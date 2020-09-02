@@ -1,0 +1,5 @@
+venv/
+vault.pass
+vault.pass.*
+become.pass
+become.pass.*
