@@ -1,0 +1,19 @@
+---
+- name: INI_FILE | Ensure that YUM erase previous versions
+  ini_file:
+    dest: /etc/yum.conf
+    section: main
+    option: clean_requirements_on_remove
+    value: 1
+
+- name: INI_FILE | Enforce GPG checks for local and remote repositories
+  ini_file:
+    dest: /etc/yum.conf
+    section: main
+    option: "{{ item.key }}"
+    value: "{{ item.val }}"
+  with_items:
+    - { key: localpkg_gpgcheck, val: "{{ ul_stig_yum_localpkg_gpgcheck }}" }
+    - { key: gpgcheck, val: "{{ ul_stig_yum_gpgcheck }}" }
+    - { key: repo_gpgcheck, val: "{{ ul_stig_yum_repo_gpgcheck }}" }
+  notify: yum clear cache

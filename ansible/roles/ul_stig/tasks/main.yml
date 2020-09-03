@@ -1,0 +1,7 @@
+---
+- import_tasks: kernel.yml
+- import_tasks: postfix.yml
+- import_tasks: repository.yml
+- import_tasks: sessions.yml
+- import_tasks: ssh.yml
+- import_tasks: systemd.yml

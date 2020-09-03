@@ -1,0 +1,22 @@
+---
+- name: COPY | Add /etc/default/useradd file
+  copy:
+    dest: "/etc/default/useradd"
+    force: no
+    content: ""
+    mode: 0644
+    owner: root
+
+- name: LINEINFILE | Set TMOUT in /etc/profile
+  lineinfile:
+     dest: /etc/profile
+     regexp: "^TMOUT="
+     line: "TMOUT=3600"
+
+- name: COPY | Add files/etc/security/limits file to /etc/security/limits.d
+  copy:
+     src: etc/security/limits.d/
+     dest: /etc/security/limits.d/
+     owner: root
+     group: root
+     mode: 0644

@@ -1,0 +1,15 @@
+---
+
+ul_stig_kernel_randomize_va_space: 2
+ul_stig_net_ipv4_conf_default_send_redirects: 0
+ul_stig_net_ipv4_conf_all_send_redirects: 0
+ul_stig_net_ipv4_ip_forward: 0
+ul_stig_net_ipv4_conf_all_accept_redirects: 0
+ul_stig_net_ipv4_conf_default_accept_redirects: 0
+ul_stig_net_ipv4_icmp_echo_ignore_broadcasts: 1
+ul_stig_net_ipv6_conf_all_accept_source_route: 0
+
+# on veut valider les package avec gpg mais pour le moment Satellite ne nous le permet pas.
+ul_stig_yum_localpkg_gpgcheck: 1
+ul_stig_yum_gpgcheck: 1
+ul_stig_yum_repo_gpgcheck: 1
