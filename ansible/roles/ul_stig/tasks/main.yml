@@ -1,7 +1,37 @@
 ---
-- import_tasks: kernel.yml
-- import_tasks: postfix.yml
-- import_tasks: repository.yml
-- import_tasks: sessions.yml
-- import_tasks: ssh.yml
-- import_tasks: systemd.yml
+
+- name: IMPORT_TASKS | kernel.yml
+  import_tasks: kernel.yml
+  tags:
+    - ul_stig
+    - ul_stig_kernel
+
+- name: IMPORT_TASKS | postfix.yml
+  import_tasks: postfix.yml
+  tags:
+    - ul_stig
+    - ul_stig_postfix
+
+- name: "IMPORT_TASKS | repository.yml"
+  import_tasks: repository.yml
+  tags:
+    - ul_stig
+    - ul_stig_repository
+
+- name: "IMPORT_TASKS | sessions.yml"
+  import_tasks: sessions.yml
+  tags:
+    - ul_stig
+    - ul_stig_sessions
+
+- name: "IMPORT_TASKS | ssh.yml"
+  import_tasks: ssh.yml
+  tags:
+    - ul_stig
+    - ul_stig_ssh
+
+- name: "IMPORT_TASKS | systemd.yml"
+  import_tasks: systemd.yml
+  tags:
+    - ul_stig
+    - ul_stig_systemd
