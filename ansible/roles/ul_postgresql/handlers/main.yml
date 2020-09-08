@@ -1,1 +1,13 @@
 ---
+
+- name: restart postgresql
+  systemd:
+    name: "{{ ul_postgresql_service_name }}"
+    state: restarted
+    enabled: yes
+
+- name: reload postgresql
+  systemd:
+    name: "{{ ul_postgresql_service_name }}"
+    state: reloaded
+    enabled: yes

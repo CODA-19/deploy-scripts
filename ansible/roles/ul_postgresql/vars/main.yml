@@ -1,0 +1,10 @@
+---
+
+# Service name
+# Must keep the .service suffix
+
+ul_postgresql_service_name: "postgresql-{{ ul_postgresql_version }}.service"
+
+# Others
+
+ul_postgresql_bin_directory: "/usr/pgsql-{{ ul_postgresql_version }}/bin"

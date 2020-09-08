@@ -1,0 +1,54 @@
+---
+
+- name: COMMANG | Ensure if the needed locale is generated
+  become: yes
+  command: localedef -c -i {{ item.parts[0] }} -f {{ item.parts[1] }} {{ item.locale_name }}
+  changed_when: false
+  with_items:
+    - { parts: "{{ ul_postgresql_locale_parts }}", locale_name: "{{ ul_postgresql_locale }}" }
+    - { parts: "{{ ul_postgresql_ctype_parts }}", locale_name: "{{ ul_postgresql_ctype }}" }
+  ignore_errors: yes
+
+- name: "FACTS | COMMAND | pg_controldata - Is database initialized?"
+  command: "{{ ul_postgresql_bin_directory }}/pg_controldata -D {{ ul_postgresql_data_directory }}"
+  changed_when: false
+  failed_when: false
+  become: yes
+  become_user: postgres
+  register: reg_pg_controldata
+
+- name: "FACTS | SET_FACT | ps_is_database_initialized"
+  set_fact:
+    pg_is_database_initialized: "{{ reg_pg_controldata.rc == 0 }}"
+    cacheable: false
+
+- name: COMMAND | Initialize the database
+  command: >
+    {{ ul_postgresql_bin_directory }}/initdb -D {{ ul_postgresql_data_directory }}
+    --locale={{ ul_postgresql_locale }} --encoding={{ ul_postgresql_encoding }}
+    {% if ul_postgresql_data_checksums %} --data-checksums {% endif %}
+    {% if ul_postgresql_pwfile != "" %} --pwfile={{ ul_postgresql_pwfile }} {% endif %}
+    {% if ul_postgresql_wal_directory != "" %} --waldir={{ ul_postgresql_wal_directory }} {% endif %}
+  become: yes
+  become_user: postgres
+  when: not pg_is_database_initialized
+
+- name: COPY | Backup original configuration files
+  copy:
+    src: "{{ ul_postgresql_data_directory }}/{{ item }}"
+    dest: "{{ ul_postgresql_data_directory }}/{{ item }}.orig"
+    remote_src: yes
+    force: no
+    owner: postgres
+    group: postgres
+    mode: 0640
+  with_items:
+    - postgresql.conf
+    - pg_hba.conf
+    - pg_ident.conf
+
+- name: "SYSTEMD | Ensure {{ ul_postgresql_service_name }} service is started and enabled"
+  systemd:
+    name: "{{ ul_postgresql_service_name }}"
+    state: started
+    enabled: yes

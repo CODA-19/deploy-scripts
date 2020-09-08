@@ -1,1 +1,61 @@
 ---
+
+#------------------------------------------------------------------------------
+# BASIC SETTINGS
+#------------------------------------------------------------------------------
+
+ul_postgresql_version: 12
+
+ul_postgresql_version_terse: "{{ ul_postgresql_version | replace('.', '') }}"  # Short version of the postgresql_version, used in some path and filenames
+
+ul_postgresql_encoding: "UTF-8"
+ul_postgresql_data_checksums: true
+ul_postgresql_pwfile: ""
+
+ul_postgresql_locale_parts:
+  - "en_CA" # Locale
+  - "UTF-8" # Encoding
+ul_postgresql_locale: "{{ ul_postgresql_locale_parts | join('.') }}"
+ul_postgresql_ctype_parts:
+  - "en_CA" # Locale
+  - "UTF-8" # Encoding
+ul_postgresql_ctype: "{{ ul_postgresql_ctype_parts | join('.') }}"
+
+ul_postgresql_env:
+  LC_ALL: "{{ ul_postgresql_locale }}"
+  LC_LCTYPE: "{{ ul_postgresql_locale }}"
+
+#### Reset the installation
+# You shuld never specify this setting permanently in a vars file.
+# Instead, overwrite at command line with --extra-vars|-e option
+
+ul_postgresql_reset: no
+
+#------------------------------------------------------------------------------
+# PG_HBA
+#------------------------------------------------------------------------------
+
+# TODO
+
+#------------------------------------------------------------------------------
+# FILE LOCATIONS
+#------------------------------------------------------------------------------
+
+ul_postgresql_data_directory: "/var/lib/pgsql/{{ ul_postgresql_version }}/data"
+ul_postgresql_wal_directory:  ""
+ul_postgresql_log_directory: ""
+
+#------------------------------------------------------------------------------
+# INSTALL/REPO
+#------------------------------------------------------------------------------
+
+# Install repo, or rely on existing configuration (Satellite, Artifactory, etc.)
+ul_postgresql_install_repository: true
+
+# YUM repository locations
+ul_postgresql_yum_repository_url: "http://yum.postgresql.org"
+ul_postgresql_pgdg_repository_url: "https://download.postgresql.org/pub/repos/yum/"
+
+# YUM (RedHat, CentOS, etc.) baseurl/gpgkey
+ul_postgresql_yum_repository_baseurl: "{{ ul_postgresql_yum_repository_url }}/{{ ul_postgresql_version }}/{{ ansible_os_family | lower }}/rhel-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}"
+ul_postgresql_yum_repository_gpgkey: "{{ ul_postgresql_pgdg_repository_url }}/RPM-GPG-KEY-PGDG-{{ ul_postgresql_version_terse }}"

@@ -1,0 +1,12 @@
+---
+
+# https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
+- name: YUM | Add PostgreSQL repository
+  yum_repository:
+     name: postgresql
+     description: postgresql yum repo
+     baseurl: "{{ ul_postgresql_yum_repository_baseurl }}"
+     gpgkey: "{{ ul_postgresql_yum_repository_gpgkey }}"
+     repo_gpgcheck: no
+  when: ul_postgresql_install_repository | bool

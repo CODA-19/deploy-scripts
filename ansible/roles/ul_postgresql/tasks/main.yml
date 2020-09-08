@@ -1,1 +1,28 @@
 ---
+
+- name: "IMPORT_TASKS | repository.yml"
+  import_tasks: repository.yml
+  tags:
+    - ul_postgresql
+    - ul_postgresql_repository
+
+- name: "IMPORT_TASKS | install.yml"
+  import_tasks: install.yml
+  tags:
+    - ul_postgresql
+    - ul_postgresql_install
+
+- name: IMPORT_TASKS | reset.yml
+  import_tasks: reset.yml
+  when:
+    - ul_postgresql_reset is defined
+    - ul_postgresql_reset | bool
+  tags:
+    - ul_postgresql
+    - ul_postgresql_reset
+
+- name: "IMPORT_TASKS | configure.yml"
+  import_tasks: configure.yml
+  tags:
+    - ul_postgresql
+    - ul_postgresql_configure
