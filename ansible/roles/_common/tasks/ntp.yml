@@ -1,0 +1,21 @@
+---
+
+- name: YUM | Ensure chrony is installed
+  yum:
+    name: chrony
+    state: present
+
+- name: TEMPLATE | /etc/chrony.conf
+  template:
+    src: chrony.conf.j2
+    dest: /etc/chrony.conf
+    owner: root
+    group: root
+  notify: restart chronyd
+
+- name: SYSTEMD | Ensure chronyd service is started and enabled
+  systemd:
+    enabled: yes
+    name: chronyd
+    state: started
+   

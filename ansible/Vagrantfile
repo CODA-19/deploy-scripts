@@ -1,20 +1,77 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+Vagrant.require_version ">= 1.8.0"
+
 Vagrant.configure("2") do |config|
 
   config.vm.box = "centos/7"
 
+  if Vagrant.has_plugin?("vagrant-hostmanager")
+    config.hostmanager.enabled = true
+    config.hostmanager.manage_host = true
+    config.hostmanager.manage_guest = true
+  end
+
   config.vm.provider :libvirt do |libvirt|
     libvirt.cpus = 2
     libvirt.memory = 4096
+
+    # Create a virtio channel for use by the qemu-guest agent (time sync, snapshotting, etc)
+    libvirt.channel :type => 'unix', :target_name => 'org.qemu.guest_agent.0', :target_type => 'virtio'
   end
 
   config.vm.provision "shell", inline: <<-SHELL
+
+       # If present, set yum proxy to use default gateway Squid Proxy
+
+       export GATEWAY=$(/sbin/ip route | awk '/default/ { print $3 }')
+
+       timeout 5 bash -c "</dev/tcp/${GATEWAY}/3128"
+       if [ $? -eq 0 ]
+       then
+          yum-config-manager --save --setopt=proxy=http://${GATEWAY}:3128 >/dev/null
+       fi
+
+       # Change repository URL to use HTTP and a specific mirror and not mirrorlist.
+       # This will make sure that the proxy will cache installed packages.
+
+       sed -i '/^mirrorlist/d' /etc/yum.repos.d/CentOS-Base.repo
+       sed -i '/^#/d'          /etc/yum.repos.d/CentOS-Base.repo
+
+       yum-config-manager --save --setopt=base.baseurl='http://centos.mirror.iweb.ca/$releasever/os/$basearch/'                 >/dev/null
+       yum-config-manager --save --setopt=updates.baseurl='http://centos.mirror.iweb.ca/$releasever/updates/$basearch/'         >/dev/null
+       yum-config-manager --save --setopt=extras.baseurl='http://centos.mirror.iweb.ca/$releasever/extras/$basearch/'           >/dev/null
+       yum-config-manager --save --setopt=centosplus.baseurl='http://centos.mirror.iweb.ca/$releasever/centosplus/$basearch/'   >/dev/null
+
+       # Clean caches
+
        yum clean all
        rm -rf /var/cache/yum
+
+      # Makecache and update
+
        yum makecache fast
        yum update -y
+
+      # Install epel-release, remove metalink paraters, uncomment baseurl, replace baseurl for [epel]
+
+      yum install -y epel-release
+
+      sed -i '/^metalink/d'           /etc/yum.repos.d/epel.repo
+      sed -i 's/^#baseurl/baseurl/g'  /etc/yum.repos.d/epel.repo
+
+      yum-config-manager --save --setopt=epel.baseurl='http://fedora-epel.mirror.iweb.com/$releasever/$basearch/' >/dev/null
+      yum-config-manager --save --setopt=epel.repo_gpgcheck=0                                                     >/dev/null
+
   SHELL
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.verbose  = "v"
+    ansible.raw_arguments  = [
+      "--become"
+    ]
+    ansible.playbook = "playbooks/vagrant.yml"
+  end
 
 end

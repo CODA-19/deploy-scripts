@@ -1,1 +1,86 @@
 ---
+
+###### NTP
+
+_common_ntp_server_1: time.nrc.ca
+_common_ntp_server_2: time.chu.nrc.ca
+_common_ntp_server_3: ntp.ovh.net
+
+###### PACKAGES
+
+_common_packages:
+  - bind-utils
+  - dstat
+  - glances
+  - htop
+  - iotop
+  - iptraf-ng
+  - mlocate
+  - nethogs
+  - sysstat
+  - tcpdump
+  - telnet
+  - traceroute
+  - unzip
+  - wget
+  - zip
+
+###### SSHD
+
+_common_sshd_remove_root_authorized_keys: yes
+
+_common_sshd_config:
+  - name: AddressFamily
+    value: "any"
+  - name: AllowTcpForwarding
+    value: "no"
+  - name: Banner
+    value: "/etc/issue"
+  - name: ChallengeResponseAuthentication
+    value: "no"
+  - name: Ciphers
+    value: "aes128-ctr,aes192-ctr,aes256-ctr"
+  - name: ClientAliveCountMax
+    value: "0"
+  - name: ClientAliveInterval
+    value: "600"
+  - name: Compression
+    value: "no"
+  - name: GSSAPIAuthentication
+    value: "no"
+  - name: IgnoreUserKnownHosts
+    value: "yes"
+  - name: KerberosAuthentication
+    value: "no"
+  - name: MACs
+    value: "hmac-sha2-512,hmac-sha2-256"
+  - name: MaxAuthTries
+    value: "4"
+  - name: MaxSessions
+    value: "10"
+  - name: PasswordAuthentication
+    value: "yes"
+  - name: PermitEmptyPasswords
+    value: "no"
+  - name: PermitRootLogin
+    value: "no"
+  - name: PermitTunnel
+    value: "no"
+  - name: PermitUserEnvironment
+    value: "no"
+  - name: PrintLastLog
+    value: "yes"
+  - name: PubkeyAuthentication
+    value: "yes"
+  - name: StrictModes
+    value: "yes"
+  - name: UsePrivilegeSeparation
+    value: "sandbox"
+  - name: X11Forwarding
+    value: "yes"
+
+###### SELINUX
+
+_common_selinux_policy: targeted
+_common_selinux_state: enforcing
+_common_selinux_boolean: []

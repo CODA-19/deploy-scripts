@@ -1,0 +1,5 @@
+[all:vars]
+env=local
+
+[all]
+default

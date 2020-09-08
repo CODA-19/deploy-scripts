@@ -1,0 +1,24 @@
+---
+
+- name: LINEINFILE | Update sshd_config file
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^{{ item.name }}"
+    line: "{{ item.name }} {{ item.value }}"
+  with_items:
+    - "{{ _common_sshd_config }}"
+  notify: restart sshd
+
+- name: COPY | Copy issue file
+  copy:
+    src: etc/issue
+    dest: "/etc/issue"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: FILE | Remove root's authorized_keys
+  file:
+    state: absent
+    path: '/root/.ssh/authorized_keys'
+  when: _common_sshd_remove_root_authorized_keys | bool

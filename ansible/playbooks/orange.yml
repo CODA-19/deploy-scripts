@@ -1,0 +1,10 @@
+---
+#
+# This playbook deploys and maintain the green boxes
+#
+- name: PLAY to deploy and maintain the «orange boxes»
+  hosts: orange
+  vars_files:
+    - "{{ inventory_dir }}/group_vars/vault.{{ env }}"
+  roles:
+    - _orange

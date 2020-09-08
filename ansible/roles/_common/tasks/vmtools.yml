@@ -1,0 +1,49 @@
+---
+
+- name: YUM | Install guest tools (VMware)
+  yum:
+    name: open-vm-tools
+    state: present
+  when: ansible_virtualization_type == "VMware"
+
+- name: YUM | Install guest tools (Hyper-V)
+  yum:
+    name:
+      - hypervvssd
+      - hyperv-daemons-license
+      - hypervkvpd
+      - hypervfcopyd
+      - hyperv-daemons
+    state: present
+  when: ansible_virtualization_type == "VirtualPC"
+
+
+- block:
+
+    - name: STAT | Check /dev/virtio-ports/org.qemu.guest_agent.0 status (KVM)
+      stat:
+        path: /dev/virtio-ports/org.qemu.guest_agent.0
+      register: _stat
+
+    - debug:
+        var: _stat
+
+    - block:
+
+        - name: YUM | Install guest tools (KVM)
+          yum:
+            name:
+              - qemu-guest-agent
+            state: present
+
+        - name: SYSTEMD | Start and enable qemu-guest-agent service (KVM)
+          systemd:
+            name: qemu-guest-agent
+            state: started
+            enabled: yes
+
+      when:
+        - _stat.stat.exists is defined
+        - _stat.stat.exists | bool
+
+  when: ansible_virtualization_type == "kvm"

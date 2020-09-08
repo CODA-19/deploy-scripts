@@ -1,0 +1,11 @@
+---
+
+- name: YUM | Install epel-release
+  yum:
+    name: epel-release
+    state: present
+
+- name: YUM | Install common packages
+  yum:
+    name: "{{ _common_packages }}"
+    state: present

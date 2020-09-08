@@ -1,0 +1,27 @@
+---
+
+- name: YUM | Add SELinux useful packages
+  yum:
+    name:
+      - libselinux-utils
+      - libselinux-python
+      - policycoreutils-python
+      - setroubleshoot-server
+    state: present
+
+- name: SELINUX | Set permanent SELinux mode
+  selinux:
+    policy: "{{ _common_selinux_policy }}"
+    state: "{{ _common_selinux_state }}"
+  register: _selinux
+
+- name: REBOOT | When selinux module requires it
+  reboot:
+  when: _selinux.reboot_required
+
+- name: SEBOOLEAN | Set SELinux booleans
+  seboolean:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('yes') }}"
+    persistent: "{{ item.persistent | default('yes') }}"
+  with_items: " {{ _common_selinux_boolean }}"

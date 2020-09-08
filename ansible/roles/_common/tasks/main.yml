@@ -1,1 +1,67 @@
 ---
+
+- name: "IMPORT_TASKS | accounts.yml"
+  import_tasks: accounts.yml
+  tags:
+    - _common
+    - _common_accounts
+
+- name: "IMPORT_TASKS | sshd.yml"
+  import_tasks: sshd.yml
+  tags:
+    - _common
+    - _common_sshd
+
+- name: "IMPORT_TASKS | sudoers.yml"
+  import_tasks: sudoers.yml
+  tags:
+    - _common
+    - _common_sudoers
+
+- name: "IMPORT_TASKS | proxy.yml"
+  import_tasks: proxy.yml
+  tags:
+    - _common
+    - _common_proxy
+
+- name: "IMPORT_TASKS | fail2ban.yml"
+  import_tasks: fail2ban.yml
+  tags:
+    - _common
+    - _common_fail2ban
+
+- name: "IMPORT_TASKS | packages.yml"
+  import_tasks: packages.yml
+  tags:
+    - _common
+    - _common_packages
+
+- name: "IMPORT_TASKS | ntp.yml"
+  import_tasks: ntp.yml
+  tags:
+    - _common
+    - _common_ntp
+
+- name: "IMPORT_TASKS | vmtools.yml"
+  import_tasks: vmtools.yml
+  tags:
+    - _common
+    - _common_vmtools
+
+- name: "IMPORT_TASKS | firewall.yml"
+  import_tasks: firewall.yml
+  tags:
+    - _common
+    - _common_firewall
+
+- name: "IMPORT_TASKS | selinux.yml"
+  import_tasks: selinux.yml
+  tags:
+    - _common
+    - _common_selinux
+
+- name: "IMPORT_TASKS | postfix.yml"
+  import_tasks: postfix.yml
+  tags:
+    - _common
+    - _common_postfix

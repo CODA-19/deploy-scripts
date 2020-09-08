@@ -1,0 +1,6 @@
+---
+dependencies:
+  - role: _common
+  - role: ul_postgresql
+  - role: ul_minio
+  - role: ul_aidbox

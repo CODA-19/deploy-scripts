@@ -1,1 +1,21 @@
 ---
+
+######
+
+- name: restart chronyd
+  systemd:
+    name: chronyd
+    state: restarted
+    enabled: yes
+
+######
+
+- name: restart sshd
+  systemd:
+    name: sshd
+    state: restarted
+
+- name: reload sshd
+  systemd:
+    name: sshd
+    state: reloaded
