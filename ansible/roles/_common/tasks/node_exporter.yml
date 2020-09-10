@@ -1,0 +1,48 @@
+---
+
+- name: "GET_URL | Download node-exporter"
+  get_url:
+    url: "{{ _common_node_exporter_url }}"
+    dest: /tmp/node_exporter.tar.gz
+  when: _common_node_exporter_url is defined
+
+- name: "COMMAND | Extract node_exporter to /usr/local/bin/node_exporter"
+  command: |
+    tar -xvf /var/tmp/node_exporter.tar.gz -C /usr/local/bin --strip-components 1 --wildcards */node_exporter
+  args:
+    creates: /usr/local/bin/node_exporter
+
+- name: "USER | Add prometheus user"
+  user:
+    name: prometheus
+    system: yes
+
+- name: "FILE | Create node_exporter collector.textfile directory ({{ _common_node_exporter_collector_textfile_dir }})"
+  file:
+    path: "{{ _common_node_exporter_collector_textfile_dir }}"
+    state: directory
+    mode: 0755
+
+- name: "TEMPLATE | Configure node_exporter (/etc/default/node_exporter)"
+  template:
+    src: etc/default/node_exporter.j2
+    dest: /etc/default/node_exporter
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart node_exporter
+
+- name: "COPY | Create service unit-file"
+  template:
+    src: etc/systemd/system/node_exporter.service.j2
+    dest: /etc/systemd/system/node_exporter.service
+  notify:
+    - reload systemd
+    - restart node_exporter
+
+- name: "SYSTEMD | Ensure node_exporter is started and enabled"
+  systemd:
+    name: node_exporter
+    state: started
+    enabled: yes

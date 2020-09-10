@@ -65,3 +65,9 @@
   tags:
     - _common
     - _common_postfix
+
+- name: "IMPORT_TASKS | node_exporter.yml"
+  import_tasks: node_exporter.yml
+  tags:
+    - _common
+    - _common_node_exporter

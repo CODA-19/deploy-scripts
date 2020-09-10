@@ -9,3 +9,4 @@
   roles:
     # Put here the roles you want to test
     - _common
+    - ul_postgresql

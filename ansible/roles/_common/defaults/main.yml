@@ -16,6 +16,7 @@ _common_packages:
   - iotop
   - iptraf-ng
   - mlocate
+  - net-tools
   - nethogs
   - sysstat
   - tcpdump
@@ -84,3 +85,9 @@ _common_sshd_config:
 _common_selinux_policy: targeted
 _common_selinux_state: enforcing
 _common_selinux_boolean: []
+
+###### NODE_EXPORTER
+
+_common_node_exporter_opts: ""
+_common_node_exporter_url: "https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz"
+_common_node_exporter_collector_textfile_dir: /var/lib/prometheus/
