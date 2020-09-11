@@ -1,0 +1,49 @@
+#
+# {{ ansible_managed }}
+#
+# PostgreSQL Client Authentication Configuration File
+# ===================================================
+#
+# Refer to the "Client Authentication" section in the PostgreSQL
+# documentation for a complete description of this file.  A short
+# synopsis follows.
+#
+# This file controls: which hosts are allowed to connect, how clients
+# are authenticated, which PostgreSQL user names they can use, which
+# databases they can access.  Records take one of these forms:
+#
+# local      DATABASE  USER  METHOD  [OPTIONS]
+# host       DATABASE  USER  ADDRESS  METHOD  [OPTIONS]
+# hostssl    DATABASE  USER  ADDRESS  METHOD  [OPTIONS]
+# hostnossl  DATABASE  USER  ADDRESS  METHOD  [OPTIONS]
+#
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+#### Defaults
+
+{% for connection in ul_postgresql_pg_hba_default %}
+{% if connection.comment is defined %}
+# {{connection.comment}}
+{% endif %}
+{{ "%-10s" | format(connection.type) }}  {{ "%-20s" | format(connection.database) }}  {{ "%-25s" | format(connection.user) }}  {{ "%-20s" | format(connection.address) }}  {{connection.method}}
+{% endfor %}
+
+{% if ul_postgresql_superusers | length > 0 %}
+#### Superusers
+
+{% for connection in ul_postgresql_pg_hba_superusers %}
+{% if connection.comment is defined %}
+# {{connection.comment}}
+{% endif %}
+{{ "%-10s" | format(connection.type) }}  {{ "%-20s" | format(connection.database) }}  {{ "%-25s" | format(connection.user) }}  {{ "%-20s" | format(connection.address) }}  {{connection.method}}
+{% endfor %}
+{% endif %}
+
+#### User custom
+
+{% for connection in ul_postgresql_pg_hba_custom %}
+{% if connection.comment is defined %}
+# {{connection.comment}}
+{% endif %}
+{{ "%-10s" | format(connection.type) }}  {{ "%-20s" | format(connection.database) }}  {{ "%-25s" | format(connection.user) }}  {{ "%-20s" | format(connection.address) }}  {{connection.method}}
+{% endfor %}

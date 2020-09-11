@@ -1,0 +1,70 @@
+---
+#
+# This file should:
+#   - contains only steps that should be run mostly prior to bootstrapping
+#   - not contain steps that manage stuff that change often
+#
+
+################################################################################
+####
+#### General Stuff
+####
+################################################################################
+
+#### Ensure requested locale is generated
+
+- name: "PREPARE | COMMAND | Ensure if the needed locale is generated"
+  become: yes
+  command: localedef -c -i {{ item.parts[0] }} -f {{ item.parts[1] }} {{ item.locale_name }}
+  changed_when: false
+  with_items:
+    - { parts: "{{ ul_postgresql_locale_parts }}", locale_name: "{{ ul_postgresql_locale }}" }
+    - { parts: "{{ ul_postgresql_ctype_parts }}", locale_name: "{{ ul_postgresql_ctype }}" }
+  ignore_errors: yes
+
+#### Get user infomation (ie: home directory) and set beautiful environement
+
+- name: "PREPARE | USER | Get «postgres» user base information"
+  user:
+    name: postgres
+  register: postgres_user_info
+
+- name: "PREPARE | TEMPLATE | Generate .pgsql_profile file"
+  template:
+    src: pgsql_profile.j2
+    dest: "{{ postgres_user_info.home }}/.pgsql_profile"
+
+################################################################################
+####
+#### Directory management
+####
+################################################################################
+
+- name: "PREPARE | FILE | Make sure the DATA directory exists ({{ ul_postgresql_data_directory }})"
+  file:
+    path: "{{ ul_postgresql_data_directory }}"
+    owner: postgres
+    group: postgres
+    state: directory
+    mode: 0700
+  register: pg_data_directory_prepare
+
+- name: "PREPARE | FILE | Make sure the WAL directory exists ({{ ul_postgresql_wal_directory }})"
+  file:
+    path: "{{ ul_postgresql_wal_directory }}"
+    owner: postgres
+    group: postgres
+    state: directory
+    mode: 0700
+  when: ul_postgresql_wal_directory != ""
+  register: pg_wal_directory_prepare
+
+- name: "PREPARE | FILE | Make sure the LOG directory exists ({{ ul_postgresql_log_directory }})"
+  file:
+    path: "{{ ul_postgresql_log_directory }}"
+    owner: postgres
+    group: postgres
+    state: directory
+    mode: 0700
+  when: ul_postgresql_log_directory != ""
+  register: pg_log_directory_prepare

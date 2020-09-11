@@ -21,8 +21,20 @@
     - ul_postgresql
     - ul_postgresql_reset
 
+- name: IMPORT_TASKS | prepare.yml
+  import_tasks: prepare.yml
+  tags:
+    - ul_postgresql
+    - ul_postgresql_prepare
+
 - name: "IMPORT_TASKS | configure.yml"
   import_tasks: configure.yml
   tags:
     - ul_postgresql
     - ul_postgresql_configure
+
+- name: "IMPORT_TASKS | manage.yml"
+  import_tasks: manage.yml
+  tags:
+    - ul_postgresql
+    - ul_postgresql_manage

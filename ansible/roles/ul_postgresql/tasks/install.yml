@@ -1,23 +1,66 @@
 ---
 
-
-- name: YUM | Install all the required dependencies
+- name: "YUM | Install all the required dependencies"
   yum:
-    name:
-      - ca-certificates
-      - python-psycopg2
-      - python-pycurl
-      - glibc-common
-      - epel-release
-      - libselinux-python
+    name: "{{ ul_postgresql_deps }}"
     state: present
 
-- name: YUM | Install PostgreSQL packages
+- name: "YUM | Install PostgreSQL Server - Main packages"
   yum:
     name:
-      - "postgresql{{ ul_postgresql_version_terse }}"
-      - "postgresql{{ ul_postgresql_version_terse }}-server"
-      - "postgresql{{ ul_postgresql_version_terse }}-contrib"
-      - "postgresql{{ ul_postgresql_version_terse }}-llvmjit"
+      - "postgresql{{ ul_postgresql_version }}"
+      - "postgresql{{ ul_postgresql_version }}-server"
     state: present
   environment: "{{ ul_postgresql_env }}"
+
+- name: "YUM | Install PostgreSQL Server - LLVMJIT (>= v11)"
+  yum:
+    name: postgresql{{ ul_postgresql_version }}-llvmjit
+    state: present
+  when:
+    - ul_postgresql_version is version('11', '>=')
+
+- block:
+
+      - name: "YUM | Install PostgreSQL Development - centos-release-scl"
+        yum:
+          name: centos-release-scl
+          state: present
+
+      - name: "YUM | Install PostgreSQL Development - postgresql{{ ul_postgresql_version }}-devel"
+        yum:
+          name: "postgresql{{ ul_postgresql_version }}-devel"
+          state: present
+
+  when: ul_postgresql_install_devel
+
+- name: "YUM | Install contrib package"
+  yum:
+    name: "postgresql{{ ul_postgresql_version }}-contrib"
+    state: present
+  when: ul_postgresql_install_contrib
+
+- name: "YUM | Install extensions packages | PostGIS {{ ul_postgresql_install_postgis_version }}"
+  yum:
+    name: "{{ ul_postgresql_install_postgis_deps }}"
+    state: present
+  when: ul_postgresql_install_postgis
+
+- name: "YUM | Install extensions packages | PGAudit"
+  yum:
+    name: "pgaudit*_{{ ul_postgresql_version }}"
+    state: present
+  when: ul_postgresql_install_pgaudit
+
+- name: "YUM | Install extensions packages | Others: {{ ul_postgresql_install_extensions | join(', ') }}"
+  yum:
+    name: "{{ item }}_{{ ul_postgresql_version }}"
+    state: present
+  with_items: "{{ ul_postgresql_install_extensions }}"
+  when: ul_postgresql_install_extensions|length > 0
+
+- name: "YUM | Install extensions packages | check_postgres"
+  yum:
+    name: check_postgres
+    state: present
+  when: ul_postgresql_install_check_postgres

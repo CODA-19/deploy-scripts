@@ -1,13 +1,8 @@
 ---
 
-- name: COMMANG | Ensure if the needed locale is generated
-  become: yes
-  command: localedef -c -i {{ item.parts[0] }} -f {{ item.parts[1] }} {{ item.locale_name }}
-  changed_when: false
-  with_items:
-    - { parts: "{{ ul_postgresql_locale_parts }}", locale_name: "{{ ul_postgresql_locale }}" }
-    - { parts: "{{ ul_postgresql_ctype_parts }}", locale_name: "{{ ul_postgresql_ctype }}" }
-  ignore_errors: yes
+################################################################################
+#### FACTS
+################################################################################
 
 - name: "FACTS | COMMAND | pg_controldata - Is database initialized?"
   command: "{{ ul_postgresql_bin_directory }}/pg_controldata -D {{ ul_postgresql_data_directory }}"
@@ -22,18 +17,25 @@
     pg_is_database_initialized: "{{ reg_pg_controldata.rc == 0 }}"
     cacheable: false
 
-- name: COMMAND | Initialize the database
+################################################################################
+#### BOOTSTRAP
+################################################################################
+
+- name: BOOTSTRAP | COMMAND | Initialize the database cluster
   command: >
     {{ ul_postgresql_bin_directory }}/initdb -D {{ ul_postgresql_data_directory }}
     --locale={{ ul_postgresql_locale }} --encoding={{ ul_postgresql_encoding }}
+    --auth-host={{  ul_postgresql_default_auth_method_host  }}
+    --auth-local={{ ul_postgresql_default_auth_method_local }}
     {% if ul_postgresql_data_checksums %} --data-checksums {% endif %}
     {% if ul_postgresql_pwfile != "" %} --pwfile={{ ul_postgresql_pwfile }} {% endif %}
     {% if ul_postgresql_wal_directory != "" %} --waldir={{ ul_postgresql_wal_directory }} {% endif %}
+    {% if ul_postgresql_wal_segsize | default("") != "" %} --wal-segsize={{ ul_postgresql_wal_segsize}} {% endif %}
   become: yes
   become_user: postgres
   when: not pg_is_database_initialized
 
-- name: COPY | Backup original configuration files
+- name: BOOTSTRAP | COPY | Backup original configuration files
   copy:
     src: "{{ ul_postgresql_data_directory }}/{{ item }}"
     dest: "{{ ul_postgresql_data_directory }}/{{ item }}.orig"
@@ -46,6 +48,192 @@
     - postgresql.conf
     - pg_hba.conf
     - pg_ident.conf
+
+################################################################################
+#### CONFIGURE
+################################################################################
+
+#
+# This section contains common changes that should be done to configuration files,
+# whichever the case or type of nodes.
+#
+# Simply put, it manages configuration files that should be normally equally
+# maintained on all nodes.
+#
+# When a file is changed, service must be reloaded to apply changes. Notice
+# that some parameters need a service restart.
+#
+# Examples of theses files are:
+#   - postgresql.conf
+#   - pg_hba.conf
+#   - pg_ident.conf
+#   - files present in conf.d/
+#   - pg_hba/superusers
+#
+
+- name: "CONFIGURE | FILE | Ensure conf.d subdirectory is present"
+  file:
+    path: "{{ ul_postgresql_data_directory }}/conf.d"
+    owner: postgres
+    group: postgres
+    state: directory
+    mode: 0700
+
+- block:
+
+    - name: "CONFIGURE | FILE | Ensure pg_hba subdirectory is present"
+      file:
+        path: "{{ ul_postgresql_data_directory }}/pg_hba"
+        owner: postgres
+        group: postgres
+        state: directory
+        mode: 0700
+
+    - name: "CONFIGURE | TEMPLATE | Generate superusers file (pg_hba/superusers)"
+      template:
+        src: pg_hba/superusers.j2
+        dest: "{{ ul_postgresql_data_directory }}/pg_hba/superusers"
+        owner: postgres
+        group: postgres
+        mode: 0640
+      notify: reload postgresql
+
+    - name: "CONFIGURE | TEMPLATE | Generate configuration (pg_hba.conf)"
+      template:
+        src: pg_hba.conf.j2
+        dest: "{{ ul_postgresql_data_directory }}/pg_hba.conf"
+        owner: postgres
+        group: postgres
+        mode: 0640
+      register: postgresql_configuration_pt1
+      notify: reload postgresql
+
+  when: ul_postgresql_manage_pg_hba | bool
+
+- name: "CONFIGURE | LINEINFILE | Activate conf.d folder in configuration (postgresql.conf)"
+  lineinfile:
+    path: "{{ ul_postgresql_data_directory }}/postgresql.conf"
+    regexp: "^#?{{ item.key }} = "
+    line: "{{ item.key }} = {{ item.val }}"
+  register: postgresql_configuration_pt2
+  notify: reload postgresql
+  with_items:
+    - key: include_dir
+      val: "'conf.d'"
+
+- name: "CONFIGURE | TEMPLATE | Generate ansible managed configuration files"
+  template:
+    src: "conf.d/{{ item }}.j2"
+    dest: "{{ ul_postgresql_data_directory }}/conf.d/{{ item }}"
+    owner: postgres
+    group: postgres
+    mode: 0640
+    #backup: yes # backup filenames makes rsync (barman) failing
+  with_items:
+    - 10-ansible-managed-auto.conf
+    - 20-ansible-managed-custom.conf
+  register: postgresql_configuration_pt3
+  notify: reload postgresql
+
+- name: "CONFIGURE | TEMPLATE | Generate configuration (pg_ident.conf)"
+  template:
+    src: pg_ident.conf.j2
+    dest: "{{ ul_postgresql_data_directory }}/pg_ident.conf"
+    owner: postgres
+    group: postgres
+    mode: 0640
+    #backup: yes  # backup filenames makes rsync (barman) failing
+  register: postgresql_configuration_pt4
+  notify: reload postgresql
+
+###############################################################################################
+#### SSL KEY AND CERTIFICATE
+###############################################################################################
+
+#
+# When SSL is enabled but without key + cert content, we generate a self signed
+#
+
+- block:
+
+    # To use ansible's provided module for openssl, we need to have PyOpenSSL>=0.15
+    # while CentOS 7 has 0.13.
+    #
+    # So we need to do it the manual way with explicit commands.
+    #
+    #- name: "BOOTSTRAP | PRIMARY | SSL | OPENSSL_PRIVATEKEY"
+    #  openssl_privatekey:
+    #    path: "{{ ul_postgresql_data_directory }}/server.key"
+    #    size: 4096
+    #
+    #- name: "BOOTSTRAP | PRIMARY | SSL | OPENSSL_CERTIFICATE"
+    #  openssl_certificate:
+    #    path: "{{ ul_postgresql_data_directory }}/server.crt"
+    #    privatekey_path: "{{ ul_postgresql_data_directory }}/server.key"
+    #    provider: selfsigned
+    #    csr_path: "{{ ul_postgresql_data_directory }}/server.csr"
+
+    - name: CONFIGURE | SSL | COMMAND | Generate private key
+      command: openssl genrsa -out {{ ul_postgresql_ssl_key_file }} 4096
+      args:
+        creates: "{{ ul_postgresql_ssl_key_file }}"
+
+    - name: CONFIGURE | SSL | COMMAND | Generate self signed certificate
+      command: |
+        openssl \
+          req -new -x509 \
+          -key {{ ul_postgresql_ssl_key_file }} \
+          -out {{ ul_postgresql_ssl_cert_file }} \
+          -days 3650  \
+          -subj '/CN={{ inventory_hostname }}'
+      args:
+        creates: "{{ ul_postgresql_ssl_cert_file }}"
+
+    - name: CONFIGURE | SSL | FILE | Private key and certificate permissions
+      file:
+        path: "{{ item }}"
+        mode: 0600
+      with_items:
+        - "{{ ul_postgresql_ssl_key_file }}"
+        - "{{ ul_postgresql_ssl_cert_file }}"
+
+  become: yes
+  become_user: postgres
+  when:
+    - ul_postgresql_ssl | bool
+    - ul_postgresql_ssl_key_content   is not defined or ul_postgresql_ssl_key_content == ""
+    - ul_postgresql_ssl_cert_content  is not defined or ul_postgresql_ssl_cert_content == ""
+
+#
+# When SSL is enabled but WITH key and cert content, we create in files
+#
+
+- block:
+
+    - name: "CONFIGURE | SSL | COPY | SSL KEY content to file"
+      copy:
+        content: "{{ ul_postgresql_ssl_key_content }}"
+        dest: "{{ ul_postgresql_ssl_key_file }}"
+        mode: 0600
+      notify: reload postgresql
+
+    - name: "CONFIGURE | SSL | COPY | SSL CERT content to file"
+      copy:
+        content: "{{ ul_postgresql_ssl_cert_content }}"
+        dest: "{{ ul_postgresql_ssl_cert_file }}"
+        mode: 0600
+      notify: reload postgresql
+
+  become: yes
+  become_user: postgres
+  when:
+    - ul_postgresql_ssl | bool
+    - ul_postgresql_ssl_key_content   is defined and ul_postgresql_ssl_key_content  != ""
+    - ul_postgresql_ssl_cert_content  is defined and ul_postgresql_ssl_cert_content != ""
+
+################################################################################
+#### START AND ENABLE SERVICE
+################################################################################
 
 - name: "SYSTEMD | Ensure {{ ul_postgresql_service_name }} service is started and enabled"
   systemd:

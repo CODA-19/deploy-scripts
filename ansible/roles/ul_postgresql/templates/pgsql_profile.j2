@@ -1,0 +1,12 @@
+#
+# {{ ansible_managed }}
+#
+
+if [ -f /etc/bashrc ]; then
+  . /etc/bashrc
+fi
+
+PATH=/usr/pgsql-{{ ul_postgresql_version }}/bin/:$PATH
+export PATH
+
+umask 077

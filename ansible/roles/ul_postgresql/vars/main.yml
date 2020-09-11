@@ -1,5 +1,23 @@
 ---
 
+# We must install other dependencies:
+#   - python-psycopg2
+#       Needed by ansible modules postgresql_user, postgresql_database, ...
+#   - pyOpenSSL
+#       Needed by ansible modules openssl_* to manage postgresql server key + cert
+#
+
+ul_postgresql_deps:
+  - python-psycopg2
+  # Ansible: «You need to have PyOpenSSL>=0.15»
+  # CentOS 7 has only 0.13
+  #- pyOpenSSL
+  - ca-certificates
+  - python-pycurl
+  - glibc-common
+  - epel-release
+  - libselinux-python
+
 # Service name
 # Must keep the .service suffix
 

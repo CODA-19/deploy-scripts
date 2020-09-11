@@ -1,0 +1,70 @@
+---
+#
+# This task list manage database content (users, databases, etc.)
+# This should run on a PRIMARY node only.
+#
+
+################################################################################
+#### USERS
+################################################################################
+
+- name: MANAGE | POSTGRESQL_USER | Make sure the SUPERUSERS are present
+  postgresql_user:
+    name: "{{ item }}"
+    state: present
+    role_attr_flags: "SUPERUSER,CREATEROLE,CREATEDB,REPLICATION,BYPASSRLS"
+    port: "{{ ul_postgresql_port }}"
+  become: yes
+  become_user: postgres
+  with_items: "{{ ul_postgresql_superusers }}"
+  when: ul_postgresql_superusers | length > 0
+
+- name: MANAGE | POSTGRESQL_USER | Make sure the ROLES (non-login roles) are present
+  postgresql_user:
+    name: "{{ item }}"
+    state: present
+    role_attr_flags: "NOLOGIN"
+    port: "{{ ul_postgresql_port }}"
+  become: yes
+  become_user: postgres
+  with_items: "{{ ul_postgresql_roles }}"
+  when: ul_postgresql_roles | length > 0
+
+- name: MANAGE | POSTGRESQL_USER | Make sure the USERS (login roles) are present
+  postgresql_user:
+    name: "{{ item.username }}"
+    state: "{{ item.state | default(omit) }}"
+    password: "{{ item.password | default(omit) }}"
+    role_attr_flags: "{{ item.role_attr_flags | default(omit) }}"
+    port: "{{ ul_postgresql_port }}"
+  become: yes
+  changed_when: false          # always return false because scram-sha255 always change the resulting password hash for each generations, should the module be modified?
+  #no_log: true                # do not log output because items contains passwords, yse loop_control instead
+  become_user: postgres
+  with_items: "{{ ul_postgresql_users }}"
+  when: ul_postgresql_users | length > 0
+
+- name: MANAGE | POSTGRESQL_PRIVS | Make sure USERS are members of GROUPS
+  postgresql_privs:
+    database: postgres
+    roles: "{{ item.username }}"
+    objs: "{{ item.roles | join(',') }}"
+    grant_option: "{{ item.grant_option | default('no') }}"
+    type: group
+    port: "{{ ul_postgresql_port }}"
+  become: yes
+  become_user: postgres
+  with_items: "{{ ul_postgresql_users_roles }}"
+  when: ul_postgresql_users | length > 0 and ul_postgresql_users_roles | length > 0
+
+################################################################################
+#### DATABASES
+################################################################################
+
+# <REDACTED>
+
+################################################################################
+#### SCHEMAS
+################################################################################
+
+# <REDACTED>

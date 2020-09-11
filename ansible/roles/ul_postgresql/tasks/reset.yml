@@ -1,26 +1,36 @@
 ---
 
-- name: "SYSTEMD | Shutdown {{ ul_postgresql_service_name }} service"
+- name: "RESET | SYSTEMD | Shutdown {{ ul_postgresql_service_name }} service"
   systemd:
     name: "{{ ul_postgresql_service_name }}"
     state: stopped
 
-- name: FILE | Delete the DATA directory
+- name: "RESET | FILE | Delete the DATA directory"
   file:
     path: "{{ ul_postgresql_data_directory }}"
     state: absent
   register: pg_data_dir_remove
 
-- name: FILE | Delete the WAL directory
+- name: "RESET | FILE | Delete the WAL directory"
   file:
     path: "{{ ul_postgresql_wal_directory }}"
     state: absent
   when: ul_postgresql_wal_directory != ""
   register: pg_wal_dir_remove
 
-- name: FILE | Delete the LOG directory
+- name: "RESET | FILE | Delete the LOG directory"
   file:
     path: "{{ ul_postgresql_log_directory }}"
     state: absent
   when: ul_postgresql_log_directory != ""
   register: pg_log_dir_remove
+
+- name: "RESET | FILE | Delete some files and folders in postgres user home"
+  file:
+    path: "{{ item }}"
+    state: absent
+  become: yes
+  become_user: postgres
+  with_items:
+    - ~/.ssh
+    - ~/.pgpass

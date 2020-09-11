@@ -2,11 +2,27 @@
 
 # https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 
-- name: YUM | Add PostgreSQL repository
-  yum_repository:
-     name: postgresql
-     description: postgresql yum repo
-     baseurl: "{{ ul_postgresql_yum_repository_baseurl }}"
-     gpgkey: "{{ ul_postgresql_yum_repository_gpgkey }}"
-     repo_gpgcheck: no
+- block:
+
+    - name: "REPOSITORY | YUM_REPOSITORY | Add PostgreSQL common repository (pgdg-common)"
+      yum_repository:
+         name: "pgdg-common"
+         description: "PostgreSQL common RPMs for RHEL/CentOS $releasever - $basearch"
+         baseurl: "{{ ul_postgresql_yum_repository_common_baseurl }}"
+         gpgkey: "{{ ul_postgresql_yum_repository_gpgkey }}"
+         repo_gpgcheck: no
+         gpgcheck: yes
+         file: postgresql
+
+
+    - name: "REPOSITORY | YUM_REPOSITORY | Add PostgreSQL {{ ul_postgresql_version }} repository (pgdg{{ ul_postgresql_version_terse }})"
+      yum_repository:
+         name: "pgdg{{ ul_postgresql_version_terse }}"
+         description: "PostgreSQL {{ ul_postgresql_version }} for RHEL/CentOS $releasever - $basearch"
+         baseurl: "{{ ul_postgresql_yum_repository_baseurl }}"
+         gpgkey: "{{ ul_postgresql_yum_repository_gpgkey }}"
+         repo_gpgcheck: no
+         gpgcheck: yes
+         file: postgresql
+
   when: ul_postgresql_install_repository | bool
