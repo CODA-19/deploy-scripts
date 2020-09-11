@@ -1,1 +1,5 @@
 ---
+
+ul_minio_server_access_key:
+ul_minio_server_secret_key:
+ul_minio_server_opts:

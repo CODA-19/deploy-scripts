@@ -1,1 +1,13 @@
 ---
+
+- name: "IMPORT_TASKS | client.yml"
+  import_tasks: client.yml
+  tags:
+    - ul_minio
+    - ul_minio_client
+
+- name: "IMPORT_TASKS | server.yml"
+  import_tasks: server.yml
+  tags:
+    - ul_minio
+    - ul_minio_server
