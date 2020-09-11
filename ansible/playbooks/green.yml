@@ -1,7 +1,5 @@
 ---
-#
-# This playbook deploys and maintain the green boxes
-#
+
 - name: PLAY to deploy and maintain the «green boxes»
   hosts: green
   vars_files:

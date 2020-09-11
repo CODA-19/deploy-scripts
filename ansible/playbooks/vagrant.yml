@@ -4,9 +4,10 @@
   hosts: all
   vars:
     env: local
-  #vars_files:
-  #  - "{{ inventory_dir }}/group_vars/vault.{{ env }}"
+  vars_files:
+    - "{{ playbook_dir }}/../group_vars/vault.{{ env }}"
   roles:
     # Put here the roles you want to test
     - _common
     - ul_postgresql
+    - ul_minio

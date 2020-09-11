@@ -16,6 +16,8 @@
   user:
     name: prometheus
     system: yes
+    shell: /sbin/nologin
+    home: /var/lib/prometheus
 
 - name: "FILE | Create node_exporter collector.textfile directory ({{ _common_node_exporter_collector_textfile_dir }})"
   file:
@@ -30,19 +32,17 @@
     owner: root
     group: root
     mode: 0644
-  notify:
-    - restart node_exporter
+  notify: restart node_exporter
 
 - name: "COPY | Create service unit-file"
   template:
     src: etc/systemd/system/node_exporter.service.j2
     dest: /etc/systemd/system/node_exporter.service
-  notify:
-    - reload systemd
-    - restart node_exporter
+  notify: restart node_exporter
 
 - name: "SYSTEMD | Ensure node_exporter is started and enabled"
   systemd:
     name: node_exporter
     state: started
     enabled: yes
+    daemon_reload: yes
