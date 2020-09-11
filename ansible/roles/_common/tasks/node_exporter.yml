@@ -8,7 +8,7 @@
 
 - name: "COMMAND | Extract node_exporter to /usr/local/bin/node_exporter"
   command: |
-    tar -xvf /var/tmp/node_exporter.tar.gz -C /usr/local/bin --strip-components 1 --wildcards */node_exporter
+    tar -xvf /tmp/node_exporter.tar.gz -C /usr/local/bin --strip-components 1 --wildcards */node_exporter
   args:
     creates: /usr/local/bin/node_exporter
 
