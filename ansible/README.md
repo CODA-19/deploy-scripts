@@ -10,21 +10,29 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### Using VAGRANT for local testing
+### Install Vagrant & Providers
 
-Install Vagrant on CentOS:
+#### CentOS
+
+Assuming `libvirt` is used as a provider.
 
 ```bash
+sudo yum install kvm libvirt
 sudo dnf install https://releases.hashicorp.com/vagrant/2.2.6/vagrant_2.2.6_x86_64.rpm
 ```
 
-Install Vagrant on Mac OS:
+#### Mac OS
+
+Assuming `virtualbox` is used as a provider.
 
 ```bash
+brew cask install virtualbox
 brew cask install vagrant
 ```
 
-Create VMs and provisioning scripts
+### Using Vagrant for local testing
+
+Create VMs and provisioning scripts:
 
 ```bash
 vagrant up
