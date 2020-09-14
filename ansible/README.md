@@ -1,7 +1,7 @@
 # CODA19 Ansible Deployment Scripts
 
 
-###  Install
+###  Install Python requirements
 
 ```bash
 virtualenv --python=python3 venv
@@ -10,9 +10,29 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### Using VAGRANT for local testing
+### Install Vagrant & Providers
 
-Create VMs and provisioning scripts
+#### CentOS
+
+Assuming `libvirt` is used as a provider.
+
+```bash
+sudo yum install kvm libvirt
+sudo dnf install https://releases.hashicorp.com/vagrant/2.2.6/vagrant_2.2.6_x86_64.rpm
+```
+
+#### Mac OS
+
+Assuming `virtualbox` is used as a provider.
+
+```bash
+brew cask install virtualbox
+brew cask install vagrant
+```
+
+### Using Vagrant for local testing
+
+Create VMs and provisioning scripts:
 
 ```bash
 vagrant up
