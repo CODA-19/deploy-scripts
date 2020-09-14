@@ -56,3 +56,9 @@
     daemon_reload: yes
     state: started
     enabled: yes
+
+- name: "COMMAND | Configure MC «local» alias with configured keys"
+  command: "/usr/local/bin/mc alias set local http://localhost:9000 {{ ul_minio_server_access_key }} {{ ul_minio_server_secret_key }}"
+  no_log: yes
+  register: _return
+  changed_when: false

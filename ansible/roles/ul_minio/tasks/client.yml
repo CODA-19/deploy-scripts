@@ -5,3 +5,9 @@
     url: https://dl.min.io/client/mc/release/linux-amd64/mc
     dest: /usr/local/bin/mc
     mode: 0755
+
+- name: "COPY | Add MINIO client autocomplete"
+  copy:
+    content: |
+      complete -C /usr/local/bin/mc mc
+    dest: /etc/bash_completion.d/mc
