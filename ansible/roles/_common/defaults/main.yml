@@ -1,5 +1,9 @@
 ---
 
+###### ACCOUNTS TO AUTOMATICALLY ADD
+
+_common_accounts: []
+
 ###### NTP
 
 _common_ntp_server_1: time.nrc.ca

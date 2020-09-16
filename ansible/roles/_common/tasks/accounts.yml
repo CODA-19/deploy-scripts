@@ -1,3 +1,15 @@
 ---
 
-# TODO
+- name: "USER | Add users"
+  user:
+    name: "{{ item.name }}"
+    state: present
+  with_items: "{{ _common_accounts }}"
+
+- name: "AUTHORIZED_KEY | Add users pubkey when provided"
+  authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ item.pubkey }}"
+    state: present
+  when: item.pubkey is defined
+  with_items: "{{ _common_accounts }}"
