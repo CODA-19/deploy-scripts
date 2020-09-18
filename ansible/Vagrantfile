@@ -57,6 +57,7 @@ Vagrant.configure("2") do |config|
       # Install epel-release, remove metalink paraters, uncomment baseurl, replace baseurl for [epel]
 
       yum install -y epel-release
+      yum update -y
 
       sed -i '/^metalink/d'           /etc/yum.repos.d/epel.repo
       sed -i 's/^#baseurl/baseurl/g'  /etc/yum.repos.d/epel.repo
@@ -71,7 +72,10 @@ Vagrant.configure("2") do |config|
     ansible.raw_arguments  = [
       "--become",
       #"--tags=_common",
+      #"--tags=_common_accounts",
       #"--tags=ul_postgresql",
+      #"--tags=ul_minio",
+      #"--tags=ul_podman",
     ]
     ansible.playbook = "playbooks/vagrant.yml"
   end
