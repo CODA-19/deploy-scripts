@@ -5,9 +5,12 @@
   vars:
     env: local
   vars_files:
+    - "{{ playbook_dir }}/../group_vars/all"
     - "{{ playbook_dir }}/../group_vars/vault.{{ env }}"
   roles:
     # Put here the roles you want to test
-    - _common
-    - ul_postgresql
-    - ul_minio
+    #- _common
+    #- ul_postgresql
+    #- ul_podman
+    #- ul_minio
+    - ul_wireguard

@@ -1,2 +1,16 @@
 [all:vars]
 env=pr
+
+#------------------------------------------------------------------------------
+# HUB - VALERIA - UNIVERSITÉ LAVAL
+#------------------------------------------------------------------------------
+
+[hub_gw]
+ul-cod-pr-gw01.l.ul.ca
+ul-cod-pr-gw02.l.ul.ca
+
+[hub_ipa]
+ul-cod-pr-ipa01.l.ul.ca
+
+[hub_mon]
+ul-cod-pr-mon01.l.ul.ca
