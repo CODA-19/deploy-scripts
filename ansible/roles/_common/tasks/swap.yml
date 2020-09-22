@@ -1,0 +1,18 @@
+---
+
+### DISABLE SWAP
+
+- block:
+
+    - name: COMMAND | Disable swap - swapoff -a
+      command: swapoff -a
+      when: ansible_swaptotal_mb > 0
+
+    - name: MOUNT | Remove swap from fstab
+      mount:
+        path: swap
+        fstype: swap
+        state: absent
+        backup: yes
+
+  when: _common_disable_swap | bool
