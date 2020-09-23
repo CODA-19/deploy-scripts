@@ -2,11 +2,12 @@
 - name: SYSCTL | STIG Parameters
   name: Paramètres sysctl pour STIG
   sysctl:
+    sysctl_file: /etc/sysctl.d/50-stig.conf
     name: "{{ item.name }}"
     value: "{{ item.value }}"
     state: present
     reload: yes
-    sysctl_set: yes
+    sysctl_set: no
   with_items:
     - { name: 'kernel.randomize_va_space',              value: "{{ ul_stig_kernel_randomize_va_space }}" }
     - { name: 'net.ipv4.conf.default.send_redirects',   value: "{{ ul_stig_net_ipv4_conf_default_send_redirects }}" }
