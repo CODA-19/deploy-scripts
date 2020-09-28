@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+#
+# To use it:
+#   yum install -y curl
+#   curl https://raw.githubusercontent.com/CODA-19/deploy-scripts/master/scripts/bootstrap.sh | bash
+#
 
 INSTALL_BASE=/opt/coda19
 
@@ -25,4 +30,4 @@ pip install -r requirements.txt
 
 #### Launch site config playbook
 
-ansible-playbook --inventory localhost playbooks/bootstrap.yml
+ansible-playbook --inventory localhost playbooks/misc/bootstrap.yml

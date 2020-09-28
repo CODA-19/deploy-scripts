@@ -1,0 +1,8 @@
+---
+
+- name: Deploy the current box as the ORANGE one
+  hosts: localhost
+  vars_files:
+    - "{{ inventory_dir }}/vaults/vault.{{ coda19.site.id }}"
+  roles:
+    - _orange

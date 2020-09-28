@@ -1,5 +1,6 @@
 .vagrant
 become.pass
 become.pass.*
-vault.*
+vault.pass
+vault.*.pass
 venv/

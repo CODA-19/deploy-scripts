@@ -1,6 +1,6 @@
 ---
 
-- name: Bootstrap site config on this host
+- name: Bootstrap localhost
   hosts: localhost
 
   vars_prompt:
@@ -48,3 +48,6 @@
       copy:
         content: "{{ _input_site_passphrase }}"
         dest: /opt/coda19/deploy-scripts/ansible/vault.pass
+        owner: root
+        group: wheel
+        mode: 0660

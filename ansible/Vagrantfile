@@ -67,17 +67,17 @@ Vagrant.configure("2") do |config|
 
   SHELL
 
-  config.vm.provision "ansible" do |ansible|
-    ansible.verbose  = "v"
-    ansible.raw_arguments  = [
-      "--become",
-      #"--tags=_common",
-      #"--tags=_common_accounts",
-      #"--tags=ul_postgresql",
-      #"--tags=ul_minio",
-      #"--tags=ul_podman",
-    ]
-    ansible.playbook = "playbooks/vagrant.yml"
-  end
+  # config.vm.provision "ansible" do |ansible|
+  #   ansible.verbose  = "v"
+  #   ansible.raw_arguments  = [
+  #     "--become",
+  #     #"--tags=_common",
+  #     #"--tags=_common_accounts",
+  #     #"--tags=ul_postgresql",
+  #     #"--tags=ul_minio",
+  #     #"--tags=ul_podman",
+  #   ]
+  #   ansible.playbook = "playbooks/misc/vagrant.yml"
+  # end
 
 end
