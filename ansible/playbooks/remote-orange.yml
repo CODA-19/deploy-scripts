@@ -1,0 +1,8 @@
+---
+
+- name: Deploy and maintain the «orange boxes»
+  hosts: orange
+  vars_files:
+    - "{{ inventory_dir }}/group_vars/vault.{{ coda19.site.id }}"
+  roles:
+    - _orange

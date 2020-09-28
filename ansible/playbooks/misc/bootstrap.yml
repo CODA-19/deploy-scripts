@@ -1,7 +1,12 @@
 ---
+#
+# How to invoke on localhost:
+#
+#   ansible-playbook --inventory localhost, playbooks/misc/bootstrap.yml
+#
 
-- name: Bootstrap localhost
-  hosts: localhost
+- name: Bootstrap server
+  hosts: all
 
   vars_prompt:
 

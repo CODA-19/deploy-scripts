@@ -1,4 +1,9 @@
 ---
+#
+# How to invoke on localhost:
+#
+#   ansible-playbook --inventory localhost, playbooks/localhost-green.yml
+#
 
 - name: Deploy the current box as the GREEN one
   hosts: localhost

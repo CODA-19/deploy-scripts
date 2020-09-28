@@ -1,4 +1,9 @@
 ---
+#
+# How to invoke on localhost:
+#
+#   ansible-playbook --inventory localhost, playbooks/localhost-orange.yml
+#
 
 - name: Deploy the current box as the ORANGE one
   hosts: localhost

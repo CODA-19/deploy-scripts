@@ -30,4 +30,4 @@ pip install -r requirements.txt
 
 #### Launch site config playbook
 
-ansible-playbook --inventory localhost playbooks/misc/bootstrap.yml
+ansible-playbook --inventory localhost, playbooks/misc/bootstrap.yml
