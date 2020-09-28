@@ -7,7 +7,7 @@
 
 - name: Bootstrap server
   hosts: all
-
+  connection: local
   vars_prompt:
 
     - prompt: "Enter your site ID (110-120): "
@@ -16,10 +16,6 @@
 
     - prompt: "Enter this host's role [orange|green]: "
       name: _input_host_role
-      private: no
-
-    - prompt: "Enter provided passphrase: "
-      name: _input_site_passphrase
       private: no
 
   tasks:
@@ -48,11 +44,3 @@
         - section: host
           option: role
           value: "{{ _input_host_role }}"
-
-    - name: COPY | Create vault.pass file
-      copy:
-        content: "{{ _input_site_passphrase }}"
-        dest: /opt/coda19/deploy-scripts/ansible/vault.pass
-        owner: root
-        group: wheel
-        mode: 0660

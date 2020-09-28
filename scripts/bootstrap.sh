@@ -28,6 +28,13 @@ source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 
-#### Launch site config playbook
+#### Set current site passphrase
 
-ansible-playbook --inventory localhost, playbooks/misc/bootstrap.yml
+read -p 'Enter provided passphrase: ' PASSPHRASE
+
+echo "${PASSPHRASE}" > vault.pass
+chmod 0660 vault.pass
+
+#### Launch bootstrap playbook
+
+#ansible-playbook --inventory localhost, playbooks/misc/bootstrap.yml
