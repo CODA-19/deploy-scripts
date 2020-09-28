@@ -1,0 +1,14 @@
+---
+
+- name: POSTGRESQL_USER | Creates database user
+  postgresql_user:
+    name: coda19-fihrbase
+    # TODO: password from vault
+    password: xqZWPTSmucD5eSeAkunRFNvBbp-60Wm_
+  become_user: postgres
+
+- name: POSTGRESQL_DB | Creates database with owner
+  postgresql_db:
+    name: coda19-fihrbase
+    owner: coda19-fihrbase
+  become_user: postgres
