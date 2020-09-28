@@ -12,7 +12,7 @@ GREEN=$(tput setaf 2)
 
 #### Install required packages
 
-echo "${BOLD}*** Installing requirements ***${NORMAL}"
+echo "${BOLD}${YELLOW}*** Installing requirements ***${NORMAL}"
 
 yum install -y curl \
                wget \
@@ -22,14 +22,14 @@ yum install -y curl \
 
 #### Clone CODA19 repository scripts locally
 
-echo "${BOLD}*** Cloning deployment scripts ***${NORMAL}"
+echo "${BOLD}${YELLOW}*** Cloning deployment scripts ***${NORMAL}"
 
 mkdir -p ${INSTALL_BASE}
 git clone https://github.com/CODA-19/deploy-scripts.git ${INSTALL_BASE}/deploy-scripts/
 
 #### Create VENV
 
-echo "${BOLD}*** Creating Ansible Virtual Environment ***${NORMAL}"
+echo "${BOLD}${YELLOW}*** Creating Ansible Virtual Environment ***${NORMAL}"
 
 cd ${INSTALL_BASE}/deploy-scripts/ansible
 python3 -m venv venv
@@ -39,7 +39,7 @@ pip install -r requirements.txt
 
 #### Set current site passphrase
 
-echo "${BOLD}*** Enter required information ***${NORMAL}"
+echo "${BOLD}${YELLOW}*** Enter required information ***${NORMAL}"
 
 #read -p 'Enter your site ID (110-120): '      SITEID
 #read -p 'Enter this VM role [orange|green]: ' VMROLE
