@@ -10,15 +10,15 @@
   connection: local
   vars_prompt:
 
-    - prompt: "Enter your site ID (110-120): "
+    - prompt: "Enter your site ID (110-120)"
       name: _input_site_id
       private: no
 
-    - prompt: "Enter your site PASSPHRASE: "
+    - prompt: "Enter your site PASSPHRASE"
       name: _input_site_passphrase
       private: no
 
-    - prompt: "Enter this VM role [orange|green]: "
+    - prompt: "Enter this VM role [orange|green]"
       name: _input_host_role
       private: no
 
@@ -31,15 +31,9 @@
         path: /etc/ansible/facts.d/
         state: directory
 
-    - name: FILE | Ensure /etc/ansible/facts.d/coda19.fact files is present
-      file:
-        path: /etc/ansible/facts.d/coda19.fact
-        owner: root
-        group: root
-        mode: 0644
-
-    - name: INI_FILE | Add entries to /etc/ansible/facts.d/coda19.facts
+    - name: INI_FILE | Add entries to /etc/ansible/facts.d/coda19.fact
       ini_file:
+        path: /etc/ansible/facts.d/coda19.fact
         section: "{{ item.section }}"
         option: "{{ item.option }}"
         value: "{{ item.value }}"
@@ -49,7 +43,7 @@
           value: "{{ _input_site_id }}"
         - section: host
           option: role
-          value: "{{ _input_host_role }}"
+          value: "{{ _input_host_role | lower }}"
 
     ###### PASSPHRASE
 

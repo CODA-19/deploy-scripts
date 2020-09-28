@@ -2,4 +2,4 @@
 env=pr
 
 [all]
-localhost 
+localhost       ansible_connection=local

@@ -13,9 +13,5 @@ yum install -y curl
 Download bootstrap script, execute it and complete informations:
 
 ```bash
-curl -s https://raw.githubusercontent.com/CODA-19/deploy-scripts/master/scripts/bootstrap.sh \
-     -o /tmp/bootstrap.sh
-
-bash /tmp/bootstrap.sh
-rm -rf /tmp/bootstrap.sh
+curl -s https://raw.githubusercontent.com/CODA-19/deploy-scripts/master/scripts/bootstrap.sh | bash
 ```

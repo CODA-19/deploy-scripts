@@ -68,5 +68,5 @@ chmod a+r /etc/profile.d/ansible.sh
 echo "---dummy---" > vault.pass
 
 #### Launch bootstrap playbook
-#
-#ansible-playbook --inventory localhost, playbooks/misc/bootstrap.yml
+
+ansible-playbook --inventory hosts.localhost playbooks/misc/bootstrap.yml
