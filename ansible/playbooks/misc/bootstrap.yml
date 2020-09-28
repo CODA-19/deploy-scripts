@@ -14,11 +14,17 @@
       name: _input_site_id
       private: no
 
+    - prompt: "Enter your site PASSPHRASE: "
+      name: _input_site_passphrase
+      private: no
+
     - prompt: "Enter this VM role [orange|green]: "
       name: _input_host_role
       private: no
 
   tasks:
+
+    ###### LOCAL FACTS
 
     - name: FILE | Ensure /etc/ansible/facts.d directory is present
       file:
@@ -44,3 +50,13 @@
         - section: host
           option: role
           value: "{{ _input_host_role }}"
+
+    ###### PASSPHRASE
+
+    - name: COPY | Create vault.pass file
+      copy:
+        content: "{{ _input_site_passphrase }}"
+        dest: /opt/coda19/deploy-scripts/ansible/vault.pass
+        owner: root
+        group: wheel
+        mode: 0660
