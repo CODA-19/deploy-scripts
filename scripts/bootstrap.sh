@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-INSTALL_BASE=/opt/coda19
+export INSTALL_BASE=/opt/coda19
 
 #### Define colors
 
@@ -36,6 +36,23 @@ python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
+
+#### Create VENV activators
+
+echo "${BOLD}${YELLOW}*** Creating Ansible Virtual Environment Activators ***${NORMAL}"
+
+cat << EOT > /usr/local/bin/env-ansible.sh
+#!/usr/bin/env bash
+source ${INSTALL_BASE}/deploy-scripts/ansible/venv/bin/activate
+EOT
+
+chmod +x /usr/local/bin/env-ansible
+
+cat << EOT > /etc/profile.d/ansible.sh
+alias env-ansible='source /usr/local/bin/env-ansible.sh && cd ${INSTALL_BASE}/deploy-scripts/ansible'
+EOT
+
+chmod a+r /etc/profile.d/ansible.sh
 
 #### Set current site passphrase
 
