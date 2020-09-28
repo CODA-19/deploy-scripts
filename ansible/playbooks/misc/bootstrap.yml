@@ -14,7 +14,7 @@
       name: _input_site_id
       private: no
 
-    - prompt: "Enter this host's role [orange|green]: "
+    - prompt: "Enter this VM role [orange|green]: "
       name: _input_host_role
       private: no
 
