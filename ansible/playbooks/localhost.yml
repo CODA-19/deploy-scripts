@@ -1,0 +1,17 @@
+---
+
+- name: Deploy the current box based on local facts (coda19.host.role)
+  hosts: all
+  connection: local
+  vars_files:
+    - "{{ inventory_dir }}/vaults/vault.{{ coda19.site.id }}"
+  tasks:
+    - name: INCLUDE_ROLE | _ORANGE
+      include_role:
+        name: _orange
+      when: "coda19.host.role|lower == 'orange'"
+
+    - name: INCLUDE_ROLE | _GREEN
+      include_role:
+        name: _green
+      when: "coda19.host.role|lower == 'green'"

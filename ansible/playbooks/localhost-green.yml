@@ -2,7 +2,10 @@
 #
 # How to invoke on localhost:
 #
-#   ansible-playbook --inventory localhost, playbooks/localhost-green.yml
+#   env-ansible
+#   ansible-playbook --inventory hosts.localhost playbooks/localhost-green.yml
+#
+# NOTICE: this playbook don't filter on current server's entered role during bootstrap.
 #
 
 - name: Deploy the current box as the GREEN one

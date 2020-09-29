@@ -22,6 +22,20 @@
       name: _input_host_role
       private: no
 
+# TODO: check for common denominator: scheme://host:port or host:port ? (yum proxy, env-vars, profile.d, etc)
+#
+#    - prompt: "Enter your site proxy"
+#      name: _input_proxy
+#      private: no
+
+#    - prompt: "Enter your site proxy hostname"
+#      name: _input_proxy_hostname
+#      private: no
+
+#    - prompt: "Enter your site proxy port"
+#      name: _input_proxy_port
+#      private: no
+
   tasks:
 
     ###### LOCAL FACTS

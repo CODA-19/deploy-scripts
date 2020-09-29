@@ -54,19 +54,10 @@ EOT
 
 chmod a+r /etc/profile.d/ansible.sh
 
-#### Set current site passphrase
-
-#echo "${BOLD}${YELLOW}*** Enter required information ***${NORMAL}"
-#read -p 'Enter your site ID (110-120): '      SITEID
-#read -p 'Enter this VM role [orange|green]: ' VMROLE
-#read -p 'Enter provided passphrase: '         PASSPHRASE
-#echo "${PASSPHRASE}" > vault.pass
-#chmod 0660 vault.pass
-
-#### Set current site passphrase to a dummy random value
-
-echo "---dummy---" > vault.pass
-
 #### Launch bootstrap playbook
 
+echo "${BOLD}${YELLOW}*** Launching Bootstrap Ansible Playbook ***${NORMAL}"
+
+# We need a dummy vault.pass file, if not bootstrap playbook won't start
+echo "---dummy---" > vault.pass
 ansible-playbook --inventory hosts.localhost playbooks/misc/bootstrap.yml
