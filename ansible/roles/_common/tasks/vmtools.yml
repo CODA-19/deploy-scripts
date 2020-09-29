@@ -25,9 +25,6 @@
         path: /dev/virtio-ports/org.qemu.guest_agent.0
       register: _stat
 
-    - debug:
-        var: _stat
-
     - block:
 
         - name: YUM | Install guest tools (KVM)
