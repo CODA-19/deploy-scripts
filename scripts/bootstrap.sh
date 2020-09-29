@@ -67,7 +67,7 @@ cat << EOT > /usr/local/bin/env-ansible.sh
 source ${INSTALL_BASE}/deploy-scripts/ansible/venv/bin/activate
 EOT
 
-chmod +x /usr/local/bin/env-ansible
+chmod +x /usr/local/bin/env-ansible.sh
 
 cat << EOT > /etc/profile.d/ansible.sh
 alias env-ansible='source /usr/local/bin/env-ansible.sh && cd ${INSTALL_BASE}/deploy-scripts/ansible'
