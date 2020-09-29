@@ -6,12 +6,6 @@
     - ul_stig
     - ul_stig_kernel
 
-- name: IMPORT_TASKS | postfix.yml
-  import_tasks: postfix.yml
-  tags:
-    - ul_stig
-    - ul_stig_postfix
-
 - name: "IMPORT_TASKS | repository.yml"
   import_tasks: repository.yml
   tags:

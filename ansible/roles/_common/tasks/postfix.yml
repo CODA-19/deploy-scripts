@@ -1,3 +1,15 @@
 ---
 
-# TODO
+- name: YUM | Ensure postfix is installed
+  yum:
+    name: postfix
+    state: present
+
+- name: FILE | Set owner/group/mode on /etc/postfix/transport
+  file:
+    path: /etc/postfix/transport
+    owner: root
+    group: root
+    mode: 0644
+
+# TODO: RELAY UP TO SMTP
