@@ -1,3 +1,36 @@
 ---
 
-# TODO
+- name: "SYSTEMD | Ensure firewalld is enabled and started"
+  systemd:
+    name: firewalld
+    state: started
+    enabled: yes
+
+###### Add zones
+
+- name: "FIREWALLD | Add local-red zone"
+  firewalld:
+    zone: local-red
+    state: present
+    permanent: yes
+  register: _fw_local_red
+
+- name: "FIREWALLD | Add local-orange zone"
+  firewalld:
+    zone: local-orange
+    state: present
+    permanent: yes
+  register: _fw_local_orange
+
+- name: "FIREWALLD | Add local-green zone"
+  firewalld:
+    zone: local-green
+    state: present
+    permanent: yes
+  register: _fw_local_green
+
+- name: "FIREWALLD | Reload if new zones added"
+  systemd:
+    name: firewalld
+    state: reloaded
+  when: _fw_local_red.changed or _fw_local_orange.changed or _fw_local_green.changed

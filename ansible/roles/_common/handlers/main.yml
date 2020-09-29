@@ -32,3 +32,10 @@
     name: node_exporter
     state: restarted
     daemon_reload: yes
+
+######
+
+- name: reload firewalld
+  systemd:
+    name: firewalld
+    state: reloaded
