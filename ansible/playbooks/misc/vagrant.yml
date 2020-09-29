@@ -5,7 +5,7 @@
   vars:
     env: local
   vars_files:
-    - "{{ playbook_dir }}/../group_vars/all"
+    - "{{ playbook_dir }}/../../group_vars/all"
   roles:
     # Put here the roles you want to test
     - _common
