@@ -1,0 +1,7 @@
+---
+
+_common_selinux_packages:
+  - libselinux-utils
+  - setroubleshoot-server
+  - python3-libselinux
+  - python3-policycoreutils

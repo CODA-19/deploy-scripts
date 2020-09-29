@@ -2,11 +2,7 @@
 
 - name: YUM | Add SELinux useful packages
   yum:
-    name:
-      - libselinux-utils
-      - libselinux-python
-      - policycoreutils-python
-      - setroubleshoot-server
+    name: "{{ _common_selinux_packages }}"
     state: present
 
 - name: SELINUX | Set permanent SELinux mode

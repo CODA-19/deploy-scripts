@@ -1,0 +1,18 @@
+---
+
+ul_postgresql_deps:
+  - epel-release
+  - ca-certificates
+  - glibc-common
+  - python-psycopg2
+  - python-pycurl
+  - libselinux-python
+
+# Service name
+# Must keep the .service suffix
+
+ul_postgresql_service_name: "postgresql-{{ ul_postgresql_version }}.service"
+
+# Others
+
+ul_postgresql_bin_directory: "/usr/pgsql-{{ ul_postgresql_version }}/bin"

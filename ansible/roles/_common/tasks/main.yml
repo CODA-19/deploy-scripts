@@ -1,5 +1,13 @@
 ---
 
+- include_vars: "{{ item }}"
+  with_first_found:
+    - "../vars/{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yml"
+    - "../vars/{{ ansible_distribution | lower }}.yml"
+    - "../vars/empty.yml"
+  tags:
+    - always
+
 - name: "IMPORT_TASKS | accounts.yml"
   import_tasks: accounts.yml
   tags:
