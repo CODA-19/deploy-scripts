@@ -10,6 +10,14 @@ YELLOW=$(tput setaf 3)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 
+#### Check if running as root
+
+if [ "$EUID" -ne 0 ]
+then
+  echo "${BOLD}${RED}!!!! Please run as root or use sudo !!!!${NORMAL}"
+  exit
+fi
+
 #### Install required packages
 
 echo "${BOLD}${YELLOW}*** Installing requirements ***${NORMAL}"
