@@ -16,4 +16,12 @@
     - { key: localpkg_gpgcheck, val: "{{ ul_stig_yum_localpkg_gpgcheck }}" }
     - { key: gpgcheck, val: "{{ ul_stig_yum_gpgcheck }}" }
     - { key: repo_gpgcheck, val: "{{ ul_stig_yum_repo_gpgcheck }}" }
-  notify: yum clear cache
+  register: _gpg
+
+# clean immediately rather than at the end of a play
+
+- name: SHELL | Clean all YUM caches
+  shell: yum clean all && rm -rf /var/cache/yum/*
+  args:
+    warn: false
+  when: _gpg.changed

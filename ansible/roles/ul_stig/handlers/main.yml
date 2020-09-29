@@ -1,4 +1,0 @@
----
-
-- name: yum clear cache
-  command: yum clean all; rm -rf /var/cache/yum/*
