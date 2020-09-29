@@ -14,11 +14,24 @@ GREEN=$(tput setaf 2)
 
 echo "${BOLD}${YELLOW}*** Installing requirements ***${NORMAL}"
 
-yum install -y curl \
+# Common packages
+
+yum install -y curl \
                wget \
                git \
-               python36 \
-               python36-virtualenv
+               python3 \
+               python3-pip
+
+# Specific by version
+
+MAJOR_VERSION=$(cat /etc/centos-release | tr -dc '0-9.'|cut -d \. -f1)
+
+if [[ "$MAJOR_VERSION" == "7" ]]; then
+  yum install -y python-virtualenv
+
+elif [[ "$MAJOR_VERSION" == "8" ]]; then
+  yum install -y python3-virtualenv
+fi
 
 #### Clone CODA19 repository scripts locally
 
