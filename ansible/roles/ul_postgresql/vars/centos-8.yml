@@ -4,6 +4,7 @@ ul_postgresql_deps:
   - epel-release
   - ca-certificates
   - glibc-common
+  - glibc-locale-source
   - python3-psycopg2
   - python3-pycurl
   - python3-libselinux
