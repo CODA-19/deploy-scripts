@@ -1,0 +1,90 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.require_version ">= 1.8.0"
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "centos/8"
+
+  if Vagrant.has_plugin?("vagrant-hostmanager")
+    config.hostmanager.enabled = true
+    config.hostmanager.manage_host = true
+    config.hostmanager.manage_guest = true
+  end
+
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.cpus = 2
+    libvirt.memory = 4096
+
+    # Create a virtio channel for use by the qemu-guest agent (time sync, snapshotting, etc)
+    libvirt.channel :type => 'unix', :target_name => 'org.qemu.guest_agent.0', :target_type => 'virtio'
+  end
+
+  config.vm.provision "shell", inline: <<-SHELL
+
+       # If present, set yum proxy to use default gateway Squid Proxy
+
+       export GATEWAY=$(/sbin/ip route | awk '/default/ { print $3 }')
+
+       timeout 5 bash -c "</dev/tcp/${GATEWAY}/3128"
+       if [ $? -eq 0 ]
+       then
+          yum-config-manager --save --setopt=proxy=http://${GATEWAY}:3128 >/dev/null
+       fi
+
+       # Disable mirrorlist usage and use the default baseurl HTTP mirror. This
+       # will make sure that the squid proxy effectively cache requested packages.
+
+       sed -i 's/^mirrorlist/#mirrorlist/g'  /etc/yum.repos.d/CentOS-*.repo
+       sed -i 's/^#baseurl/baseurl/g'        /etc/yum.repos.d/CentOS-*.repo
+
+       # Change repositories baseurl to a nearby mirror that uses HTTP
+       #
+       # A bug in python3-dnf-plugins-core force us to use sed rather than yum-config-manager
+       # See: https://bugzilla.redhat.com/show_bug.cgi?id=1702678
+       #
+       # Since the default baseurl is http://mirror.centos.org and is cacheable, we can keep
+       # this one by default.
+       #
+       #sed -i 's/http:\/\/mirror.centos.org\/$contentdir/http:\/\/centos.mirror.iweb.ca/'  /etc/yum.repos.d/CentOS-*.repo
+
+       # Clean caches and update
+
+       yum clean all
+       rm -rf /var/cache/yum
+       yum update -y
+
+       # Install epel-release, remove metalink parameters, uncomment baseurl, replace baseurl for nerby HTTP site
+
+       yum install -y epel-release
+       yum update -y
+
+       sed -i 's/^metalink/#metalink/g'  /etc/yum.repos.d/epel*.repo
+       sed -i 's/^#baseurl/baseurl/g'    /etc/yum.repos.d/epel*.repo
+
+       yum-config-manager --save --setopt=epel.baseurl='http://fedora-epel.mirror.iweb.com/$releasever/Everything/$basearch/'      >/dev/null
+       yum-config-manager --save --setopt=epel.repo_gpgcheck=0
+
+       yum-config-manager --save --setopt=epel-modular.baseurl='http://fedora-epel.mirror.iweb.com/$releasever/Modular/$basearch/' >/dev/null
+       yum-config-manager --save --setopt=epel-modular.repo_gpgcheck=0
+
+  SHELL
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.verbose  = "v"
+    ansible.raw_arguments  = [
+      --become,
+      #"--tags=ul_stig_repository",
+      #"--tags=ul_stig",
+      #"--tags=_common_selinux",
+      #"--tags=_common_accounts",
+      #"--tags=_common_firewall",
+      #"--tags=ul_postgresql",
+      #"--tags=ul_minio",
+      #"--tags=ul_podman",
+    ]
+    ansible.playbook = "playbooks/misc/vagrant.yml"
+  end
+
+end
