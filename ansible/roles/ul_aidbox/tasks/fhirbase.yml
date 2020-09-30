@@ -1,0 +1,13 @@
+---
+- name: "GET_URL | Download FHIR client"
+  get_url:
+    url: https://github.com/fhirbase/fhirbase/releases/download/v0.0.6/fhirbase-linux-amd64
+    dest: /usr/local/sbin/fhirbase
+    mode: 0755
+
+# Running over a previous attempts will lead to severe protestations, simply ignore them.
+- name: "COMMAND | Initialize the database schema"
+  command: "/usr/local/sbin/fhirbase -n 127.0.0.1 -d {{ ul_aidbox_db_name }} -U {{ ul_aidbox_db_owner }} init"
+  ignore_errors: yes
+  environment:
+    PGPASSWORD: "{{ ul_aidbox_db_password }}"

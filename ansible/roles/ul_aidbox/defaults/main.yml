@@ -1,3 +1,12 @@
 ---
-
 ul_aidbox_port: 8888
+ul_aidbox_db_owner: coda19_fihrbase
+ul_aidbox_db_name: coda19_fihrbase
+
+# Those are used for aidbox_svc.conf.j2
+# TODO: Generate "real" passwords in vaults
+ul_aidbox_svc_conf_admin_login: admin
+ul_aidbox_svc_conf_admin_password: secret
+ul_aidbox_svc_conf_client_id: root
+ul_aidbox_svc_conf_client_secret: secret
+

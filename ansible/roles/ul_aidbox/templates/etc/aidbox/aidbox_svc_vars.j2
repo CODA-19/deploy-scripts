@@ -1,0 +1,32 @@
+###
+### {{ ansible_managed }}
+###
+# This a set of variables used when systemd calls "podman run" to spawn
+# the AidBox REST service API.
+# KEEP THIS FILE PRIVATE AS IT CONTAINS YOUR LICENCE KEY
+
+{# This information is in the vault file #}
+# LIcencing information
+AIDBOX_LICENSE_ID={{ ul_aidbox_svc_conf_license_id }}
+AIDBOX_LICENSE_KEY={{ ul_aidbox_svc_conf_license_key }}
+
+# Client credentials
+AIDBOX_CLIENT_ID='root'
+AIDBOX_CLIENT_SECRET=secret
+
+# Admin credential
+AIDBOX_ADMIN_ID=admin
+AIDBOX_ADMIN_PASSWORD=secret
+
+# The REST service listens on this port
+AIDBOX_PORT=8888
+
+# Do not change, unless you know what you are doing
+AIDBOX_FHIR_VERSION=3.0.1
+
+# FHIR Database
+PGPORT=5432
+PGHOST=127.0.0.1
+PGUSER=coda19_fihrbase
+PGDATABASE=coda19_fihrbase
+PGPASSWORD={{ ul_aidbox_db_password }}

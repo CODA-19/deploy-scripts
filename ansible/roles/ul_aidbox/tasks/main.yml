@@ -1,1 +1,18 @@
 ---
+- name: "IMPORT_TASKS | database.yml"
+  import_tasks: database.yml
+  tags:
+    - ul_aidbox
+    - ul_aidbox_database
+
+- name: "IMPORT_TASKS | fhirbase.yml"
+  import_tasks: fhirbase.yml
+  tags:
+    - ul_aidbox
+    - ul_aidbox_fhirbase
+
+- name: "IMPORT_TASKS | rest_service.yml"
+  import_tasks: rest_service.yml
+  tags:
+    - ul_aidbox
+    - ul_aidbox_fhirbase
