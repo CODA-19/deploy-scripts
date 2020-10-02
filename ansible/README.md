@@ -32,6 +32,19 @@ brew cask install vagrant
 
 ### Using Vagrant for local testing
 
+Use a specific Vagrant:
+
+```bash
+# Temporarily - Option 1: set environment variable at session level
+export VAGRANT_VAGRANTFILE=Vagrantfile.centos-8
+
+# Temporarily - Option 2: set environment variable at the command level
+VAGRANT_VAGRANTFILE=Vagrantfile.centos-8 vagrant [...]
+
+# Permanently - Use a symlink
+ln -sf Vagrantfile.centos-8 Vagrantfile
+```
+
 Create VMs and provisioning scripts:
 
 ```bash
