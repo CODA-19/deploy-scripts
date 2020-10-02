@@ -6,9 +6,23 @@ _common_accounts: []
 
 ###### NTP
 
-_common_ntp_server_1: time.nrc.ca
-_common_ntp_server_2: time.chu.nrc.ca
-_common_ntp_server_3: ntp.ovh.net
+_common_ntp_servers:
+  - time.nrc.ca
+  - time.chu.nrc.ca
+  - ntp.ovh.net
+
+###### PROXY
+
+# Proxies, when provied are enabled by default.
+# Even if enabled flag returns true, you must define a value
+# to make it truely enabled.
+
+_common_global_proxy_enabled: yes
+_common_global_proxy: "http://192.168.100.1:3128"
+_common_global_noproxy: 127.0.0.1,localhost
+
+_common_yum_proxy_enabled: yes
+_common_yum_proxy: "{{ _common_global_proxy }}"
 
 ###### PACKAGES
 

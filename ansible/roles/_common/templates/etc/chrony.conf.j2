@@ -5,9 +5,9 @@
 # Please consider joining the pool (http://www.pool.ntp.org/join.html).
 # ------------------------------------
 
-server {{ _common_ntp_server_1 }} iburst maxpoll 10
-server {{ _common_ntp_server_2 }} iburst maxpoll 10
-server {{ _common_ntp_server_3 }} iburst maxpoll 10
+{% for server in _common_ntp_servers %}
+server {{ server }} iburst maxpoll 10
+{% endfor %}
 
 # Record the rate at which the system clock gains/losses time.
 driftfile /var/lib/chrony/drift
@@ -24,7 +24,7 @@ rtcsync
 
 # Increase the minimum number of selectable sources required to adjust
 # the system clock.
-minsources 2
+minsources {{ [ _common_ntp_servers|length - 1, 1] | max }}
 
 # Allow NTP client access from local network.
 #allow 192.168.0.0/16

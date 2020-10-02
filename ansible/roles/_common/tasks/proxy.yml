@@ -1,3 +1,50 @@
 ---
 
-# TODO
+###### SYSTEM WIDE PROXY
+
+- name: COPY | Set system wide proxy settings
+  copy:
+    dest: /etc/profile.d/proxy.sh
+    mode: 0644
+    content: |
+      export PROXY={{ _common_global_proxy }}
+
+      export HTTP_PROXY=$PROXY
+      export HTTPS_PROXY=$PROXY
+      export FTP_PROXY=$PROXY
+      export NO_PROXY="{{ _common_global_noproxy }}"
+
+      export proxy=$PROXY
+      export http_proxy=$PROXY
+      export https_proxy=$PROXY
+      export ftp_proxy=$PROXY
+      export no_proxy=$NO_PROXY
+  when:
+    - _common_global_proxy_enabled
+    - _common_global_proxy|length > 0
+
+- name: FILE | Ensure system wide proxy settings are absent when disabled
+  file:
+    path: /etc/profile.d/proxy.sh
+    state: absent
+  when: not _common_global_proxy_enabled or _common_global_proxy|length == 0
+
+###### YUM PROXY
+
+- name: INI_FILE | Enable proxy in yum.conf
+  ini_file:
+    path: /etc/yum.conf
+    section: "main"
+    option: "proxy"
+    value: "{{ _common_yum_proxy }}"
+  when:
+    - _common_yum_proxy_enabled
+    - _common_yum_proxy|length > 0
+
+- name: INI_FILE | Disable proxy in yum.conf
+  ini_file:
+    path: /etc/yum.conf
+    section: "main"
+    option: "proxy"
+    state: absent
+  when: not _common_yum_proxy_enabled or _common_yum_proxy|length == 0
