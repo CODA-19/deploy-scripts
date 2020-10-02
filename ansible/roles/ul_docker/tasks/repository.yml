@@ -1,0 +1,6 @@
+---
+
+- name: COPY | Add docker-ce repository file
+  copy:
+    dest: /etc/yum.repos.d/docker-ce.repo
+    content: "{{ ul_docker_repository }}"

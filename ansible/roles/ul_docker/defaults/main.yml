@@ -1,0 +1,36 @@
+---
+
+# Proxy settings
+
+ul_docker_proxy: ""
+ul_docker_noproxy: "localhost,127.0.0.1"
+
+# Content source: https://download.docker.com/linux/centos/docker-ce.repo
+
+ul_docker_repository: |
+  [docker-ce-stable]
+  name=Docker CE Stable - $basearch
+  baseurl=https://download.docker.com/linux/centos/$releasever/$basearch/stable
+  enabled=1
+  gpgcheck=1
+  gpgkey=https://download.docker.com/linux/centos/gpg
+
+ul_docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+
+ul_docker_required_packages:
+  - yum-utils
+  - device-mapper-persistent-data
+  - lvm2
+
+ul_docker_remove_packages:
+  - docker
+  - docker-client
+  - docker-client-latest
+  - docker-common
+  - docker-latest
+  - docker-latest-logrotate
+  - docker-logrotate
+  - docker-engine

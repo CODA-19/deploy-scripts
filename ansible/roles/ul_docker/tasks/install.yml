@@ -1,0 +1,17 @@
+---
+
+- name: YUM | Install required packages
+  yum:
+    name: "{{ ul_docker_required_packages }}"
+    state: present
+
+- name: YUM | Install docker-ce
+  yum:
+    name: "{{ ul_docker_packages }}"
+    state: present
+
+- name: SYSTEMD | Ensure docker service is started and enabled
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
