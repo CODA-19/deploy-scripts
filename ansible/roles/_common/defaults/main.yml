@@ -18,7 +18,7 @@ _common_ntp_servers:
 # to make it truely enabled.
 
 _common_global_proxy_enabled: yes
-_common_global_proxy: "http://192.168.100.1:3128"
+_common_global_proxy: ""
 _common_global_noproxy: 127.0.0.1,localhost
 
 _common_yum_proxy_enabled: yes
