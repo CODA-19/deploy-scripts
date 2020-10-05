@@ -18,6 +18,11 @@ then
   exit
 fi
 
+#### Run minimal bootstrap steps
+
+echo "${BOLD}${YELLOW}*** Creating deployment user ***${NORMAL}"
+. bootstrap-common.sh
+
 #### Install required packages
 
 echo "${BOLD}${YELLOW}*** Installing requirements ***${NORMAL}"
