@@ -80,11 +80,11 @@ EOT
 
 chmod +x /usr/local/bin/env-ansible.sh
 
-cat << EOT > /etc/profile.d/ansible.sh
+cat << EOT > /etc/profile.d/env-ansible.sh
 alias env-ansible='source /usr/local/bin/env-ansible.sh && cd ${INSTALL_BASE}/deploy-scripts/ansible'
 EOT
 
-chmod a+r /etc/profile.d/ansible.sh
+chmod a+r /etc/profile.d/env-ansible.sh
 
 #### Launch bootstrap playbook
 
