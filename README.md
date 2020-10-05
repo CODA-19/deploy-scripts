@@ -21,10 +21,15 @@ export HTTPS_PROXY=${PROXY}
 Download bootstrap script and execute it:
 
 ```bash
-curl -s https://raw.githubusercontent.com/CODA-19/deploy-scripts/master/ansible/scripts/bootstrap.sh \
-     -o /tmp/bootstrap.sh
+cd ${HOME}
 
-bash /tmp/bootstrap.sh
+curl -s https://raw.githubusercontent.com/CODA-19/deploy-scripts/master/ansible/scripts/bootstrap-common.sh \
+     -o bootstrap-common.sh
+
+curl -s https://raw.githubusercontent.com/CODA-19/deploy-scripts/master/ansible/scripts/bootstrap.sh \
+    -o bootstrap.sh
+
+bash bootstrap.sh
 ```
 
 ## Useful commands
@@ -33,6 +38,10 @@ For all commands, the Ansible virtualenv must be loaded beforehand. It is simple
 to use activators installed by the `bootstrap.sh` script:
 
 ```bash
+# Only if in the same session than bootstrap execution
+source /etc/profile.d/env-ansible.sh
+
+# Activage environment
 env-ansible
 ```
 
