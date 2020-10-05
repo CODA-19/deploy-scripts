@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 export INSTALL_BASE=/opt/coda19
+export VENV_DIR=${INSTALL_BASE}/venv-ansible
 
 #### Define colors
 
@@ -51,15 +52,20 @@ fi
 echo "${BOLD}${YELLOW}*** Cloning deployment scripts ***${NORMAL}"
 
 mkdir -p ${INSTALL_BASE}
-git clone https://github.com/CODA-19/deploy-scripts.git ${INSTALL_BASE}/deploy-scripts/
+if [ -d "/vagrant" ]; then
+  mkdir -p ${INSTALL_BASE}/deploy-scripts
+  ln -sf /vagrant ${INSTALL_BASE}/deploy-scripts/ansible
+else
+  git clone https://github.com/CODA-19/deploy-scripts.git ${INSTALL_BASE}/deploy-scripts/
+fi
 
 #### Create VENV
 
 echo "${BOLD}${YELLOW}*** Creating Ansible Virtual Environment ***${NORMAL}"
 
 cd ${INSTALL_BASE}/deploy-scripts/ansible
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv ${VENV_DIR}
+source ${VENV_DIR}/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 
@@ -69,7 +75,7 @@ echo "${BOLD}${YELLOW}*** Creating Ansible Virtual Environment Activators ***${N
 
 cat << EOT > /usr/local/bin/env-ansible.sh
 #!/usr/bin/env bash
-source ${INSTALL_BASE}/deploy-scripts/ansible/venv/bin/activate
+source ${VENV_DIR}/bin/activate
 EOT
 
 chmod +x /usr/local/bin/env-ansible.sh
