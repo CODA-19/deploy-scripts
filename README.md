@@ -10,11 +10,10 @@ Ensure `curl` is installed:
 yum install -y curl
 ```
 
-Export proxy if needed:
+If internet access needs proxy, adjust values and export accordingly:
 
-**TODO: finish this step**
 ```bash
-export PROXY=
+export PROXY=http://proxy.company.com:8080
 export HTTP_PROXY=${PROXY}
 export HTTPS_PROXY=${PROXY}
 ```
@@ -22,7 +21,7 @@ export HTTPS_PROXY=${PROXY}
 Download bootstrap script and execute it:
 
 ```bash
-curl -s https://raw.githubusercontent.com/CODA-19/deploy-scripts/master/scripts/bootstrap.sh \
+curl -s https://raw.githubusercontent.com/CODA-19/deploy-scripts/master/ansible/scripts/bootstrap.sh \
      -o /tmp/bootstrap.sh
 
 bash /tmp/bootstrap.sh
