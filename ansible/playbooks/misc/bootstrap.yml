@@ -22,19 +22,13 @@
       name: _input_host_role
       private: no
 
-# TODO: check for common denominator: scheme://host:port or host:port ? (yum proxy, env-vars, profile.d, etc)
-#
-#    - prompt: "Enter your site proxy"
-#      name: _input_proxy
-#      private: no
+    - prompt: "Enter your site PROXY, if required, for internet access (e.g.: http://proxy.company.com:8080)"
+      name: _input_proxy
+      private: no
 
-#    - prompt: "Enter your site proxy hostname"
-#      name: _input_proxy_hostname
-#      private: no
-
-#    - prompt: "Enter your site proxy port"
-#      name: _input_proxy_port
-#      private: no
+    - prompt: "Enter your site NTP server address"
+      name: _input_ntp
+      private: no
 
   tasks:
 
@@ -55,6 +49,12 @@
         - section: site
           option: id
           value: "{{ _input_site_id }}"
+        - section: site
+          option: proxy
+          value: "{{ _input_proxy }}"
+        - section: site
+          option: ntp
+          value: "{{ _input_ntp }}"
         - section: host
           option: role
           value: "{{ _input_host_role | lower }}"
