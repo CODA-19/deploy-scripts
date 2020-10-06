@@ -1,12 +1,39 @@
 ---
 
+#------------------------------------------------------------------------------
 # CENTOS 7
-#sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_7/devel:kubic:libcontainers:stable.repo
-#sudo yum -y install podman
+#------------------------------------------------------------------------------
 
+- block:
+
+    - name: COPY | Create upstream respository file (/etc/yum.repos.d/devel:kubic:libcontainers:stable.repo)
+      copy:
+        dest: /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo
+        content: |
+          [devel_kubic_libcontainers_stable]
+          name=Stable Releases of Upstream github.com/containers packages (CentOS_7)
+          type=rpm-md
+          baseurl=https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_7/
+          gpgcheck=1
+          gpgkey=https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_7/repodata/repomd.xml.key
+          enabled=1
+
+  when:
+    - ul_podman_install_upstream|bool
+    - ansible_distribution == 'CentOS'
+    - ansible_distribution_major_version == 7
+
+#------------------------------------------------------------------------------
 # CENTOS 8
-#sudo dnf -y module disable container-tools
-#sudo dnf -y install 'dnf-command(copr)'
-#sudo dnf -y copr enable rhcontainerbot/container-selinux
-#sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_8/devel:kubic:libcontainers:stable.repo
-#sudo dnf -y install podman
+#------------------------------------------------------------------------------
+
+- block:
+
+    - name: DEBUG | NOT IMPLEMENTED YET
+      debug:
+        msg: "!!!! NOTE IMPLEMENTED YET !!!!"
+
+  when:
+    - ul_podman_install_upstream|bool
+    - ansible_distribution == 'CentOS'
+    - ansible_distribution_major_version == 8

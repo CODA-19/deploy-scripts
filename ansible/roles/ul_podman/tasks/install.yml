@@ -1,17 +1,6 @@
 ---
 
-- name: "YUM | Install PODMAN - From OS provided repositories"
+- name: "YUM | Install PODMAN"
   yum:
     name: "{{ ul_podman_packages }}"
     state: present
-
-- name: "COPY | Backup original configuration files"
-  copy:
-    src: "/etc/containers/{{ item }}"
-    dest: "/etc/containers/{{item }}.orig"
-    remote_src: yes
-    force: no
-  with_items:
-    - policy.json
-    - registries.conf
-    - storage.conf

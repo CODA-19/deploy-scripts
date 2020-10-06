@@ -1,23 +1,18 @@
 ---
 
+- name: "COPY | Backup original configuration files"
+  copy:
+    src: "/etc/containers/{{ item }}"
+    dest: "/etc/containers/{{item }}.orig"
+    remote_src: yes
+    force: no
+  with_items:
+    - policy.json
+    - registries.conf
+    - storage.conf
+
 - name: "SYSCTL | Set max_user_namespaces={{ ul_podman_max_user_namespaces }}"
   sysctl:
     name: user.max_user_namespaces
     value: "{{ ul_podman_max_user_namespaces }}"
     state: present
-
-#
-# These steps aren't necessary anymore, because useradd/userdel and podman installation automatically generates
-# subuid and subgids.
-#
-#- name: "GETENT | Set getent_passwd fact"
-#  getent:
-#    database: passwd
-#
-#- name: "TEMPLATE | Generage /etc/subuid and /etc/subgid from provided usernames"
-#  template:
-#    src: "etc/subuid-subgid.j2"
-#    dest: "/etc/{{ item }}"
-#  with_items:
-#    - subuid
-#    - subgid

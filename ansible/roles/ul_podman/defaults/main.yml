@@ -1,30 +1,14 @@
 ---
 
+#------------------------------------------------------------------------------
+# GENERAL SETTINGS
+#------------------------------------------------------------------------------
+
+# Use latest version from upstream project rather than from official repositories or EPEL
+# This simply follow these instructions: https://podman.io/getting-started/installation
+
+ul_podman_install_upstream: yes
+
+# Maximum namespaces per user
+
 ul_podman_max_user_namespaces: 65536
-
-# Not implemented yet
-#ul_podman_registries: []
-
-#------------------------------------------------------------------------------
-# SUBUIDs AND SUBGIDs SETTINGS
-#------------------------------------------------------------------------------
-
-# Define base uid/gid and id range
-
-ul_podman_mappings_base_id: 100000
-ul_podman_mappings_range: 10000
-
-# Generate mappings from a manual list of local accounts to generate ranges for.
-# Useful to generate entries before users creation.
-# All users already present in the automatic part are ignored.
-
-ul_podman_mappings_users: []
-
-#
-# Generate mappings for all existing users.
-# This ignores:
-#   - uid < 1000
-#   - nfsnobody (uid 65534)
-#
-
-ul_podman_mappings_automatic: yes
