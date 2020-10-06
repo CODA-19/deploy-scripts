@@ -9,25 +9,6 @@
     name: healthsamurai/devbox
     tag: latest
 
-# Generate the file that contains the variables for the REST service container
-# TODO: use different credential between sites
-- name: TEMPLATE | Generate /etc/aidbox/aidbox_svc.conf
-  template:
-    src: etc/aidbox/aidbox_svc_vars.j2
-    dest: /etc/aidbox/aidbox_svc_vars
-    owner: root
-    group: root
-    mode: 0664
-
-# Where the config stuff goes
-- name: FILE | Ensure /etc/aidbox is present
-  file:
-    dest: /etc/aidbox
-    owner: root
-    group: root
-    mode: 0755
-    state: directory
-
 # Sets up a local user 'aidbox' (local group 'aidbox') and its subuid/subgid for a rootless container
 # Unfortunately, the 'user' and 'group' modules have no support for subuid/subguid in Ansible 2.9
 - name: GROUP | Add the group 'aidbox'
@@ -65,6 +46,34 @@
     path: /etc/subgid
     regexp: '^aidbox'
     line: 'aidbox:200000:100'
+
+# Where the config stuff goes
+- name: FILE | Ensure /etc/aidbox is present
+  file:
+    dest: /etc/aidbox
+    owner: aidbox
+    group: aidbox
+    mode: 0750
+    state: directory
+
+# Generate the file that contains the variables for the REST service container
+# TODO: use different credential between sites
+- name: TEMPLATE | Generate /etc/aidbox/aidbox_svc.conf
+  template:
+    src: etc/aidbox/aidbox_svc_vars.j2
+    dest: /etc/aidbox/aidbox_svc_vars
+    owner: aidbox
+    group: aidbox
+    mode: 0640
+
+# Only root can write inside /run
+- name: FILE | Ensure /run/aidbox is present
+  file:
+    dest: /run/aidbox
+    owner: aidbox
+    group: aidbox
+    mode: 0750
+    state: directory
 
 # Generates the systemd workunit
 # Ref.

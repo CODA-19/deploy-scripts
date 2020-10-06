@@ -6,15 +6,16 @@ Wants=network.target
 After=network-online.target
 
 [Service]
+User=aidbox
 EnvironmentFile=/etc/aidbox/aidbox_svc_vars
 Restart=on-failure
-ExecStartPre=/usr/bin/rm -f /%t/%n-pid /%t/%n-cid
-ExecStart=/usr/bin/podman run --env-file /etc/aidbox/aidbox_svc_vars  --log-driver journald --conmon-pidfile  /%t/%n-pid  --cidfile /%t/%n-cid --network host -d healthsamurai/devbox
-ExecStop=/usr/bin/podman stop --ignore --cidfile /%t/%n-cid -t 30
-ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile /%t/%n-cid
+ExecStartPre=/usr/bin/rm -f /%t/aidbox/%n-pid /%t/aidbox/%n-cid
+ExecStart=/usr/bin/podman run --env-file /etc/aidbox/aidbox_svc_vars  --log-driver journald --conmon-pidfile  /%t/aidbox/%n-pid  --cidfile /%t/aidbox/%n-cid --network host -d healthsamurai/devbox
+ExecStop=/usr/bin/podman stop --ignore --cidfile /%t/aidbox/%n-cid -t 30
+ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile /%t/aidbox/%n-cid
 KillMode=none
 Type=forking
-PIDFile=/%t/%n-pid
+PIDFile=/%t/aidbox/%n-pid
 
 [Install]
 WantedBy=multi-user.target
