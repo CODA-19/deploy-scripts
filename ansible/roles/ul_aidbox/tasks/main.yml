@@ -5,14 +5,8 @@
     - ul_aidbox
     - ul_aidbox_database
 
-- name: "IMPORT_TASKS | fhirbase.yml"
-  import_tasks: fhirbase.yml
+- name: "IMPORT_TASKS | aidboxone.yml"
+  import_tasks: aidboxone.yml
   tags:
     - ul_aidbox
-    - ul_aidbox_fhirbase
-
-- name: "IMPORT_TASKS | rest_service.yml"
-  import_tasks: rest_service.yml
-  tags:
-    - ul_aidbox
-    - ul_aidbox_fhirbase
+    - ul_aidbox_one

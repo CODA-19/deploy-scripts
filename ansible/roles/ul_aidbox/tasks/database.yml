@@ -4,8 +4,9 @@
   postgresql_user:
     name: "{{ ul_aidbox_db_owner }}"
     # See vault files (password differs between sites), enforce md5 security
+    # The REST API do some operations (GRANT, etc) that requires a superuser :(
     password: "{{ 'md5'+((ul_aidbox_db_password+ul_aidbox_db_owner) | hash('MD5')) }}"
-    role_attr_flags: LOGIN
+    role_attr_flags: LOGIN,SUPERUSER
   become: true
   become_user: postgres
 

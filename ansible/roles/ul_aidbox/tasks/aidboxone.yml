@@ -3,49 +3,41 @@
 
 # Pull an offical image (~300 MB required)
 # WARNING: The rest service will connect to a licence server located in the cloud over https (TCP/443)
-# and the container will be stuck until the licence key validation passed
-- name: DOCKER_IMAGE | Pull an official aidbox REST service image
+# and the container will be stuck until the licence key validation passed.
+#
+# The licence server is https://license.aidbox.app/ ()
+
+- name: PODMAN_IMAGE | Pull an official aidbox REST service image
   podman_image:
-    name: healthsamurai/devbox
-    tag: latest
+    name: "{{ ul_aidbox_one_image }}"
+    tag: "{{ ul_aidbox_one_image_tag }}"
 
 # Sets up a local user 'aidbox' (local group 'aidbox') and its subuid/subgid for a rootless container
 # Unfortunately, the 'user' and 'group' modules have no support for subuid/subguid in Ansible 2.9
+
 - name: GROUP | Add the group 'aidbox'
   group:
     name: aidbox
     system: yes
 
-- name: USER | Add the user 'aibox'
+- name: USER | Add the user 'aidbox'
   user:
     name: aidbox
     comment: AidBox Service account
     group: aidbox
     system: yes
 
-- name: LINEINFILE | Remove any existing definition for 'aidbox' in /etc/subuid
-  lineinfile:
-    path: /etc/subuid
-    state: absent
-    regexp: '^aidbox'
-
-- name: LINEINFILE | Remove any existing definition for 'aidbox' in /etc/subgid
-  lineinfile:
-    path: /etc/subgid
-    state: absent
-    regexp: '^aidbox'
-
 - name: LINEINFILE | Add definition for 'aidbox' in /etc/subuid
   lineinfile:
     path: /etc/subuid
     regexp: '^aidbox'
-    line: 'aidbox:200000:100'
+    line: 'aidbox:200000:65536'
 
 - name: LINEINFILE | Add definition for 'aidbox' in /etc/subgid
   lineinfile:
     path: /etc/subgid
     regexp: '^aidbox'
-    line: 'aidbox:200000:100'
+    line: 'aidbox:200000:65536'
 
 # Where the config stuff goes
 - name: FILE | Ensure /etc/aidbox is present
@@ -58,10 +50,10 @@
 
 # Generate the file that contains the variables for the REST service container
 # TODO: use different credential between sites
-- name: TEMPLATE | Generate /etc/aidbox/aidbox_svc.conf
+- name: TEMPLATE | Generate /etc/aidbox/aidboxone_vars.conf
   template:
-    src: etc/aidbox/aidbox_svc_vars.j2
-    dest: /etc/aidbox/aidbox_svc_vars
+    src: etc/aidbox/aidboxone_vars.j2
+    dest: /etc/aidbox/aidboxone_vars
     owner: aidbox
     group: aidbox
     mode: 0640
@@ -77,10 +69,10 @@
 
 # Generates the systemd workunit
 # Ref.
-- name: COPY | Copy systemd workunit
-  copy:
-    src: etc/systemd/system/aidbox_rest_api.service
-    dest: /etc/systemd/system/aidbox_rest_api.service
+- name: TEMPLATE | Copy systemd workunit
+  template:
+    src: etc/systemd/system/aidboxone.service.j2
+    dest: /etc/systemd/system/aidboxone.service
     owner: root
     group: root
     mode: 0664
