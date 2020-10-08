@@ -15,5 +15,5 @@ ul_aidbox_svc_conf_admin_password: secret
 ul_aidbox_svc_conf_client_id: root
 ul_aidbox_svc_conf_client_secret: secret
 
-ul_aidbox_one_image: docker.io/healthsamurai/aidboxone
-ul_aidbox_one_image_tag: 0.5.0-SNAPSHOT
+ul_aidbox_image: docker.io/healthsamurai/aidboxone
+ul_aidbox_image_tag: 0.5.0-SNAPSHOT
