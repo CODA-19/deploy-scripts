@@ -36,5 +36,5 @@ PGPASSWORD={{ ul_aidbox_db_password }}
 {% if ansible_local.coda19.site.proxy is defined %}
 # Extra-parameters for the JVM.
 # The licensing id/key info is checked with a host somewhere in the cloud (TLS is used => -Dhttps.proxy)
-JAVA_OPTS=-Dhttps.proxyHost={{ ansible_local.coda19.site.proxy | urlsplit('hostname') }} -Dhttps.proxyPort={{ ansible_local.coda19.site.proxy | urlsplit('port') | default("3128", true) }}
+JAVA_OPTS=-Dhttps.proxyHost={{ ansible_local.coda19.site.proxy | urlsplit('hostname') }} -Dhttps.proxyPort={{ ansible_local.coda19.site.proxy | urlsplit('port') | default("3128", true) }} -Dhttp.nonProxyHosts="localhost|127.0.0.1"
 {% endif %}
