@@ -1,18 +1,12 @@
 ---
-- name: "IMPORT_TASKS | database.yml"
+- name: "IMPORT_TASKS | firewall.yml"
   import_tasks: firewall.yml
   tags:
     - ul_aidbox
     - ul_aidbox_firewall
-      
-- name: "IMPORT_TASKS | database.yml"
-  import_tasks: database.yml
-  tags:
-    - ul_aidbox
-    - ul_aidbox_database
 
-- name: "IMPORT_TASKS | aidboxone.yml"
-  import_tasks: aidboxone.yml
+- name: "IMPORT_TASKS | install.yml"
+  import_tasks: install.yml
   tags:
     - ul_aidbox
-    - ul_aidbox_one
+    - ul_aidbox_install

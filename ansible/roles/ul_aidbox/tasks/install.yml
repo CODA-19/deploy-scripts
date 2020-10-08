@@ -1,5 +1,21 @@
 ---
-# You must put you Licence Key AND Licence ID in the vault file before running this
+# Creates a database for Aidbox
+- name: POSTGRESQL_USER | Create PosgteSQL role for AidBox
+  postgresql_user:
+    name: "{{ ul_aidbox_db_owner }}"
+    # See vault files (password differs between sites), enforce md5 security
+    # The REST API do some operations (GRANT, etc) that requires a superuser :(
+    password: "{{ 'md5'+((ul_aidbox_db_password+ul_aidbox_db_owner) | hash('MD5')) }}"
+    role_attr_flags: LOGIN,SUPERUSER
+  become: true
+  become_user: postgres
+
+- name: POSTGRESQL_DB | Create database for AidBox
+  postgresql_db:
+    name: "{{ ul_aidbox_db_name }}"
+    owner: "{{ ul_aidbox_db_owner }}"
+  become: true
+  become_user: postgres
 
 # Sets up a local user 'aidbox' (local group 'aidbox') and its subuid/subgid for a rootless container
 # Unfortunately, the 'user' and 'group' modules have no support for subuid/subguid in Ansible 2.9
