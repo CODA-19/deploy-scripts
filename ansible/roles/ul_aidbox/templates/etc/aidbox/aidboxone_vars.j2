@@ -6,7 +6,7 @@
 # KEEP THIS FILE PRIVATE AS IT CONTAINS YOUR LICENCE KEY
 
 {# This information is in the vault file #}
-# LIcencing information
+# Licensing information
 AIDBOX_LICENSE_ID={{ ul_aidboxone_conf_license_id }}
 AIDBOX_LICENSE_KEY={{ ul_aidboxone_conf_license_key }}
 
@@ -30,3 +30,11 @@ PGHOST=127.0.0.1
 PGUSER=coda19_fihrbase
 PGDATABASE=coda19_fihrbase
 PGPASSWORD={{ ul_aidbox_db_password }}
+
+
+{# Proxy information comes from local facts (see playbooks/misc/bootstrap.yml) #}
+{% if ansible_local.coda19.site.proxy is defined %}
+# Extra-parameters for the JVM.
+# The licensing id/key info is checked with a host somewhere in the cloud (TLS is used => -Dhttps.proxy)
+JAVA_OPTS=-Dhttps.proxyHost={{ ansible_local.coda19.site.proxy | urlsplit('hostname') }} -Dhttps.proxyPort={{ ansible_local.coda19.site.proxy | urlsplit('port') | default("3128", true) }}
+{% endif %}

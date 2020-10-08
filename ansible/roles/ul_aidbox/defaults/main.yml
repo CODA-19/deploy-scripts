@@ -1,6 +1,8 @@
 ---
-  
+
+# Aidbox.One listening port (TCP)
 ul_aidbox_port: 8888
+
 ul_aidbox_db_owner: coda19_fihrbase
 ul_aidbox_db_name: coda19_fihrbase
 
