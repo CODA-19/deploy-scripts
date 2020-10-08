@@ -1,4 +1,6 @@
 ---
+#TODO: Manage more than one zone
+ul_aidbox_firewall_zone: public
 
 # Aidbox.One listening port (TCP)
 ul_aidbox_port: 8888
