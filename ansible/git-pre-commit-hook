@@ -1,0 +1,13 @@
+#!/bin/bash
+# Avoid committing unencrypted vaults.
+#
+# ln -s `realpath git-pre-commit-hook` .git/hooks/pre-commit
+
+VAULTS=`ls -1 ansible/vaults/*`
+
+for i in ${VAULTS}
+do
+  head -n 1 $i | grep -E '^\$ANSIBLE_VAULT;1.1;AES256' > /dev/null || exit 1
+done
+
+echo "All vaults are encrypted, proceeding with commit!"
