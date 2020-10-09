@@ -16,7 +16,7 @@
 
     - prompt: "Enter your site PASSPHRASE"
       name: _input_site_passphrase
-      private: no
+      private: yes
 
     - prompt: "Enter this VM role [orange|green]"
       name: _input_host_role
@@ -61,7 +61,7 @@
           value: "{{ _input_ntp }}"
         - section: site
           option: smtp
-          value: "{{ _input_smtp }}"          
+          value: "{{ _input_smtp }}"
         - section: host
           option: role
           value: "{{ _input_host_role | lower }}"
