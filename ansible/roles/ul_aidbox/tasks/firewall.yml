@@ -5,9 +5,9 @@
     dest: /etc/firewalld/services/aidbox.xml
   register: _svc
 
-- name: SYSTEMD | Systemd reload
-  systemd:
-    daemon_reload: yes
+- name: FIREWALLD | Systemd reload
+  firewalld:
+    state: reloaded
   when: _svc.changed
 
 - name: FIREWALLD |
