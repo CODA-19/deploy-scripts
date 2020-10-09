@@ -12,12 +12,12 @@
       export HTTP_PROXY=$PROXY
       export HTTPS_PROXY=$PROXY
       export FTP_PROXY=$PROXY
-      export NO_PROXY="{{ _common_global_noproxy }}"
 
-      export proxy=$PROXY
       export http_proxy=$PROXY
       export https_proxy=$PROXY
       export ftp_proxy=$PROXY
+
+      export NO_PROXY="{{ _common_global_noproxy }}"
       export no_proxy=$NO_PROXY
   when:
     - _common_global_proxy_enabled
