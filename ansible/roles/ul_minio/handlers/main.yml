@@ -7,6 +7,13 @@
 
 ######
 
+- name: reload firewalld
+  systemd:
+    name: firewalld
+    state: reloaded
+
+######
+
 - name: restart minio
   systemd:
     name: minio

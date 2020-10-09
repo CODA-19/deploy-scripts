@@ -3,3 +3,13 @@
 ul_minio_server_access_key:
 ul_minio_server_secret_key:
 ul_minio_server_opts:
+
+ul_minio_server_port: 9000
+
+ul_minio_server_firewalld_zones:
+  - zone: public
+    state: enabled
+  - zone: local-green
+    state: enabled
+  - zone: local-red
+    state: enabled

@@ -1,0 +1,22 @@
+---
+
+- name: TEMPLATE | MinIO service definition
+  template:
+    src: etc/firewalld/services/minio.xml.j2
+    dest: /etc/firewalld/services/minio.xml
+  register: _svc
+
+- name: SYSTEMD | Reload firewalld
+  systemd:
+    name: firewalld
+    state: reloaded
+  when: _svc.changed
+
+- name: FIREWALLD | Manage minio service zones
+  firewalld:
+    zone: "{{ item.zone }}"
+    service: minio
+    state: "{{ item.state | default('enabled') }}"
+    permanent: yes
+    immediate: yes
+  with_items: "{{ ul_minio_server_firewalld_zones }}"

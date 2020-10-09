@@ -11,3 +11,9 @@
   tags:
     - ul_minio
     - ul_minio_server
+
+- name: "IMPORT_TASKS | firewall.yml"
+  import_tasks: firewall.yml
+  tags:
+    - ul_minio
+    - ul_minio_firewall
