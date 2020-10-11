@@ -1,16 +1,16 @@
 ---
-- name: TEMPLATE | AidBox service definition
+- name: TEMPLATE | Put the AidBox service definition
   template:
     src: etc/firewalld/services/aidbox.xml.j2
     dest: /etc/firewalld/services/aidbox.xml
   register: _svc
 
-- name: FIREWALLD | Systemd reload
+- name: FIREWALLD | Reload firewalld
   firewalld:
     state: reloaded
   when: _svc.changed
 
-- name: FIREWALLD |
+- name: FIREWALLD | Attach the AidBox service port
   firewalld:
     zone: "{{ ul_aidbox_firewall_zone }}"
     service: aidbox
