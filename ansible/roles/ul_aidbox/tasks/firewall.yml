@@ -5,15 +5,17 @@
     dest: /etc/firewalld/services/aidbox.xml
   register: _svc
 
-- name: FIREWALLD | Reload firewalld
-  firewalld:
+- name: SYSTEMD | Reload firewalld
+  systemd:
+    name: firewalld
     state: reloaded
   when: _svc.changed
 
-- name: FIREWALLD | Attach the AidBox service port
+- name: FIREWALLD | Manage AidBox service zones
   firewalld:
-    zone: "{{ ul_aidbox_firewall_zone }}"
+    zone: "{{ item.zone }}"
     service: aidbox
+    state: "{{ item.state | default('enabled') }}"
     permanent: yes
-    state: enabled
     immediate: yes
+  with_items: "{{ ul_aidbox_firewalld_zones }}"
