@@ -3,8 +3,6 @@
 - name: Deploy the current box based on local facts (coda19.host.role)
   hosts: all
   connection: local
-  vars:
-    - ul_postgresql_shared_preload_libraries: [ 'fuzzystrmatch','pgcrypto','pg_stat_statements','pg_trgm' ]
   vars_files:
     - "{{ inventory_dir }}/vaults/vault.{{ ansible_local.coda19.site.id }}"
   tasks:
