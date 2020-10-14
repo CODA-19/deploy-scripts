@@ -1,5 +1,10 @@
 ---
-
+#
+# How to invoke on localhost:
+#
+#   env-ansible
+#   ansible-playbook --inventory hosts.localhost playbooks/localhost.yml
+#
 - name: Deploy the current box based on local facts (coda19.host.role)
   hosts: all
   connection: local
