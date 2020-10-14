@@ -6,12 +6,17 @@ Before=aidbox
 
 [Service]
 User=aidboxdb
+Group=aidboxdb
 Restart=on-failure
-ExecStartPre=/usr/bin/rm -f /%t/aidboxdb/%n-pid /%t/aidboxdb/%n-cid /%T/%n.tmp
-ExecStartPre=/bin/mkdir  /%T/%n.tmp && chmod  1777 /%T/%n.tmp
-ExecStart=/usr/bin/podman run --env-file /etc/aidboxdb/aidboxdb_vars --log-driver journald --conmon-pidfile  /%t/aidboxdb/%n-pid  --cidfile /%t/aidboxdb/%n-cid --network host -p {{ ul_aidbox_db_port }}:{{ ul_aidbox_db_port }} -v /data/aidboxdb:/data:z -v /%T/%n.tmp:/tmp:z -d {{ ul_aidbox_db_image }}:{{ ul_aidbox_db_image_tag }}
+RuntimeDirectory=aidboxdb
+RuntimeDirectoryMode=0775
+Restart=on-failure
+ExecStartPre=/usr/bin/rm -rf /%t/aidboxdb/%n-pid /%t/aidboxdb/%n-cid /tmp/%n.tmp
+ExecStartPre=/bin/mkdir /tmp/%n.tmp
+ExecStartPre=/bin/chmod 1770 /tmp/%n.tmp
+ExecStart=/usr/bin/podman run --env-file /etc/aidboxdb/aidboxdb_vars --log-driver journald --conmon-pidfile  /%t/aidboxdb/%n-pid  --cidfile /%t/aidboxdb/%n-cid --network host -p {{ ul_aidbox_db_port }}:{{ ul_aidbox_db_port }} -v /data/aidboxdb:/data:z -v /tmp/%n.tmp:/tmp:z -d {{ ul_aidbox_db_image }}:{{ ul_aidbox_db_image_tag }}
 ExecStop=/usr/bin/podman stop --ignore --cidfile /%t/aidboxdb/%n-cid -t 30
-ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile /%t/aidboxdb/%n-cid /%T/%n.tmp
+ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile /%t/aidboxdb/%n-cid /%tmp/%n.tmp
 KillMode=none
 Type=forking
 PIDFile=/%t/aidboxdb/%n-pid
