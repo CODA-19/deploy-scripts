@@ -25,8 +25,8 @@ AIDBOX_PORT={{ ul_aidbox_port }}
 AIDBOX_FHIR_VERSION=3.0.1
 
 # FHIR Database
-PGPORT=5432
-PGHOST=127.0.0.1
+PGPORT={{ ul_aidbox_db_port }}
+PGHOST={{ ul_aidbox_db_host }}
 PGUSER={{ ul_aidbox_db_owner }}
 PGDATABASE={{ ul_aidbox_db_name }}
 PGPASSWORD={{ ul_aidbox_db_password }}

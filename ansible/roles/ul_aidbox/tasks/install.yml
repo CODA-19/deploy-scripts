@@ -1,21 +1,71 @@
 ---
-# Creates a database for Aidbox
-- name: POSTGRESQL_USER | Create PostgreSQL role for AidBox
-  postgresql_user:
-    name: "{{ ul_aidbox_db_owner }}"
-    # See vault files (password differs between sites), enforce md5 security
-    # The REST API do some operations (GRANT, etc) that requires a superuser :(
-    password: "{{ 'md5'+((ul_aidbox_db_password+ul_aidbox_db_owner) | hash('MD5')) }}"
-    role_attr_flags: LOGIN,SUPERUSER
-  become: true
-  become_user: postgres
+##
+## AIDBOX.DB
+##
+# Health Samurai provides a ready-to-use  Postgresql Container with all required extensions
 
-- name: POSTGRESQL_DB | Create database for AidBox
-  postgresql_db:
-    name: "{{ ul_aidbox_db_name }}"
-    owner: "{{ ul_aidbox_db_owner }}"
-  become: true
-  become_user: postgres
+# useradd automatically adds the subordinate user (/etc/subuid)
+- name: GROUP | Add the group 'aidboxdb'
+  group:
+    name: aidboxdb
+    system: yes
+
+# useradd automatically adds the subordinate user (/etc/subgid)
+- name: USER | Add the user 'aidboxdb'
+  user:
+    name: aidboxdb
+    comment: AidBox DB Service account
+    group: aidboxdb
+    system: yes
+
+# Where the config stuff goes
+- name: FILE | Ensure /etc/aidboxdb is present
+  file:
+    dest: /etc/aidboxdb
+    owner: aidboxdb
+    group: aidboxdb
+    mode: 0750
+    state: directory
+
+# Where the PosgtreSQL stuff goes
+- name: FILE | Ensure /data/aidboxdb is present
+  file:
+    dest: /data/aidboxdb
+    owner: aidboxdb
+    group: aidboxdb
+    mode: 0750
+    state: directory
+
+# Generate the file that contains the variables for aidBoxDB (PostgreSQL)
+- name: TEMPLATE | Generate /etc/aidboxdb/aidboxdb_vars
+  template:
+    src: etc/aidboxdb/aidboxdb_vars.j2
+    dest: /etc/aidboxdb/aidboxdb_vars
+    owner: aidboxdb
+    group: aidboxdb
+    mode: 0640
+
+- name: FILE | Ensure /run/aidboxdb is present
+  file:
+    dest: /run/aidboxdb
+    owner: aidboxdb
+    group: aidboxdb
+    mode: 0750
+    state: directory
+
+# Generates the systemd workunit
+# Ref.
+- name: TEMPLATE | Copy systemd workunit
+  template:
+    src: etc/systemd/system/aidboxdb.service.j2
+    dest: /etc/systemd/system/aidboxdb.service
+    owner: root
+    group: root
+    mode: 0664
+
+##
+## AIDBOX
+##
 
 # Sets up a local user 'aidbox' (local group 'aidbox') and its subuid/subgid for a rootless container
 # Unfortunately, the 'user' and 'group' modules have no support for subuid/subguid in Ansible 2.9

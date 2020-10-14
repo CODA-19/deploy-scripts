@@ -10,6 +10,8 @@ ul_aidbox_port: 8888
 
 ul_aidbox_db_owner: aidbox
 ul_aidbox_db_name: aidbox
+ul_aidbox_db_host: 127.0.0.1
+ul_aidbox_db_port: 5432
 
 # Those are used for aidbox_svc.conf.j2
 
@@ -21,3 +23,6 @@ ul_aidbox_conf_client_secret: secret
 
 ul_aidbox_image: docker.io/healthsamurai/aidboxone
 ul_aidbox_image_tag: 0.5.0-SNAPSHOT
+
+ul_aidbox_db_image: docker.io/aidbox/db
+ul_aidbox_db_image_tag: 13.0.0
