@@ -1,0 +1,21 @@
+---
+- name: TEMPLATE | Put the CODA Purple service definition
+  template:
+    src: etc/firewalld/services/coda_purple.xml.j2
+    dest: /etc/firewalld/services/coda_purple.xml
+  register: _svc
+
+- name: SYSTEMD | Reload firewalld
+  systemd:
+    name: firewalld
+    state: reloaded
+  when: _svc.changed
+
+- name: FIREWALLD | Manage CODA Purple service zones
+  firewalld:
+    zone: "{{ item.zone }}"
+    service: coda_purple
+    state: "{{ item.state | default('enabled') }}"
+    permanent: yes
+    immediate: yes
+  with_items: "{{ ul_coda_purple_firewalld_zones }}"

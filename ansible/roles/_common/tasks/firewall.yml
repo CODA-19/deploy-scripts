@@ -29,8 +29,15 @@
     permanent: yes
   register: _fw_local_green
 
+- name: "FIREWALLD | Add local-purple zone"
+  firewalld:
+    zone: local-purple
+    state: present
+    permanent: yes
+  register: _fw_local_purple
+
 - name: "FIREWALLD | Reload if new zones added"
   systemd:
     name: firewalld
     state: reloaded
-  when: _fw_local_red.changed or _fw_local_orange.changed or _fw_local_green.changed
+  when: _fw_local_red.changed or _fw_local_orange.changed or _fw_local_green.changed or _fw_local_purple.changed

@@ -20,3 +20,8 @@
       include_role:
         name: _green
       when: "ansible_local.coda19.host.role|lower == 'green'"
+
+    - name: INCLUDE_ROLE | _PURPLE
+      include_role:
+        name: _purple
+      when: "ansible_local.coda19.host.role|lower == 'purple'"

@@ -1,0 +1,16 @@
+---
+
+ul_coda_purple_firewalld_zones:
+  - zone: public
+    state: enabled
+  - zone: local-purple
+    state: enabled
+  - zone: local-red
+    state: enabled
+
+# Listening port (TCP)
+ul_coda_purple_port: 8080
+
+# This should be a pre-existing locally built image
+ul_coda_purple_image: coda_purple
+ul_coda_purple_image_tag: latest

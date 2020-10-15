@@ -18,7 +18,7 @@
       name: _input_site_passphrase
       private: yes
 
-    - prompt: "Enter this VM role [orange|green]"
+    - prompt: "Enter this VM role [orange|green|purple]"
       name: _input_host_role
       private: no
 
