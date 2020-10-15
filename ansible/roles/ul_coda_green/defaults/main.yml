@@ -1,0 +1,16 @@
+---
+
+ul_coda_green_firewalld_zones:
+  - zone: public
+    state: enabled
+  - zone: local-green
+    state: enabled
+  - zone: local-red
+    state: enabled
+
+# Aidbox.One listening port (TCP)
+ul_coda_green_port: 5148
+
+# This should be a pre-existing locally built image
+ul_coda_green_image: coda_green
+ul_coda_green_image_tag: latest

@@ -1,0 +1,45 @@
+---
+# Sets up a local user 'aidbox' (local group 'aidbox') and its subuid/subgid for a rootless container
+# Unfortunately, the 'user' and 'group' modules have no support for subuid/subguid in Ansible 2.9
+- name: GROUP | Add the group 'coda'
+  group:
+    name: coda
+    system: yes
+
+- name: USER | Add the user 'coda'
+  user:
+    name: coda
+    comment: AidBox Service account
+    group: coda
+    system: no
+
+# Where the config stuff goes
+- name: FILE | Ensure /etc/coda is present
+  file:
+    dest: /etc/coda
+    owner: coda
+    group: coda
+    mode: 0750
+    state: directory
+
+# Generate the file that contains the variables for the REST service container
+# TODO: use different credential between sites
+- name: TEMPLATE | Generate /etc/coda/coda_green_vars
+  template:
+    src: etc/coda/coda_green_vars.j2
+    dest: /etc/coda/coda_green_vars
+    owner: coda
+    group: coda
+    mode: 0640
+
+# Generates the systemd workunit
+# Ref.
+- name: TEMPLATE | Copy systemd workunit
+  template:
+    src: etc/systemd/system/coda_green.service.j2
+    dest: /etc/systemd/system/coda_green.service
+    owner: root
+    group: root
+    mode: 0664
+
+# The container image is locally built and assumed to be present, no need to prefetch it

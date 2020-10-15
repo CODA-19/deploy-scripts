@@ -1,0 +1,21 @@
+---
+- name: TEMPLATE | Put the CODA Green service definition
+  template:
+    src: etc/firewalld/services/coda_green.xml.j2
+    dest: /etc/firewalld/services/coda_green.xml
+  register: _svc
+
+- name: SYSTEMD | Reload firewalld
+  systemd:
+    name: firewalld
+    state: reloaded
+  when: _svc.changed
+
+- name: FIREWALLD | Manage CODA Green service zones
+  firewalld:
+    zone: "{{ item.zone }}"
+    service: coda_green
+    state: "{{ item.state | default('enabled') }}"
+    permanent: yes
+    immediate: yes
+  with_items: "{{ ul_coda_green_firewalld_zones }}"
