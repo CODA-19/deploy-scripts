@@ -72,9 +72,8 @@
 
 - name: "YUM | Install extensions packages | Others: {{ ul_postgresql_install_extensions | join(', ') }}"
   yum:
-    name: "{{ item }}_{{ ul_postgresql_version }}"
+    name: "{{ ul_postgresql_install_extensions }}"
     state: present
-  with_items: "{{ ul_postgresql_install_extensions }}"
   when: ul_postgresql_install_extensions|length > 0
 
 - name: "YUM | Install extensions packages | check_postgres"

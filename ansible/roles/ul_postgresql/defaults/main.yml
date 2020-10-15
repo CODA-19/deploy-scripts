@@ -5,7 +5,7 @@
 #------------------------------------------------------------------------------
 
 ul_postgresql_cluster_id: default
-ul_postgresql_version: 12
+ul_postgresql_version: 13
 
 #------------------------------------------------------------------------------
 # INSTALLATION OPTIONS AND SCOPE
@@ -21,13 +21,18 @@ ul_postgresql_install_pgaudit: no
 
 ul_postgresql_install_check_postgres: no
 
-# Other extension packages to install
+# Other extension packages to install.
+# Beware, some packages names append version differently, be either:
+#   - <package name>_<version>
+#   - <package name><version>
 #
-# Example:
+# To take this into account, you must embed the version variable differently on a
+# by package basis. Example:
 #
 # ul_postgresql_install_extensions:
-#   - timescaledb
-#   - citus
+#   - timescaledb_{{ ul_postgresql_version }}
+#   - citus_{{ ul_postgresql_version}}
+#   - pg_repack{{ ul_postgresql_version }}}
 
 ul_postgresql_install_extensions: []
 
