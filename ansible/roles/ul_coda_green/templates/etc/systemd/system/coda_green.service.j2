@@ -16,7 +16,7 @@ ExecStop=/usr/bin/podman stop --ignore --cidfile /%t/coda/%n-cid -t 30
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile /%t/coda/%n-cid
 KillMode=none
 Type=forking
-PIDFile=/%t/coda_green/%n-pid
+PIDFile=/%t/coda/%n-pid
 
 [Install]
 WantedBy=multi-user.target
