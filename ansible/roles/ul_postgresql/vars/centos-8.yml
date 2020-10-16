@@ -9,6 +9,8 @@ ul_postgresql_deps:
   - python3-pycurl
   - python3-libselinux
 
+ul_postgresql_devel_deps: []
+
 # Service name
 # Must keep the .service suffix
 

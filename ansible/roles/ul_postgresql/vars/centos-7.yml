@@ -8,6 +8,9 @@ ul_postgresql_deps:
   - python-pycurl
   - libselinux-python
 
+ul_postgresql_devel_deps:
+  - centos-release-scl
+
 # Service name
 # Must keep the .service suffix
 

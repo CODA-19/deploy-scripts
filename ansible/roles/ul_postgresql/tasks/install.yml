@@ -40,12 +40,12 @@
 
 - block:
 
-      - name: "YUM | Install PostgreSQL Development - centos-release-scl"
+      - name: "YUM | Install postgresql{{ ul_postgresql_version }}-devel requirements"
         yum:
-          name: centos-release-scl
+          name: "{{ ul_postgresql_devel_deps }}"
           state: present
 
-      - name: "YUM | Install PostgreSQL Development - postgresql{{ ul_postgresql_version }}-devel"
+      - name: "YUM | Install postgresql{{ ul_postgresql_version }}-devel"
         yum:
           name: "postgresql{{ ul_postgresql_version }}-devel"
           state: present
