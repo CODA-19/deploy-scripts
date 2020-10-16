@@ -1,0 +1,28 @@
+---
+
+###### JSONKNIFE
+
+- block:
+
+    - name: "FILE | Ensure that /usr/pgsql-{{ ul_postgresql_version }}/lib/bitcode/jsonknife/ directory exists"
+      file:
+        path: "/usr/pgsql-{{ ul_postgresql_version }}/lib/bitcode/jsonknife/"
+        state: directory
+
+    - name: JSONKNIFE
+      copy:
+        src: "extensions/jsonknife/v{{ ul_postgresql_version }}/{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version }}/{{ item.file }}"
+        dest: "{{ item.path }}/{{ item.file }}"
+      with_items:
+        - file: jsonknife.so
+          path: "/usr/pgsql-{{ ul_postgresql_version }}/lib/"
+        - file: jsonknife.control
+          path: "/usr/pgsql-{{ ul_postgresql_version }}/share/extension/"
+        - file: jsonknife--1.0.sql
+          path: "/usr/pgsql-{{ ul_postgresql_version }}/share/extension/"
+        - file: jsonknife.bc
+          path: "/usr/pgsql-{{ ul_postgresql_version }}/lib/bitcode/jsonknife"
+        - file: jsonknife.index.bc
+          path: "/usr/pgsql-{{ ul_postgresql_version }}/lib/bitcode/"
+
+  when: ul_postgresql_ext_jsonknife | default(false)

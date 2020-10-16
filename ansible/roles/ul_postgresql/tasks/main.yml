@@ -1,5 +1,6 @@
 ---
 
+# TODO: ansible_distribution --> ansible_os_family
 - include_vars: "{{ item }}"
   with_first_found:
     - "../vars/{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yml"
@@ -40,6 +41,12 @@
   tags:
     - ul_postgresql
     - ul_postgresql_configure
+
+- name: "IMPORT_TASKS | extensions.yml"
+  import_tasks: extensions.yml
+  tags:
+    - ul_postgresql
+    - ul_postgresql_extensions
 
 - name: "IMPORT_TASKS | manage.yml"
   import_tasks: manage.yml
