@@ -9,6 +9,10 @@ After=network-online.target
 
 [Service]
 User=aidbox
+Group=aidbox
+Restart=on-failure
+RuntimeDirectory=aidbox
+RuntimeDirectoryMode=0775
 Restart=on-failure
 ExecStartPre=/usr/bin/rm -f /%t/aidbox/%n-pid /%t/aidbox/%n-cid
 ExecStart=/usr/bin/podman run --env-file /etc/aidbox/aidbox_vars --log-driver journald --conmon-pidfile  /%t/aidbox/%n-pid  --cidfile /%t/aidbox/%n-cid --network host -p {{ ul_aidbox_port }}:{{ ul_aidbox_port }} -d {{ ul_aidbox_image }}:{{ ul_aidbox_image_tag }}
