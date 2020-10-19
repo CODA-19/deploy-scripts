@@ -37,6 +37,7 @@ _common_packages:
   - net-tools
   - nethogs
   - sysstat
+  - tar
   - tcpdump
   - telnet
   - traceroute
