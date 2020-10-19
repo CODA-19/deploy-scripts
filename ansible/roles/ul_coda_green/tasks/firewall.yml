@@ -1,5 +1,5 @@
 ---
-- name: TEMPLATE | Put the CODA Green service definition
+- name: TEMPLATE | Put the CODA19-API service definition
   template:
     src: etc/firewalld/services/coda_green.xml.j2
     dest: /etc/firewalld/services/coda_green.xml
@@ -11,7 +11,7 @@
     state: reloaded
   when: _svc.changed
 
-- name: FIREWALLD | Manage CODA Green service zones
+- name: FIREWALLD | Manage CODA19-API service zones
   firewalld:
     zone: "{{ item.zone }}"
     service: coda_green
