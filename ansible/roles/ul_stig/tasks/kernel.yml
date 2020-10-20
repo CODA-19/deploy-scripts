@@ -1,6 +1,5 @@
 ---
 - name: SYSCTL | STIG Parameters
-  name: Paramètres sysctl pour STIG
   sysctl:
     sysctl_file: /etc/sysctl.d/50-stig.conf
     name: "{{ item.name }}"
