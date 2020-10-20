@@ -5,3 +5,7 @@ _common_selinux_packages:
   - setroubleshoot-server
   - python3-libselinux
   - python3-policycoreutils
+
+_common_yum_config_files:
+  - /etc/yum.conf
+  - /etc/dnf/dnf.conf

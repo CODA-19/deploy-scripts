@@ -29,22 +29,33 @@
     state: absent
   when: not _common_global_proxy_enabled or _common_global_proxy|length == 0
 
-###### YUM PROXY
+# Be sure to take proxy setting changes in effect.
+# Only works on real SSH connections.
 
-- name: INI_FILE | Enable proxy in yum.conf
+- meta: reset_connection
+
+###### YUM/DNF PROXY
+#
+# Since CentOS/RHEL 8, /etc/dnf/dnf.conf configs takes precedence.
+# We take no chances, and manage both.
+#
+
+- name: INI_FILE | Enable proxy in /etc/yum.conf
   ini_file:
-    path: /etc/yum.conf
+    path: "{{ item }}"
     section: "main"
     option: "proxy"
     value: "{{ _common_yum_proxy }}"
+  with_items: "{{ _common_yum_config_files }}"
   when:
     - _common_yum_proxy_enabled
     - _common_yum_proxy|length > 0
 
 - name: INI_FILE | Disable proxy in yum.conf
   ini_file:
-    path: /etc/yum.conf
+    path: "{{ item }}"
     section: "main"
     option: "proxy"
     state: absent
+  with_items: "{{ _common_yum_config_files }}"
   when: not _common_yum_proxy_enabled or _common_yum_proxy|length == 0
