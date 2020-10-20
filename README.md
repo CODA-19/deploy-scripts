@@ -50,7 +50,7 @@ env-ansible
 ### Manually run localhost.yml playbook
 
 ```bash
-ansible-playbook -i hosts.localhost playbooks/localhost.yml
+ansible-playbook --vault-password-file /etc/ansible/vault.pass -i hosts.localhost playbooks/localhost.yml
 ```
 
 ## Useful tricks and commands

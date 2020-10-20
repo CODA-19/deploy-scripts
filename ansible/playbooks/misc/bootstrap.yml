@@ -68,10 +68,10 @@
 
     ###### PASSPHRASE
 
-    - name: COPY | Create vault.pass file
+    - name: COPY | Create vault.pass file - /etc/ansible/vault.pass
       copy:
         content: "{{ _input_site_passphrase }}"
-        dest: /opt/coda19/deploy-scripts/ansible/vault.pass
+        dest: /etc/ansible/vault.pass
         owner: root
         group: wheel
         mode: 0660
