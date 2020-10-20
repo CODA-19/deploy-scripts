@@ -23,9 +23,6 @@ Download bootstrap script and execute it:
 ```bash
 cd ${HOME}
 
-curl -s https://raw.githubusercontent.com/CODA-19/deploy-scripts/master/ansible/scripts/bootstrap-common.sh \
-     -o bootstrap-common.sh
-
 curl -s https://raw.githubusercontent.com/CODA-19/deploy-scripts/master/ansible/scripts/bootstrap.sh \
     -o bootstrap.sh
 
