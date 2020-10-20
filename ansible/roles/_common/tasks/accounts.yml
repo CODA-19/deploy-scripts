@@ -1,5 +1,11 @@
 ---
 
+##### Manage deployment user
+
+# TODO
+
+##### Add local user accounts
+
 - name: "USER | Add users"
   user:
     name: "{{ item.name }}"
@@ -16,6 +22,10 @@
   when: item.pubkey is defined
   with_items: "{{ _common_accounts }}"
 
-# TODO: add rescue account
+##### Manage rescue account
 
-# TODO: change root password
+# TODO
+
+##### Change root password
+
+# TODO
