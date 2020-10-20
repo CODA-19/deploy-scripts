@@ -1,5 +1,22 @@
 ---
 
+###### USEFUL SCRIPTS
+
+- name: COPY | Generate an unset proxy script
+  copy:
+    dest: /usr/local/bin/env-unset-proxy.sh
+    content: |
+      #!/bin/echo !!! PLEASE SOURCE THIS FILE !!!
+      unset HTTP_PROXY
+      unset HTTPS_PROXY
+      unset FTP_PROXY
+      unset NO_PROXY
+      unset http_proxy
+      unset https_proxy
+      unset ftp_proxy
+      unset no_proxy
+    mode: 0755
+
 ###### SYSTEM WIDE PROXY
 
 - name: COPY | Set system wide proxy settings
