@@ -123,7 +123,7 @@
 # WARNING: The rest service will connect to a licence server located in the cloud over https (TCP/443)
 # and the container will be stuck until the licence key validation passed, if you are behind
 # a proxy, use
-- name: DOCKER_IMAGE | Pull an official aidbox REST service image
+- name: PODMAN_IMAGE | Pull an official aidbox REST service image
   podman_image:
     name: "{{ ul_aidbox_image }}"
     tag: "{{ ul_aidbox_image_tag }}"
