@@ -6,7 +6,7 @@
 #   ansible-playbook --inventory hosts.localhost playbooks/localhost.yml
 #
 - name: Deploy the current box based on local facts (coda19.host.role)
-  hosts: all
+  hosts: localhost
   connection: local
   vars_files:
     - "{{ inventory_dir }}/vaults/vault.{{ ansible_local.coda19.site.id }}"
@@ -28,6 +28,7 @@
         - always
 
   tasks:
+
     - name: INCLUDE_ROLE | _ORANGE
       include_role:
         name: _orange
