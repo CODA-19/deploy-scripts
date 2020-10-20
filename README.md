@@ -4,52 +4,61 @@ Deployment scripts for the different CODA-19 components.
 
 ## Bootstrap
 
+All below steps must be run as «root» by using `sudo su -`.
+
+### Install package dependencies
+
 Ensure `curl` is installed:
 
 ```bash
 yum install -y curl
 ```
 
-If internet access needs proxy, adjust values and export accordingly:
+### Export proxy
+
+If current host doesn't have direct internet access and needs to use a proxy, simply
+adjust PROXY variable and export:
 
 ```bash
-export PROXY=http://proxy.company.com:8080
+export PROXY=http://<hostname>:<port>
+
 export HTTP_PROXY=${PROXY}
 export HTTPS_PROXY=${PROXY}
+export http_proxy=${PROXY}
+export https_proxy=${PROXY}
 ```
 
 Download bootstrap script and execute it:
 
 ```bash
-cd ${HOME}
-
 curl -s https://raw.githubusercontent.com/CODA-19/deploy-scripts/master/ansible/scripts/bootstrap.sh \
     -o bootstrap.sh
 
 bash bootstrap.sh
 ```
 
-## Useful commands
+### Load activators and Ansible Virtual Environment
 
-For all commands, the Ansible virtualenv must be loaded beforehand. It is simpler
-to use activators installed by the `bootstrap.sh` script:
+Since we're in the same session than the bootstrap script, we must explicitly
+source new activators. In any new session, only `env-ansible` needed.
 
 ```bash
-# Only if in the same session than bootstrap execution
 source /etc/profile.d/env-ansible.sh
-
-# Activage environment
 env-ansible
 ```
 
-### Checking current server settings
-
-```bash
-ansible all -i hosts.localhost -m setup -a "filter=ansible_local"
-```
-
-### Executing playbooks
+### Manually run localhost.yml playbook
 
 ```bash
 ansible-playbook -i hosts.localhost playbooks/localhost.yml
+```
+
+## Useful tricks and commands
+
+All the following assume that the Ansible venv is already loaded by using `env-ansible`.
+
+### Checking local facts
+
+```bash
+ansible all -i hosts.localhost -m setup -a "filter=ansible_local"
 ```
