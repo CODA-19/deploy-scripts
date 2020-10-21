@@ -121,6 +121,8 @@ python3 -m venv ${CODA19_ANSIBLE_VENV_DIR}
 source ${CODA19_ANSIBLE_VENV_DIR}/bin/activate
 pip install --upgrade pip
 
+#### FETCH AND INSTALL REQUIREMENTS
+
 echo "${BOLD}${YELLOW}*** INSTALLING REQUIREMENTS ***${NORMAL}"
 
 if [[ -d "/vagrant" && ${CODA19_USE_VAGRANT} = true ]]; then
@@ -151,7 +153,7 @@ EOT
 chmod +x /usr/local/bin/env-ansible.sh
 
 cat << EOT > /etc/profile.d/env-ansible.sh
-alias env-ansible='source /usr/local/bin/env-ansible.sh && cd ${INSTALL_BASE}/deploy-scripts/ansible'
+alias env-ansible='source /usr/local/bin/env-ansible.sh'
 EOT
 
 chmod a+r /etc/profile.d/env-ansible.sh
