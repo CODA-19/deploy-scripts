@@ -11,6 +11,10 @@ _common_ntp_servers:
   - time.chu.nrc.ca
   - ntp.ovh.net
 
+###### SMTP
+
+_common_smtp_server: ""
+
 ###### PROXY
 
 # Proxies, when provied are enabled by default.
