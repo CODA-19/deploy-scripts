@@ -2,6 +2,7 @@
 #
 # Locally test this script in Vagrant:
 #    host$ vagrant rsync
+#    guest# export CODA19_USE_VAGRANT=true
 #    guest# rm -rf /opt/coda19 && bash /vagrant/scripts/bootstrap.sh
 #
 ################################################################################
@@ -51,6 +52,7 @@ userdel --remove coda19-deployment 2>/dev/null
 useradd coda19-deployment --groups wheel --password '$6$.UqcnmIDvAfWwCdq$5Jy3dsTcljF7hxcUsBvV9kA3Wt0UvMJ03L9XQFqNBVru7PX4.hEiWtzKK2vwhpAWSPCMWLC4gDgO2NPDw8CFH/' 2>/dev/null
 
 # CREATE .SSH FOLDER AND PUBLIC KEY
+# TODO: fetch public key from a remote repository
 
 mkdir -p ~coda19-deployment/.ssh
 cat << EOT> ~coda19-deployment/.ssh/authorized_keys
