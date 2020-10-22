@@ -9,7 +9,8 @@
   hosts: localhost
   connection: local
   vars_files:
-    - "{{ inventory_dir }}/vaults/vault.{{ ansible_local.coda19.site.id }}"
+    - "{{ playbook_dir }}/../group_vars/s{{ ansible_local.coda19.site.id }}"
+    - "{{ playbook_dir }}/../vaults/vault.{{ ansible_local.coda19.site.id }}"
 
   pre_tasks:
 
