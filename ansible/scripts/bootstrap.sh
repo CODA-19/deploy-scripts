@@ -178,8 +178,15 @@ else
   curl -so ${PLAYBOOK} ${CODA19_ANSIBLE_BOOTSTRAP_PLAYBOOK_URL}
 fi
 
+# Just to get out some warning messages in bootstrap playbook.
+mkdir -p /etc/ansible/facts.d/
+touch /etc/ansible/vault.pass
+touch /etc/ansible/facts.d/coda19.fact
+
 echo
+echo "${BOLD}${YELLOW}*********************************************${NORMAL}"
 echo "${BOLD}${YELLOW}*** PLEASE ANSWER THE FOLLOWING QUESTIONS ***${NORMAL}"
+echo "${BOLD}${YELLOW}*********************************************${NORMAL}"
 echo
 
 ansible-playbook \
