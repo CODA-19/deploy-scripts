@@ -2,4 +2,3 @@ ansible==2.9.13
 dnspython
 netaddr
 boto3
-selinux

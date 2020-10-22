@@ -79,6 +79,7 @@ yum install -y curl \
                git \
                python3 \
                python3-pip \
+               libselinux-python3 \
                util-linux
 
 # SPECIFIC BY VERSION
