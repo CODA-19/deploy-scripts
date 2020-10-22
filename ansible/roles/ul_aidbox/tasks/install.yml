@@ -63,6 +63,13 @@
     group: root
     mode: 0664
 
+# 'podman system update' is required else, an error will be thrown :
+# "there might not be enough IDs available in the namespace (requested 0:42 for /etc/gshadow): lchown /etc/gshadow: invalid argument"
+- name: COMMAND | podman system migrate
+  command: /bin/podman system migrate
+  become: yes
+  become_user: aidboxdb
+
 ##
 ## AIDBOX
 ##
@@ -119,13 +126,11 @@
     group: root
     mode: 0664
 
-# On the first start, podman would pull the image however let's do this now
-# WARNING: The rest service will connect to a licence server located in the cloud over https (TCP/443)
-# and the container will be stuck until the licence key validation passed, if you are behind
-# a proxy, use
-- name: PODMAN_IMAGE | Pull an official aidbox REST service image
-  podman_image:
-    name: "{{ ul_aidbox_image }}"
-    tag: "{{ ul_aidbox_image_tag }}"
+# 'podman system update' is required else, an error will be thrown :
+# "there might not be enough IDs available in the namespace (requested 0:42 for /etc/gshadow): lchown /etc/gshadow: invalid argument"
+- name: COMMAND | podman system migrate
+  command: /bin/podman system migrate
   become: yes
   become_user: aidbox
+
+# On the first run, podman will pull the containers images (See systemd WUs)
