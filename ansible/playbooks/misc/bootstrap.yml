@@ -85,3 +85,51 @@
         owner: root
         group: wheel
         mode: 0660
+
+################################################################################
+
+- name: "BOOTSTRAP PLAYBOOK - PLAY #2 - SETUP ANSIBLE-PULL"
+  hosts: all
+  connection: local
+  gather_facts: yes
+  tasks:
+
+    # !!!! BEWARE !!!! IF WE NEED PROXY !!!! WE MUST CONFIGURE IT IN SCRIPT
+    
+    - name: COPY | Create /usr/local/bin/execute-ansible-pull.sh
+      copy:
+        dest: /usr/local/bin/execute-ansible-pull.sh
+        mode: 0755
+        content: |
+          #!/usr/bin/env bash
+
+          #### Parameters
+
+          export PULL_BASE=/opt/coda19/deploy-scripts-pull
+          export ANSIBLE_BASE=${PULL_BASE}/ansible
+          export ANSIBLE_ROLES_PATH=${ANSIBLE_BASE}/roles
+
+          #### Export proxy, as defined in localfacts while bootstraping.
+          #### We're doing this here to overcome the chicken-egg problem.
+          #### Configured settings in /etc/profile.d/proxy.sh will take precedence.
+
+          #### TODO
+
+          #### Be safe, load required environment stuff
+
+          if [[ -f /etc/profile.d/proxy.sh ]]; then
+            source /etc/profile.d/proxy.sh
+          fi
+
+          if [[ -f /usr/local/bin/env-ansible.sh ]]; then
+            source /usr/local/bin/env-ansible.sh
+          fi
+
+          #### Execute ansible-pull
+
+          ansible-pull \
+            --url https://github.com/CODA-19/deploy-scripts.git \
+            --vault-password-file /etc/ansible/vault.pass \
+            --directory ${PULL_BASE} \
+            --inventory localhost, \
+            ${ANSIBLE_BASE}/playbooks/localhost.yml
