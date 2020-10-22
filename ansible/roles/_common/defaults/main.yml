@@ -44,8 +44,10 @@ _common_packages:
   - tar
   - tcpdump
   - telnet
+  - tmux
   - traceroute
   - unzip
+  - vim
   - wget
   - zip
 
