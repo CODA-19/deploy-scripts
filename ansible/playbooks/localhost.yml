@@ -42,6 +42,14 @@
     - "{{ playbook_dir }}/../group_vars/s{{ ansible_local.coda19.site.id }}"
     - "{{ playbook_dir }}/../vaults/vault.{{ ansible_local.coda19.site.id }}"
 
+  pre_tasks:
+
+    - name: DEBUG | Show local facts
+      debug:
+        var: ansible_local
+      tags:
+        - always
+
   tasks:
 
     - name: INCLUDE_ROLE | _ORANGE
