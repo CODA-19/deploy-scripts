@@ -1,10 +1,40 @@
 ---
 #
-# How to invoke on localhost:
+# MAIN PLAYBOOK FOR LOCAL DEPLOYMENT MODE / ANSIBLE-PULL
+#
+# How to invoke on localhost, use something like this:
 #
 #   env-ansible
-#   ansible-playbook --inventory hosts.localhost playbooks/localhost.yml
+#   ansible-playbook \
+#     --inventory localhost, \
+#     --vault-password-file /etc/ansible/vault.pass \
+#     localhost.yml
 #
+# To run correctly, this playbook minimaly need these localfacts:
+#
+#   - ansible_local.coda19.site.id
+#   - ansible_local.coda19.node.role
+#
+#   Those are needed to correctly load corresponding vars, vaults and which
+#   meta role to load (eg: _green, _orange, etc.). They are initialized when
+#   running the boostrap procedure.
+#
+#   To get more information about localfacts and file locations, see docs:
+#   https://docs.ansible.com/ansible/latest/user_guide/playbooks_vars_facts.html#facts-d-or-local-facts
+#
+# Then other facts can (or should) come from:
+#
+#   - Site vault, in file vaults/vault.<site id>
+#   - Site group vars, in file group_vars/s<site id>
+#
+# Storing some facts in vaults and in group_vars is very useful becase we can ensure
+# that they are centrally, properly managed and used independently the deployment
+# strategy, being either:
+#
+#   - locally using ansible pull (this localhost playbook)
+#   - remotely using traditionnal push over ssh (remote playbooks)
+#
+
 - name: Deploy the current box based on local facts (coda19.host.role)
   hosts: localhost
   connection: local
