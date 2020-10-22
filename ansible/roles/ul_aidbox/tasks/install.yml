@@ -8,7 +8,7 @@
 - name: GROUP | Add the group 'aidboxdb'
   group:
     name: aidboxdb
-    system: yes
+    system: no
 
 # useradd automatically adds the subordinate user (/etc/subgid)
 - name: USER | Add the user 'aidboxdb'
@@ -16,7 +16,7 @@
     name: aidboxdb
     comment: AidBox DB Service account
     group: aidboxdb
-    system: yes
+    system: no
 
 # Where the config stuff goes
 - name: FILE | Ensure /etc/aidboxdb is present
