@@ -5,33 +5,43 @@
 #   ansible-playbook --inventory localhost, playbooks/misc/bootstrap.yml
 #
 
-- name: Bootstrap server
+- name: "BOOTSTRAP PLAYBOOK - PLAY #1 - ASK INFORMATIONS AND STORE IT IN LOCAL FACTS"
   hosts: all
   connection: local
+  gather_facts: no
+  vars:
+    facts_file: /etc/ansible/facts.d/coda19.fact
+    vault_pass_file: /etc/ansible/vault.pass
   vars_prompt:
 
     - prompt: "Enter your site ID (110-120)"
-      name: _input_site_id
+      name: _prompt_site_id
+      default: "{{ lookup('ini', 'id section=site file=' + facts_file, errors='ignore') }}"
       private: no
 
-    - prompt: "Enter your site PASSPHRASE"
-      name: _input_site_passphrase
-      private: yes
-
-    - prompt: "Enter this VM role [orange|green|purple]"
-      name: _input_host_role
+    - prompt: "Enter your site VAULT PASSWORD"
+      name: _prompt_site_vault_pass
+      default: "{{ lookup('file', vault_pass_file, errors='ignore') | default('') }}"
       private: no
 
-    - prompt: "Enter your site PROXY, if required, for internet access (e.g.: http://proxy.company.com:8080)"
-      name: _input_proxy
+    - prompt: "Enter your site PROXY, if required, for internet access (format: http://<host>:<port>)"
+      name: _prompt_proxy
+      default: "{{ lookup('ini', 'proxy section=site file=' + facts_file, errors='ignore') }}"
       private: no
 
     - prompt: "Enter your site NTP server address"
-      name: _input_ntp
+      name: _prompt_ntp
+      default: "{{ lookup('ini', 'ntp section=site file=' + facts_file, errors='ignore') }}"
       private: no
 
     - prompt: "Enter your site SMTP server address"
-      name: _input_smtp
+      name: _prompt_smtp
+      default: "{{ lookup('ini', 'smtp section=site file=' + facts_file, errors='ignore') }}"
+      private: no
+
+    - prompt: "Enter this VM role [orange|green]"
+      name: _prompt_host_role
+      default: "{{ lookup('ini', 'role section=host file=' + facts_file, errors='ignore') }}"
       private: no
 
   tasks:
@@ -52,26 +62,26 @@
       with_items:
         - section: site
           option: id
-          value: "{{ _input_site_id }}"
+          value: "{{ _prompt_site_id }}"
         - section: site
           option: proxy
-          value: "{{ _input_proxy }}"
+          value: "{{ _prompt_proxy }}"
         - section: site
           option: ntp
-          value: "{{ _input_ntp }}"
+          value: "{{ _prompt_ntp }}"
         - section: site
           option: smtp
-          value: "{{ _input_smtp }}"
+          value: "{{ _prompt_smtp }}"
         - section: host
           option: role
-          value: "{{ _input_host_role | lower }}"
+          value: "{{ _prompt_host_role | lower }}"
 
     ###### PASSPHRASE
 
-    - name: COPY | Create vault.pass file - /etc/ansible/vault.pass
+    - name: COPY | Create vault.pass file
       copy:
-        content: "{{ _input_site_passphrase }}"
-        dest: /etc/ansible/vault.pass
+        content: "{{ _prompt_site_vault_pass }}"
+        dest: "{{ vault_pass_file }}"
         owner: root
         group: wheel
         mode: 0660
