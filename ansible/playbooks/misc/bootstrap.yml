@@ -24,19 +24,10 @@
       default: "{{ lookup('file', vault_pass_file, errors='ignore') | default('') }}"
       private: no
 
+    # This proxy setting is used for bootstrap process only.
     - prompt: "Enter your site PROXY, if required, for internet access (format: http://<host>:<port>)"
       name: _prompt_proxy
       default: "{{ lookup('ini', 'proxy section=site file=' + facts_file, errors='ignore') }}"
-      private: no
-
-    - prompt: "Enter your site NTP server address"
-      name: _prompt_ntp
-      default: "{{ lookup('ini', 'ntp section=site file=' + facts_file, errors='ignore') }}"
-      private: no
-
-    - prompt: "Enter your site SMTP server address"
-      name: _prompt_smtp
-      default: "{{ lookup('ini', 'smtp section=site file=' + facts_file, errors='ignore') }}"
       private: no
 
     - prompt: "Enter this VM role [orange|green]"
@@ -66,12 +57,6 @@
         - section: site
           option: proxy
           value: "{{ _prompt_proxy }}"
-        - section: site
-          option: ntp
-          value: "{{ _prompt_ntp }}"
-        - section: site
-          option: smtp
-          value: "{{ _prompt_smtp }}"
         - section: host
           option: role
           value: "{{ _prompt_host_role | lower }}"

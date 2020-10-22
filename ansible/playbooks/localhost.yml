@@ -12,22 +12,6 @@
     - "{{ playbook_dir }}/../group_vars/s{{ ansible_local.coda19.site.id }}"
     - "{{ playbook_dir }}/../vaults/vault.{{ ansible_local.coda19.site.id }}"
 
-  pre_tasks:
-
-    - name: DEBUG | Show local facts
-      debug:
-        var: ansible_local
-      tags:
-        - always
-
-    - name: SET_FACT | Set facts from local facts - _common_global_proxy - _common_ntp_servers - _common_smtp_server
-      set_fact:
-        _common_global_proxy: "{{ ansible_local.coda19.site.proxy          }}"
-        _common_ntp_servers:  "{{ ansible_local.coda19.site.ntp.split(',') }}"
-        _common_smtp_server:  "{{ ansible_local.coda19.site.smtp           }}"
-      tags:
-        - always
-
   tasks:
 
     - name: INCLUDE_ROLE | _ORANGE
