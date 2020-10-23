@@ -147,7 +147,7 @@
               --url {{ _ansible_pull_repo_url }} \
               --vault-password-file /etc/ansible/vault.pass \
               --directory ${PULL_BASE} \
-              --inventory localhost, \
+              --inventory ${ANSIBLE_BASE}/hosts.localhost \
               ${ANSIBLE_BASE}/playbooks/localhost.yml
 
           ) 200>/var/lock/execute-ansible-pull.lock
