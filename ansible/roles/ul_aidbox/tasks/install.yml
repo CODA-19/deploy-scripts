@@ -70,6 +70,23 @@
   become: yes
   become_user: aidboxdb
 
+# Prefetch the image
+- name: PODMAN_IMAGE | Pull the AidboxDB image
+  podman_image:
+    name: "{{ ul_aidbox_db_image }}"
+    tag: "{{ ul_aidbox_db_image_tag }}"
+    state: present
+  become: yes
+  become_user: aidboxdb
+
+# At the end, enable and start!
+- name: SYSTEMD | Enable & Start AidboxDB
+  systemd:
+    name: aidboxdb
+    enabled: yes
+    state: started
+    daemon_reload: yes
+
 ##
 ## AIDBOX
 ##
@@ -133,4 +150,19 @@
   become: yes
   become_user: aidbox
 
-# On the first run, podman will pull the containers images (See systemd WUs)
+# Prefetch the image
+- name: PODMAN_IMAGE | Pull the Aidbox image
+  podman_image:
+    name: "{{ ul_aidbox_image }}"
+    tag: "{{ ul_aidbox_image_tag }}"
+    state: present
+  become: yes
+  become_user: aidbox
+
+# At the end, enable and start!
+- name: SYSTEMD | Enable & Start Aidbox
+  systemd:
+    name: aidbox
+    enabled: yes
+    state: started
+    daemon_reload: yes
