@@ -1,4 +1,8 @@
 ---
+# Those values can be overriden within a group_vars file or
+# inside vault files. If specified at both places, what is
+# specified in the vault file takes priority over what is
+# defined in the group_vars file.
 
 ###### ACCOUNTS TO AUTOMATICALLY ADD
 
