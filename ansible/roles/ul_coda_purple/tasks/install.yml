@@ -44,4 +44,11 @@
     group: root
     mode: 0664
 
-# The container image is locally built and assumed to be present, no need to prefetch it
+# 'podman system migrate' is required else, an error will be thrown :
+# "there might not be enough IDs available in the namespace (requested 0:42 for /etc/gshadow): lchown /etc/gshadow: invalid argument"
+- name: COMMAND | podman system migrate
+  command: /bin/podman system migrate
+  become: yes
+  become_user: coda
+
+#TODO: Prefetch podman image
