@@ -49,14 +49,14 @@ fi
 echo "${BOLD}${YELLOW}*** CREATING DEPLOYMENT USER ***${NORMAL}"
 
 userdel --remove coda19-deployment 2>/dev/null
-useradd coda19-deployment --groups wheel --password '$6$.UqcnmIDvAfWwCdq$5Jy3dsTcljF7hxcUsBvV9kA3Wt0UvMJ03L9XQFqNBVru7PX4.hEiWtzKK2vwhpAWSPCMWLC4gDgO2NPDw8CFH/' 2>/dev/null
+useradd coda19-deployment --groups wheel --password '$6$mayq9jenCSAnecbp$z64XGUJG3e9Gyh8rC6HIAS62ykwr4Tv0glAC1zjVVhq73S3bulIQXNuwRFc8QL.C3pUn2OOtKjComEViWGPLJ/' 2>/dev/null
 
 # CREATE .SSH FOLDER AND PUBLIC KEY
 # TODO: fetch public key from a remote repository
 
 mkdir -p ~coda19-deployment/.ssh
 cat << EOT> ~coda19-deployment/.ssh/authorized_keys
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDFfxBJ0T+HcFUehscJygx2npYdToTrahgpDI0o6+1fUmxYW/DqOulhuApxY9S5/2Ht7+IZBIH9/H6OZ9kjig0Q4X2jDbd/Y3+oZINYRyPP92w/d1j0H4YemfJfHIDt7xTSIlwwlPb5wFBOe0FevFChbdrP50Gqm0+HqVZw78IZjwdULLaX0LQR1u0J20Zihro+CFwBnPNIWEktSUgWo5rlMCGakrO+tzcxoLDWCnu6i47iFoZWibpl2yO+zjkOeAT9OyRuZi2Mw8I3PPlCxDY3+9BEa/cnszRMatMAn/J4cu7NFfTK0ZABwZB/37Rk8t+2hIiwtPpHyM7elYId5vS2lbTAAGlLRW57pZFKRWwzBSJHOBL0tVaKHQnklPpOa5EQ7sswv/YcYFt9FGOEth7y7M6M0YVt5FgcYqV+jSFwTicyD+9VQhs677IbwPZfeYDqvImUJZAT+6C9kccd3MUMGhgytqFNmVxtmfsuirws9L+OuIUimBDALyDfbKYCi/5yFB6VZX3eC3U0xSN0cm6Bn+r+OEuIdSm+AZ8wPg6KAdd22fGaZDUMbSifbCtwzn98+E1vtU7W8VGV5AfxRUh/QsqnSxqpUQfYiUch+g54dZ5e29AHDYJb8bzWWr0pDjYePSAUzBblZiv+9GaMMfz7LNt6cnF3XAoxOiYkm8/rcw== info@valeria.science
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC6nTz+2ijfUToJVlpEx1bt053dO8h9yE9cIKKI1vXltu2eH95IwMU1+4cCXt0C6ursfmqMpZfFShBTkS+DxWbfiIu7fA5HDyZPVya586BOdSo6WYfiMZ/jWS51qyXpHO7qCFPUCx7PhFkg9aq2eiR3qIUGHoUu8wuBHBKq09K75YBPKK1h9wPv9kUE9JDKTnnFFZM8VduI9Oc4Wv7+9Zl52RyajuCTdIuWD8NzcL6jd3U37bPLCI8JdaWDMgEEfbPkfRClUaL/BgS2+UitE1N8+5XRnguA9hcrvrRoOWVdvKbmI4QgUWCjcXxDpzWw3gH/1zKH5gLrM1stoBtrowS7d/DVlWDNaFqs4YYdex46uqszY/WcXOI4XowAEk2x9PJRC2ot+GklRZryL+K2ILZjGQfcm4dXtL/NRxFA1hay17IFmCmF8um3Aroiz7/rv3aKkZ4D1n99X/tX5WFYC9jmuNJHQYiY6oauIz9DguDb904od35aT2Wn5IRi1C4fk/UlGPEnOxGdVvDcyA2JoYA2g9OO3B2pCNA2JT37xWIV4NXBTnv9Zw4Fcpi4BIcTf0hYp2QFT8iYJNbbcBa0JPqQxeSAhc1pWSWOkRhnCPg4Ukw6jRzpEpUs9zwgzfaxC7vo5yyI+ZU291b9geWu5DAXi7oDfdweg4cwy4KQINxkjw== coda19-deployment
 EOT
 
 # SET OWNERSHIP AND PRIVILEGES
