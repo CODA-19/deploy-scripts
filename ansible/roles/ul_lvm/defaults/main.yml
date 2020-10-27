@@ -1,0 +1,6 @@
+---
+
+ul_lvm_enabled: false
+ul_lvm_pvresize_enabled: false
+
+ul_lvm_groups: []

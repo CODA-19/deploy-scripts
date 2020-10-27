@@ -1,0 +1,10 @@
+---
+
+- name: IMPORT_TASKS | Dependencies
+  import_tasks: dependencies.yml
+  tags: ul_lvm
+
+- name: IMPORT_TASKS | Manage LVM
+  import_tasks: manage-lvm.yml
+  when: ul_lvm_enabled | bool
+  tags: ul_lvm
