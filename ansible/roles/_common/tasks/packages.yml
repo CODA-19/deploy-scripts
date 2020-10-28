@@ -1,9 +1,25 @@
 ---
 
-- name: YUM | Install epel-release
+- name: YUM | Install epel-release and yum-utils
   yum:
-    name: epel-release
+    name:
+      - epel-release
+      - yum-utils
     state: present
+
+# Since we enforce repo_gpgcheck=1 globally in ul_stig and that EPEL .repo files don't
+# ship with this flag disabled, we must force it.
+#
+# At first, we use a brute force and non deterministic method with yum-config-manager.
+#
+# TODO: We could improve this step by carefully defining all required fields and by
+#       using yum_repository module. Also, specifying an HTTP mirror will make efficient
+#       use of proxy caching (eg: Squid).
+
+- name: COMMAND | Remove repo_gpgcheck from EPEL repositories
+  command: "yum-config-manager --save --setopt={{ item }}.repo_gpgcheck=0"
+  changed_when: false
+  with_items: "{{ _common_epel_repos }}"
 
 - name: YUM | Install common packages
   yum:

@@ -8,3 +8,6 @@ _common_selinux_packages:
 
 _common_yum_config_files:
   - /etc/yum.conf
+
+_common_epel_repos:
+  - epel
