@@ -13,9 +13,9 @@
     option: "{{ item.key }}"
     value: "{{ item.val }}"
   with_items:
-    - { key: localpkg_gpgcheck, val: "{{ ul_stig_yum_localpkg_gpgcheck }}" }
-    - { key: gpgcheck, val: "{{ ul_stig_yum_gpgcheck }}" }
-    - { key: repo_gpgcheck, val: "{{ ul_stig_yum_repo_gpgcheck }}" }
+    - { key: localpkg_gpgcheck,  val: "{{ ul_stig_yum_localpkg_gpgcheck }}" }
+    - { key: gpgcheck,           val: "{{ ul_stig_yum_gpgcheck          }}" }
+    - { key: repo_gpgcheck,      val: "{{ ul_stig_yum_repo_gpgcheck     }}" }
   register: _gpg
 
 # clean immediately rather than at the end of a play
