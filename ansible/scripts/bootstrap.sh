@@ -26,6 +26,10 @@ CODA19_ANSIBLE_BASE_URL=https://raw.githubusercontent.com/CODA-19/deploy-scripts
 CODA19_ANSIBLE_VENV_REQUIREMENTS_URL=${CODA19_ANSIBLE_BASE_URL}/requirements.txt
 CODA19_ANSIBLE_BOOTSTRAP_PLAYBOOK_URL=${CODA19_ANSIBLE_BASE_URL}/playbooks/misc/bootstrap.yml
 
+# DEPLOYMENT USER PUBLIC KEY URL
+
+CODA19_DEPLOYMENT_USER_PUB_KEY_URL=https://raw.githubusercontent.com/CODA-19/deploy-scripts/master/ansible/keys/id_rsa.deployment.pub
+
 #### DEFINE COLORS
 
 BOLD=$(tput bold)
@@ -79,12 +83,9 @@ userdel --remove coda19-deployment 2>/dev/null
 useradd coda19-deployment --groups wheel --password '$6$mayq9jenCSAnecbp$z64XGUJG3e9Gyh8rC6HIAS62ykwr4Tv0glAC1zjVVhq73S3bulIQXNuwRFc8QL.C3pUn2OOtKjComEViWGPLJ/' 2>/dev/null
 
 # CREATE .SSH FOLDER AND PUBLIC KEY
-# TODO: fetch public key from a remote repository
 
 mkdir -p ~coda19-deployment/.ssh
-cat << EOT> ~coda19-deployment/.ssh/authorized_keys
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC6nTz+2ijfUToJVlpEx1bt053dO8h9yE9cIKKI1vXltu2eH95IwMU1+4cCXt0C6ursfmqMpZfFShBTkS+DxWbfiIu7fA5HDyZPVya586BOdSo6WYfiMZ/jWS51qyXpHO7qCFPUCx7PhFkg9aq2eiR3qIUGHoUu8wuBHBKq09K75YBPKK1h9wPv9kUE9JDKTnnFFZM8VduI9Oc4Wv7+9Zl52RyajuCTdIuWD8NzcL6jd3U37bPLCI8JdaWDMgEEfbPkfRClUaL/BgS2+UitE1N8+5XRnguA9hcrvrRoOWVdvKbmI4QgUWCjcXxDpzWw3gH/1zKH5gLrM1stoBtrowS7d/DVlWDNaFqs4YYdex46uqszY/WcXOI4XowAEk2x9PJRC2ot+GklRZryL+K2ILZjGQfcm4dXtL/NRxFA1hay17IFmCmF8um3Aroiz7/rv3aKkZ4D1n99X/tX5WFYC9jmuNJHQYiY6oauIz9DguDb904od35aT2Wn5IRi1C4fk/UlGPEnOxGdVvDcyA2JoYA2g9OO3B2pCNA2JT37xWIV4NXBTnv9Zw4Fcpi4BIcTf0hYp2QFT8iYJNbbcBa0JPqQxeSAhc1pWSWOkRhnCPg4Ukw6jRzpEpUs9zwgzfaxC7vo5yyI+ZU291b9geWu5DAXi7oDfdweg4cwy4KQINxkjw== coda19-deployment@coda19.com
-EOT
+curl -so ~coda19-deployment/.ssh/authorized_keys ${CODA19_DEPLOYMENT_USER_PUB_KEY_URL}
 
 # SET OWNERSHIP AND PRIVILEGES
 
