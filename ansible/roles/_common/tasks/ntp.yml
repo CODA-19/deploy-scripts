@@ -1,5 +1,7 @@
 ---
 
+# TODO: ENSURE NTPD IS REMOVED
+
 - name: YUM | Ensure chrony is installed
   yum:
     name: chrony
