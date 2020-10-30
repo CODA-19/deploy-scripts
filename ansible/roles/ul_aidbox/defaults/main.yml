@@ -11,7 +11,7 @@ ul_aidbox_port: 8888
 ul_aidbox_db_owner: aidbox
 ul_aidbox_db_name: aidbox
 ul_aidbox_db_host: 127.0.0.1
-ul_aidbox_db_port: 5432
+ul_aidbox_db_port: 6432
 
 # Those are used for aidbox_svc.conf.j2
 
