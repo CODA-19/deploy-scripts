@@ -4,3 +4,8 @@
   yum:
     name: "{{ ul_podman_packages }}"
     state: present
+
+- name: "YUM | Install SKOPEO"
+  yum:
+    name: "{{ ul_skopeo_packages }}"
+    state: present
