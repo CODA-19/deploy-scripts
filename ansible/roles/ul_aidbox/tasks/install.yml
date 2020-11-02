@@ -70,21 +70,36 @@
   become: yes
   become_user: aidboxdb
 
-# Prefetch the image
-- name: PODMAN_IMAGE | Pull the AidboxDB image
-  podman_image:
-    name: "{{ ul_aidbox_db_image }}"
-    tag: "{{ ul_aidbox_db_image_tag }}"
-    state: present
-  become: yes
-  become_user: aidboxdb
+# systemctl start will be initiated but the rootless cronjob, add adequate sudoers definitions
+- name: COPY | Copy the AidBoxDB sudoers file
+  copy:
+    src: etc/sudoers.d/aidboxdb
+    dest: /etc/sudoers.d/aidboxdb
+    mode: 0644
+    owner: root
+    group: root
 
-# At the end, enable and start!
-- name: SYSTEMD | Enable & Start AidboxDB
+# Install the cron job that will check/pull the podman image and start the service upon it next run
+# The script has been installed by the _common role
+- name: CRON | Create the "pull & restart" job for AidBoxDB
+  cron:
+    name: "aidboxdb image check"
+    cron_file: "/etc/crontab"
+    user: "aidboxdb"
+    minute: "/15"
+    hour: "*"
+    day: "*"
+    month: "*"
+    weekday: "*"
+    job: "/usr/local/bin/update_podman_image.sh {{ ul_aidbox_db_image_registry }} {{ ul_aidbox_db_image }} {{ ul_aidbox_db_image_tag }} aidboxdb"
+
+# At the end, enable !
+# NOTE: As we use ansible_pull on this role, this paragraph will be excuted on each call, to disable the service,
+# deactivate the corresponding Cron job.
+- name: SYSTEMD | Enable AidboxDB
   systemd:
     name: aidboxdb
     enabled: yes
-    state: started
     daemon_reload: yes
 
 ##
@@ -150,19 +165,34 @@
   become: yes
   become_user: aidbox
 
-# Prefetch the image
-- name: PODMAN_IMAGE | Pull the Aidbox image
-  podman_image:
-    name: "{{ ul_aidbox_image }}"
-    tag: "{{ ul_aidbox_image_tag }}"
-    state: present
-  become: yes
-  become_user: aidbox
+# systemctl start will be initiated but the rootless cronjob, add adequate sudoers definitions
+- name: COPY | Copy the AidBox sudoers file
+  copy:
+    src: etc/sudoers.d/aidbox
+    dest: /etc/sudoers.d/aidbox
+    mode: 0644
+    owner: root
+    group: root
 
-# At the end, enable and start!
-- name: SYSTEMD | Enable & Start Aidbox
+# Install the cron job that will check/pull the podman image and start the service upon it next run
+# The script has been installed by the _common role
+- name: CRON | Create the "pull & restart" job for AidBoxDB
+  cron:
+    name: "aidboxdb image check"
+    cron_file: "/etc/crontab"
+    user: "aidboxdb"
+    minute: "/15"
+    hour: "*"
+    day: "*"
+    month: "*"
+    weekday: "*"
+    job: "/usr/local/bin/update_podman_image.sh {{ ul_aidbox_image_registry }} {{ ul_aidbox_image }} {{ ul_aidbox_image_tag }} aidbox"
+
+# At the end, enable !
+# NOTE: As we use ansible_pull on this role, this paragraph will be excuted on each call, to disable the service,
+# deactivate the corresponding Cron job.
+- name: SYSTEMD | Enable Aidbox
   systemd:
     name: aidbox
     enabled: yes
-    state: started
     daemon_reload: yes

@@ -1,0 +1,9 @@
+---
+# Simply copy at this point, orange/green/etc roles will do the rest
+- name: COPY | update_podman_image.sh
+  copy:
+    src: usr/local/bin/update_podman_image.sh
+    dest: /usr/local/bin/update_podman_image.sh
+    owner: root
+    group: root
+    mode: 0755

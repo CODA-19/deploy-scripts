@@ -21,8 +21,10 @@ ul_aidbox_conf_admin_password: password
 ul_aidbox_conf_client_id: client
 ul_aidbox_conf_client_secret: secret
 
-ul_aidbox_image: docker.io/healthsamurai/aidboxone
+ul_aidbox_image_registry: docker.io
+ul_aidbox_image: healthsamurai/aidboxone
 ul_aidbox_image_tag: 0.5.0-SNAPSHOT
 
-ul_aidbox_db_image: docker.io/aidbox/db
+ul_aidbox_db_image_registry: docker.io
+ul_aidbox_db_image: aidbox/db
 ul_aidbox_db_image_tag: 13.0.0

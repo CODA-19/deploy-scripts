@@ -1,0 +1,3 @@
+Cmnd_Alias SYSTEMCTL_CMD_AIDBOX=/bin/systemctl * aidbox
+
+aidbox  ALL=(root) NOPASSWD: SYSTEMCTL_CMD_AIDBOX
