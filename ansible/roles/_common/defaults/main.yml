@@ -41,6 +41,7 @@ _common_packages:
   - htop
   - iotop
   - iptraf-ng
+  - jq 
   - mlocate
   - net-tools
   - nethogs
