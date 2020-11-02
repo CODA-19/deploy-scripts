@@ -178,9 +178,9 @@
 # The script has been installed by the _common role
 - name: CRON | Create the "pull & restart" job for AidBoxDB
   cron:
-    name: "aidboxdb image check"
+    name: "aidbox image check"
     cron_file: "/etc/crontab"
-    user: "aidboxdb"
+    user: "aidbox"
     minute: "/15"
     hour: "*"
     day: "*"
