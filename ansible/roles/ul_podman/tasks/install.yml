@@ -1,11 +1,9 @@
 ---
-
 - name: "YUM | Install PODMAN"
   yum:
     name: "{{ ul_podman_packages }}"
     state: present
 
----
 # Simply copy at this point, orange/green/etc roles will do the rest
 - name: COPY | update_podman_image.sh
   copy:
@@ -14,3 +12,4 @@
     owner: root
     group: root
     mode: 0755
+    
