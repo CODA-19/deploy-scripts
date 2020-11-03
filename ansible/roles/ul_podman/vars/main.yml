@@ -2,6 +2,4 @@
 ul_podman_packages:
   - podman
   - podman-docker
-
-ul_skopeo_packages:
   - skopeo

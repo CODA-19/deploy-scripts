@@ -85,10 +85,3 @@
   tags:
     - _common
     - _common_swap
-
-# Avoids duplicates in each machine role
-- name: "IMPORT_TASKS | cron_scripts.yml"
-  import_tasks: cron_scripts.yml
-  tags:
-    - _common
-    - _common_cron_scripts
