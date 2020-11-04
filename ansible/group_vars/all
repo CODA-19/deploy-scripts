@@ -22,11 +22,13 @@ ul_postgresql_install_extensions:
 ul_postgresql_shared_preload_libraries:
   - pg_stat_statements
 
-ul_postgresql_ext_jsonknife: yes  
+ul_postgresql_ext_jsonknife: yes
 
 ################################################################################
 ###### UL_MINIO
 ################################################################################
+
+ul_minio_home_dir: /data/minio/
 
 ul_minio_server_firewalld_zones:
   - zone: public
