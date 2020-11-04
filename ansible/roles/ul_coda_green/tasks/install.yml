@@ -51,4 +51,25 @@
   become: yes
   become_user: coda
 
-# TODO: Prefetch podman image
+# systemctl start will be initiated but the rootless cronjob, add adequate sudoers definitions
+- name: COPY | Copy the sudoers file
+  copy:
+    src: etc/sudoers.d/coda
+    dest: /etc/sudoers.d/coda
+    mode: 0644
+    owner: root
+    group: root
+
+# Install the cron job that will check/pull the podman image and start the service upon it next run
+# The script has been installed by the ul_podman role
+- name: CRON | Create the "pull & restart" job
+  cron:
+    name: "coda green image check"
+    cron_file: "/etc/crontab"
+    user: "coda"
+    minute: "*/15"
+    hour: "*"
+    day: "*"
+    month: "*"
+    weekday: "*"
+    job: "/usr/local/bin/update_podman_image.sh {{ ul_coda_green_image_registry }} {{ ul_coda_green_image }} {{ ul_coda_green_image_tag }} coda_green"

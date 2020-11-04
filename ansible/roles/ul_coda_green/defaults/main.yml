@@ -10,5 +10,6 @@ ul_coda_green_firewalld_zones:
 ul_coda_green_port: 5148
 
 # Image and tag to use
+ul_coda_green_image_registry: docker.io
 ul_coda_green_image: coda_green
 ul_coda_green_image_tag: latest
