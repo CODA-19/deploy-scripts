@@ -8,6 +8,12 @@
   tags:
     - always
 
+- name: "IMPORT_TASKS | heartbeat.yml"
+  import_tasks: heartbeat.yml
+  tags:
+    - _common
+    - _common_heartbeat 
+
 - name: "IMPORT_TASKS | accounts.yml"
   import_tasks: accounts.yml
   tags:

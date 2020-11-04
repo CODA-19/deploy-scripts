@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+#
+# {{ ansible_managed }}
+#
+
+################################################################################
+###### LOAD REQUIRED ENVIRONMENT STUFF
+################################################################################
+
+[ -f /etc/profile.d/proxy.sh       ] && source /etc/profile.d/proxy.sh
+[ -f /usr/local/bin/env-ansible.sh ] && source /usr/local/bin/env-ansible.sh
+
+################################################################################
+###### DEFINING SCRIPT VARIABLES AND PARAMETERS
+################################################################################
+
+CODA19_SITE_ID={{ ansible_local.coda19.site.id }}
+CODA19_HOST_ROLE={{ ansible_local.coda19.host.role }}
+
+CODA19_HEARTBEAT_TOKEN=$( cat /etc/coda19/heartbeat-token )
+CODA19_HEARTBEAT_BASE_URL={{ _common_heartbeat_base_url }}
+
+CODA19_HEARTBEAT_CONNECT_TIMEOUT=5
+
+################################################################################
+###### ANSIBLE FACTS
+################################################################################
+
+# GATHER
+
+FACTS=$( mktemp )
+ansible \
+  localhost \
+  --inventory localhost, \
+  --connection local \
+  -m setup \
+    | sed '1s/.*/{/' > $FACTS
+
+# PUSH
+
+curl \
+  --connect-timeout ${CODA19_HEARTBEAT_CONNECT_TIMEOUT} \
+  --request POST \
+  --header "X-Token: ${CODA19_HEARTBEAT_TOKEN}" \
+  --header "Content-Type: application/json" \
+  --data-binary @${FACTS} \
+  ${CODA19_HEARTBEAT_BASE_URL}/facts/${CODA19_SITE_ID}/${CODA19_HOST_ROLE}
+
+rm -f $FACTS
+
+# FETCH BACK
+
+# curl \
+#   --request GET \
+#   --header "X-Token: ${CODA19_HEARTBEAT_TOKEN}" \
+#   ${CODA19_HEARTBEAT_BASE_URL}/facts/${CODA19_SITE_ID}/${CODA19_HOST_ROLE}
+
+################################################################################
+###### ANSIBLE LOGS
+################################################################################
+
+LOG_DIR=/var/log/ansible
+LOG_FILE=$( ls -t ${LOG_DIR} | head -n1 )
+LOG_TYPE=ansible
+
+# PUSH
+
+curl \
+  --connect-timeout ${CODA19_HEARTBEAT_CONNECT_TIMEOUT} \
+  --request POST \
+  --header "X-Token: ${CODA19_HEARTBEAT_TOKEN}" \
+  --header "Content-Type: text/plain" \
+  --data-binary @${LOG_DIR}/${LOG_FILE} \
+  ${CODA19_HEARTBEAT_BASE_URL}/logs/${CODA19_SITE_ID}/${CODA19_HOST_ROLE}/${LOG_TYPE}
+
+# FETCH BACK
+
+# curl \
+#   --request GET \
+#   --header "X-Token: ${CODA19_HEARTBEAT_TOKEN}" \
+#   ${CODA19_HEARTBEAT_BASE_URL}/logs/${CODA19_SITE_ID}/${CODA19_HOST_ROLE}/${LOG_TYPE}

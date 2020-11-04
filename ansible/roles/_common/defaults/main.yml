@@ -32,6 +32,17 @@ _common_global_noproxy: 127.0.0.1,localhost
 _common_yum_proxy_enabled: yes
 _common_yum_proxy: "{{ _common_global_proxy }}"
 
+###### HEARTBEAT
+#
+# Heartbeat service will be automatically enabled by default if and only if
+# there's a token defined with a length greater than 32 characters long.
+#
+
+_common_heartbeat_enabled: yes
+_common_heartbeat_base_url: https://heartbeat.hub.coda19.com
+_common_heartbeat_token: ""
+_common_heartbeat_interval: 5
+
 ###### PACKAGES
 
 _common_packages:
