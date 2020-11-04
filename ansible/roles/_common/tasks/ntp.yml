@@ -1,6 +1,11 @@
 ---
 
-# TODO: ENSURE NTPD IS REMOVED
+- name: YUM | Ensure ntp and ntpdate is removed
+  yum:
+    name:
+      - ntp
+      - ntpdate
+    state: absent
 
 - name: YUM | Ensure chrony is installed
   yum:
