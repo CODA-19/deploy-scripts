@@ -8,13 +8,12 @@
     not ul_minio_server_access_key or ul_minio_server_access_key is not defined or
     not ul_minio_server_access_key or ul_minio_server_access_key is not defined
 
-# TODO: what happens if directory exist and previously provisioned by an lvm mountpoint (ul_lvm) ?
 - name: "USER | Create MINIO user"
   user:
     name: minio
     system: yes
     shell: /sbin/nologin
-    home: /var/lib/minio
+    home: "{{ ul_minio_home_dir }}"
 
 ###### SERVER
 

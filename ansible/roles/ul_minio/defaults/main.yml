@@ -6,6 +6,8 @@ ul_minio_server_opts:
 
 ul_minio_server_port: 9000
 
+ul_minio_home_dir: /var/lib/minio
+
 ul_minio_server_firewalld_zones:
   - zone: public
     state: enabled
