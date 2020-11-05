@@ -1,32 +1,38 @@
 ---
-- name: YUM | Install aide required packages
-  yum:
-    name:
-      - aide
-      - mailx
-    state: present
 
-- name: COPY | Copy init script
-  copy:
-    src: init.sh
-    dest: /var/lib/aide/init.sh
-    owner: root
-    group: root
-    mode: 0700
+- block:
+  
+    - name: YUM | Install aide required packages
+      yum:
+        name:
+          - aide
+          - mailx
+        state: present
 
-- name: COMMAND | Initialize aide
-  command: /var/lib/aide/init.sh
-  changed_when: false
-  tags: skip_ansible_lint
+    - name: COPY | Copy init script
+      copy:
+        src: init.sh
+        dest: /var/lib/aide/init.sh
+        owner: root
+        group: root
+        mode: 0700
 
-- name: CRON | Create weekly aide check
-  cron:
-    name: "aide check"
-    cron_file: "/etc/crontab"
-    user: "root"
-    minute: "5"
-    hour: "4"
-    day: "*"
-    month: "*"
-    weekday: "0"
-    job: "/usr/sbin/aide --check | /bin/mail -s \"{{ ansible_hostname }} - AIDE Integrity Check\" root@localhost"
+    - name: COMMAND | Initialize aide
+      command: /var/lib/aide/init.sh
+      changed_when: false
+      tags: skip_ansible_lint
+
+    - name: CRON | Create weekly aide check
+      cron:
+        name: "aide check"
+        cron_file: "/etc/crontab"
+        user: "root"
+        minute: "5"
+        hour: "4"
+        day: "*"
+        month: "*"
+        weekday: "0"
+        job: "/usr/sbin/aide --check | /bin/mail -s \"{{ ansible_hostname }} - AIDE Integrity Check\" root@localhost"
+
+  tags:
+    - ul_aide
