@@ -7,7 +7,6 @@
   with_subelements:
     - "{{ ul_lvm_groups }}"
     - disks
-  tags: ul_lvm
 
 - name: COMMAND | wipefs - Effacer tables de partitions autre que LVM2
   command: "wipefs --all --force {{ item.item.1 }}"
@@ -16,7 +15,6 @@
   when:
     - "item.stdout_lines | length > 0"
     - "'LVM2_member' not in item.stdout"
-  tags: ul_lvm
 
 - name: COMMAND | pvresize - Seulement si déjà signature de type LVM2_member
   command: "pvresize {{ item.item.1 }}"
@@ -26,7 +24,6 @@
     - ul_lvm_pvresize_enabled | bool
     - "'LVM2_member' in item.stdout"
   changed_when: false
-  tags: ul_lvm
 
 - name: LVG | Création des Volume Group(s) (VG)
   lvg:
@@ -36,7 +33,6 @@
     pesize: "{{ item.pesize | default(omit) }}"
   with_items: "{{ ul_lvm_groups }}"
   when: item.create is defined and item.create | bool
-  tags: ul_lvm
 
 - name: LVOL | Création des Logical Volume(s) (LV)
   lvol:
@@ -53,7 +49,6 @@
     (item.0.create is defined and item.0.create | bool) and
     (item.1 is defined and item.1 | length > 0 ) and
     (item.1.create is defined and item.1.create | bool)
-  tags: ul_lvm
 
 - name: FILESYSTEM | Création des filesystems sur les nouveaux Logical Volume(s)
   filesystem:
@@ -67,7 +62,6 @@
     (item.0.create is defined and item.0.create | bool) and
     (item.1 is defined and item.1 | length > 0 ) and
     (item.1.create is defined and item.1.create | bool)
-  tags: ul_lvm
 
 - name: MOUNT | Montage des nouveaux systèmes de fichiers
   mount:
@@ -84,7 +78,6 @@
     (item.1 is defined and item.1 | length > 0 ) and
     (item.1.create is defined and item.1.create | bool) and
     (item.1.mount is defined and item.1.mount)
-  tags: ul_lvm
 
 # Étapes pour retrait
 
@@ -100,7 +93,6 @@
   when: >
     (item.1 is defined and item.1 != 'None') and
     (item.1.create is defined and not item.1.create)
-  tags: ul_lvm
 
 - name: LVOL | Suppression des logical volume(s)
   lvol:
@@ -114,7 +106,6 @@
   when: >
     (item.1 is defined and item.1 | length > 0 ) and
     (item.1.create is defined and not item.1.create | bool)
-  tags: ul_lvm
 
 - name: LVG | Suppression des volume group(s)
   lvg:
@@ -124,4 +115,3 @@
     force: yes
   with_items: "{{ ul_lvm_groups }}"
   when: item.create is defined and not item.create
-  tags: ul_lvm
