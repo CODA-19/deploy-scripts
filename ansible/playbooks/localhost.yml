@@ -51,25 +51,36 @@
       tags:
         - always
 
+    # Provision global facts from local ones, those one should be loaded from regular mecanism (inventory)
+    # when running in remote mode.
+    #
+    # Some tasks across de project must refer to these vars, being executed
+    # in local or remote mode.
+
+    - name: SET_FACT | Set coda19_* facts from local ones
+      set_fact:
+        coda19_site_id:   "{{ ansible_local.coda19.site.id   | lower }}"
+        coda19_host_role: "{{ ansible_local.coda19.host.role | lower }}"
+
   tasks:
 
     - name: INCLUDE_ROLE | _ORANGE
       include_role:
         name: _orange
-      when: "ansible_local.coda19.host.role|lower == 'orange'"
+      when: "coda19_host_role == 'orange'"
       tags:
         - always
 
     - name: INCLUDE_ROLE | _GREEN
       include_role:
         name: _green
-      when: "ansible_local.coda19.host.role|lower == 'green'"
+      when: "coda19_host_role == 'green'"
       tags:
         - always
 
     - name: INCLUDE_ROLE | _PURPLE
       include_role:
         name: _purple
-      when: "ansible_local.coda19.host.role|lower == 'purple'"
+      when: "coda19_host_role == 'purple'"
       tags:
         - always

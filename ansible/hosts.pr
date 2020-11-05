@@ -16,6 +16,31 @@ ul-cod-pr-gw01.l.ul.ca
 ul-cod-pr-gw02.l.ul.ca
 
 #------------------------------------------------------------------------------
+# GENERAL - AGGREGATE GROUPS
+#
+# Don't forget to complete children entries as we activate sites.
+#
+#------------------------------------------------------------------------------
+
+### ORANGE
+
+[orange:vars]
+coda19_host_role=orange
+
+[orange:children]
+s110_orange
+s116_orange
+
+### green
+
+[green:vars]
+coda19_host_role=green
+
+[green:children]
+s110_green
+s116_green
+
+#------------------------------------------------------------------------------
 # 110 - CHUM - Centre Hospitalier de l'Université de Montréal
 #------------------------------------------------------------------------------
 
