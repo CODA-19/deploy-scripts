@@ -1,0 +1,48 @@
+---
+
+- block:
+
+    - name: "FAIL | CHECK BLOCK DEVICES REQUIREMENTS"
+      fail:
+        msg: "FAIL: YOU MUST HAVE ENOUGH BLOCK DEVICES TO CONTINUE, FOUND: {{ ansible_devices.keys() | length | int }} NEEDED: {{ _data_min_block_devices }}"
+      when: ansible_devices.keys() | length | int < _data_min_block_devices
+
+    # We need to dynamically configure LVM here and it can't be done at group_vars level.
+    # Simply because we refer to an ansible_device at index 1, that maybe is not existing at parse time.
+    # We want to fail here, just in time when we manage storage devices.
+
+    - name: INCLUDE_ROLE | UL_LVM
+      include_role:
+        name: ul_lvm
+      vars:
+        ul_lvm_enabled: yes
+        ul_lvm_groups:
+          - vgname: VGData
+            disks:
+              # Find which block device to use for /data partition:
+              #   - If _data_block_device is defined, use it;
+              #   - If not, simply use the second device.
+              #     We assume that all devices are all of same type (sda,sdb; vda,vdb).
+              - "{{ _data_block_device | default('/dev/' + ( ansible_devices.keys() | select('match','^[vs]d') | list | sort )[1]) }}"
+            create: true
+
+            lvnames:
+              - lvname: LVData
+                size: +100%FREE
+                create: true
+                filesystem: xfs
+                mount: true
+                mount_point: /data
+
+  when:
+    - _data_enabled
+
+#### Always create the /data folder with good permissions
+
+- name: FILE | Ensure /data folder exists with good permissions
+  file:
+    path: /data
+    state: directory
+    owner: root
+    group: root
+    mode: 0755

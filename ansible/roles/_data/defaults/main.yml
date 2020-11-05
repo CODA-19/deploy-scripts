@@ -1,0 +1,8 @@
+---
+
+_data_enabled: yes
+_data_min_block_devices: 2
+
+# By default, we use the second device in list.
+# It is possible to overwrite by defining this variable if needed.
+#_data_block_device:
