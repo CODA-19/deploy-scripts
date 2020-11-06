@@ -20,6 +20,7 @@ ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile /%t/aidboxdb/%n-cid /%tmp/
 KillMode=none
 Type=forking
 PIDFile=/%t/aidboxdb/%n-pid
+TimeoutSec={{ aidbox_wu_timeout }}
 
 [Install]
 WantedBy=multi-user.target

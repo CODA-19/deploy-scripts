@@ -13,3 +13,5 @@ ul_coda_green_port: 5148
 ul_coda_green_image_registry: docker.io
 ul_coda_green_image: coda_green
 ul_coda_green_image_tag: latest
+
+ul_coda_green_timeout: 120

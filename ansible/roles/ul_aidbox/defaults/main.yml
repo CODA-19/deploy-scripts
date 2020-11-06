@@ -28,3 +28,7 @@ ul_aidbox_image_tag: 0.5.0-SNAPSHOT
 ul_aidbox_db_image_registry: docker.io
 ul_aidbox_db_image: aidbox/db
 ul_aidbox_db_image_tag: 13.0.0
+
+# Startup timeouts expressed in seconds
+ul_aidbox_wu_timeout: 120
+ul_aidbox_db_wu_timeout: 120
