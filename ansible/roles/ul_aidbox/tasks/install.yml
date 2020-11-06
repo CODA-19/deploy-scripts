@@ -93,12 +93,21 @@
     weekday: "*"
     job: "/usr/local/bin/update_podman_image.sh {{ ul_aidbox_db_image_registry }} {{ ul_aidbox_db_image }} {{ ul_aidbox_db_image_tag }} aidboxdb"
 
+- name: "PODMAN_IMAGE | Ensure «aidboxdb» image is present: {{ ul_aidbox_db_image_registry }}/{{ ul_aidbox_db_image }}:{{ ul_aidbox_db_image_tag }}"
+  podman_image:
+    name: "{{ ul_aidbox_db_image_registry }}/{{ ul_aidbox_db_image }}"
+    tag: "{{ ul_aidbox_db_image_tag }}"
+    state: present
+  become: true
+  become_user: aidboxdb
+
 # At the end, enable !
 # NOTE: As we use ansible_pull on this role, this paragraph will be excuted on each call, to disable the service,
 # deactivate the corresponding Cron job.
 - name: SYSTEMD | Enable AidboxDB
   systemd:
     name: aidboxdb
+    state: started
     enabled: yes
     daemon_reload: yes
 
@@ -188,11 +197,20 @@
     weekday: "*"
     job: "/usr/local/bin/update_podman_image.sh {{ ul_aidbox_image_registry }} {{ ul_aidbox_image }} {{ ul_aidbox_image_tag }} aidbox"
 
+- name: "PODMAN_IMAGE | Ensure «aidbox» image is present: {{ ul_aidbox_image_registry }}/{{ ul_aidbox_image }}:{{ ul_aidbox_image_tag }}"
+  podman_image:
+    name: "{{ ul_aidbox_image_registry }}/{{ ul_aidbox_image }}"
+    tag: "{{ ul_aidbox_image_tag }}"
+    state: present
+  become: true
+  become_user: aidbox
+
 # At the end, enable !
 # NOTE: As we use ansible_pull on this role, this paragraph will be excuted on each call, to disable the service,
 # deactivate the corresponding Cron job.
 - name: SYSTEMD | Enable Aidbox
   systemd:
     name: aidbox
+    state: started
     enabled: yes
     daemon_reload: yes
