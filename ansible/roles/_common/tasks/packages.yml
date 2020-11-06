@@ -15,11 +15,12 @@
 # TODO: We could improve this step by carefully defining all required fields and by
 #       using yum_repository module. Also, specifying an HTTP mirror will make efficient
 #       use of proxy caching (eg: Squid).
-
-- name: COMMAND | Remove repo_gpgcheck from EPEL repositories
-  command: "yum-config-manager --save --setopt={{ item }}.repo_gpgcheck=0"
-  changed_when: false
-  with_items: "{{ _common_epel_repos }}"
+#
+# Bogus under centos 7
+# - name: COMMAND | Remove repo_gpgcheck from EPEL repositories
+#   command: "yum-config-manager --save --setopt={{ item }}.repo_gpgcheck=0"
+#   changed_when: false
+#   with_items: "{{ _common_epel_repos }}"
 
 - name: YUM | Install common packages
   yum:
