@@ -61,6 +61,8 @@
       set_fact:
         coda19_site_id:   "{{ ansible_local.coda19.site.id   | lower }}"
         coda19_host_role: "{{ ansible_local.coda19.host.role | lower }}"
+      tags:
+        - always
 
   tasks:
 
