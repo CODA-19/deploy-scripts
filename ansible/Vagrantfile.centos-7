@@ -64,7 +64,7 @@ Vagrant.configure("2") do |config|
       sed -Ei '/^metalink/d'              /etc/yum.repos.d/epel.repo
       sed -Ei 's/^#\s?baseurl/baseurl/g'  /etc/yum.repos.d/epel.repo
 
-      yum-config-manager --save --setopt=epel.baseurl='http://fedora-epel.mirror.iweb.com/$releasever/$basearch/' >/dev/null
+      yum-config-manager --save --setopt=epel.baseurl='http://fedora-epel.mirror.iweb.ca/$releasever/$basearch/' >/dev/null
       yum-config-manager --save --setopt=epel.repo_gpgcheck=0                                                     >/dev/null
 
       # Install centos-release-scl for llvm used by postgresql<version>-devel on centos 7
@@ -76,20 +76,12 @@ Vagrant.configure("2") do |config|
 
   SHELL
 
-   config.vm.provision "ansible" do |ansible|
-     ansible.verbose  = "v"
-     ansible.raw_arguments  = [
-       "--become",
-       #"--tags=ul_stig_repository",
-       #"--tags=ul_stig",
-       #"--tags=_common_selinux",
-       #"--tags=_common_accounts",
-       #"--tags=_common_firewall",
-       #"--tags=ul_postgresql",
-       #"--tags=ul_minio",
-       #"--tags=ul_podman",
-     ]
-     ansible.playbook = "playbooks/misc/vagrant.yml"
-   end
+   # config.vm.provision "ansible" do |ansible|
+   #   ansible.verbose  = "v"
+   #   ansible.raw_arguments  = [
+   #     "--become",
+   #   ]
+   #   ansible.playbook = "playbooks/misc/vagrant.yml"
+   # end
 
 end
