@@ -1,0 +1,8 @@
+---
+
+# Example customization when deploying locally
+
+_common_global_proxy: http://192.168.10.55:3128
+_common_heartbeat_base_url: http://192.168.10.55:5000
+
+_data_enabled: no
