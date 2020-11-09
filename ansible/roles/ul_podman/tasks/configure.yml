@@ -16,3 +16,15 @@
     name: user.max_user_namespaces
     value: "{{ ul_podman_max_user_namespaces }}"
     state: present
+
+# On CentOS 7 *only*, the line in storage.conf
+#   mountopt = "nodev,metacopy=on"
+# MUST be changed to:
+#   mountopt = "nodev"
+# Else weird behavior occurs with commands like "podman networks ..."
+- name: "LINEINFILE | Remove 'metacopy=on' from /etc/containers/storage.conf"
+  lineinfile:
+    regex: '^mountopt = "nodev,metacopy=on"'
+    line: 'mountopt = "nodev"'
+    state: present
+  when: ansible_distribution_major_version == '7'
