@@ -24,6 +24,7 @@
 # Else weird behavior occurs with commands like "podman networks ..."
 - name: "LINEINFILE | Remove 'metacopy=on' from /etc/containers/storage.conf"
   lineinfile:
+    path: /etc/containers/storage.conf
     regex: '^mountopt = "nodev,metacopy=on"'
     line: 'mountopt = "nodev"'
     state: present
