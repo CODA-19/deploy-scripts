@@ -1,6 +1,6 @@
 ---
 
-ul_coda_hub_api_url: https:/api-poc.hub.coda19.com/
+ul_coda_hub_api_url: https://hub-api-poc.hub.coda19.com
 
 ul_coda_green_firewalld_zones:
   - zone: public
