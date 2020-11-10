@@ -17,6 +17,7 @@ ExecStartPre=/bin/chmod 1770 /tmp/%n.tmp
 ExecStart=/usr/bin/podman run --env-file /etc/aidboxdb/aidboxdb_vars --log-driver journald --conmon-pidfile  /%t/aidboxdb/%n-pid  --cidfile /%t/aidboxdb/%n-cid --network host -p {{ ul_aidbox_db_port }}:5432 -v /data/aidboxdb:/data:z -v /tmp/%n.tmp:/tmp:z -d {{ ul_aidbox_db_image_registry }}/{{ ul_aidbox_db_image }}:{{ ul_aidbox_db_image_tag }}
 ExecStop=/usr/bin/podman stop --ignore --cidfile /%t/aidboxdb/%n-cid -t 30
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile /%t/aidboxdb/%n-cid /%tmp/%n.tmp
+ExecStopPost=/usr/bin/rm -f aidbox_db.last
 KillMode=none
 Type=forking
 PIDFile=/%t/aidboxdb/%n-pid
