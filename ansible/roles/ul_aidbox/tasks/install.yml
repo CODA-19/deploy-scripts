@@ -108,7 +108,6 @@
 - name: SYSTEMD | Enable AidboxDB
   systemd:
     name: aidboxdb
-    state: started
     enabled: yes
     daemon_reload: yes
 
@@ -214,6 +213,5 @@
 - name: SYSTEMD | Enable Aidbox
   systemd:
     name: aidbox
-    state: started
     enabled: yes
     daemon_reload: yes
