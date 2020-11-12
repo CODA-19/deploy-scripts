@@ -8,55 +8,111 @@
 #  * podman_registry_url: where to fetch the container image
 #  * podman_image_name : the podman image name
 #  * podman_image_tag : the tag of podman_image_name to use
+#  * podman_run_extra_args: Extra argument to pass to podman run, typically "-v host/dir:container:dir -p HostPort:ContainerPort"
 #  * run_as_user: The user under which "podman pull" will be done (and the service will run under)
-#  * systemd_unit_name : the system unit name to restart on podman_image_name:podman_image_tag update (without the final ".service")
 #
 # Because podman images are specific to a user account (stored in ~/.local) thus not shareable
 # between accounts, this playbook *must* be invoked under the account the service corresponding
 # to  the podman image will run under.
 
+
 - name: "SERVICE/CONTAINERS MANAGEMENT PLAYBOOK"
   hosts: all
   connection: local
-  gather_facts: no
+  gather_facts: yes
   vars:
     facts_file: /etc/ansible/facts.d/coda19.fact
-    vault_pass_file: /etc/ansible/vault.pass
-  environment:
-    http_proxy: "{{ ansible_local.coda19.proxy }}"
-    https_proxy: "{{ ansible_local.coda19.proxy }}"
 
   tasks:
 
-    - fail: "FAIL | Check if all input variables are set up"
-      when: "(podman_registry_url is undefined or podman_registry_url == '' or podman_registry_url is None) or
-             (podman_image_name is undefined or podman_image_name == "" or podman_image_name is None) or
-             (podman_image_tag is undefined or podman_image_tag == "" or podman_image_tag is None) or
-             (run_as_user is undefined or run_as_user == "" or run_as_user is None) or
-             (systemd_unit_name is undefined or run_as_user == "" or run_as_user is None) or
+    - name: "FAIL | Args check"
+      fail:
+        msg: "Bad number of arguments"
+      when: "(podman_registry_url is undefined or podman_registry_url == '') or
+             (podman_image_name is undefined or podman_image_name == '' ) or
+             (podman_image_tag is undefined or podman_image_tag == '' ) or
+             (podman_run_extra_args is undefined or podman_run_extra_args == '' ) or
+             (run_as_user is undefined or run_as_user == '' )"
 
-    - name: "SHELL | skopeo inspect docker://{{ podman_registry_url }}/{{ podman_image_name }}:{{ podman_image_tag }}"
-      shell: "/usr/bin/skopeo inspect docker://{{ podman_registry_url }}/{{ podman_image_name }}:{{ podman_image_tag }} | jq '.Digest'"
-      register: _podman_image_digest
+    - name: "FILE | Ensure the presence of /var/run/{{ run_as_user }}"
+      file:
+        name: "/var/run/{{ run_as_user }}"
+        state: directory
+        mode: 0750
+        owner: "{{ run_as_user }}"
 
-    - name: "COPY | Keep a souvenir of the remote image digest"
-      copy:
-        dest: "/var/run/{{ run_as_user }}/remote_digest }}"
-        content: "{{ _podman_image_digest.stdout }}"
-      register: _copy_digest.changed
+    # If a an image has been pulled (new image or existing image updated) => _podman_image.changed == true
+
+    - name: PODMAN_IMAGE | Pull the image
+      podman_image:
+        name: "{{ podman_registry_url }}/{{ podman_image_name }}:{{ podman_image_tag }}"
+      become_user: "{{ run_as_user }}"
+      become: yes
+      register: _podman_image
+      environment:
+        http_proxy: "{{ ansible_local.coda19.site.proxy }}"
+        https_proxy: "{{ ansible_local.coda19.site.proxy }}"
+
+    # On change, stop the container and remove it
+
+    - name: SHELL | podman stop
+      shell: |
+        /usr/bin/podman stop -t 30 --ignore --cidfile=/var/run/{{ run_as_user }}/{{ podman_image_name | replace('/','_') }}
+        /usr/bin/podman rm --ignore -f --cidfile=/var/run/{{ run_as_user }}/{{ podman_image_name | replace('/','_') }}.cid
+        /bin/rm -f /var/run/{{ run_as_user }}/{{ podman_image_name | replace('/','_') }}.cid
+      when: _podman_image.changed
+
+
+    # And start it again....
+    # ....If the system is in a clean state, we should not have any cidfile (non-existing as a initial condition, or previously removed in the just above step)
+    # in that case (and in that case only), start the service else we will end up by having multiple instances which is obviously not suitable ;)
+    # In order to have a  filled-in cidfile, => -d is mandatory
+
+    - name: STAT | check if cid file exists
+      stat:
+        path: "/var/run/{{ run_as_user }}/{{ podman_image_name | replace('/','_') }}.cid"
+      register: _podman_cidfile
+
+    # If a CID file exists, check if we have a running container. If nothing is running _podman_inspect.stdout will contain "false". If an invalid container ID is checked, the output will be empty
+    - name: SYSTEM | Inspect for running container
+      ignore_errors: yes
+      shell: |
+        /usr/bin/podman inspect `cat /var/run/{{ run_as_user }}/{{ podman_image_name | replace('/','_') }}.cid` | /bin/jq '.[0].State.Running' | grep -v -i error | grep -v -i null
+      register: _podman_inspect
+      become_user: "{{ run_as_user }}"
+      become: yes
+      when: _podman_cidfile.stat.exists == True
+
+    # If we have "error" (followed by second line where a "null" can be read) on the above "podman inspect" result, that means the container failed to start or died the hard way so remove the CID file to enable
+    # the next step to start the container again. Also removes the dead container (might not exist)
 
     - block:
-        - name: PODMAN_IMAGE | Pull the image
-          podman_image:
-            name: "{{ podman_registry_url }}/{{ podman_image_name }}:{{ podman_image_tag }}"
-            force: yes
-          become_user: "{{ run_as_user }}"
-          become: yes
+      - name: SHELL | Remove the dead container (do not abort if this fails)
+        ignore_errors: yes
+        shell: |
+          /usr/bin/podman rm  `cat /var/run/{{ run_as_user }}/{{ podman_image_name | replace('/','_') }}.cid`
+        become_user: "{{ run_as_user }}"
+        become: yes
 
-        - name: SYSTEMD | Restart service
-          systemd:
-            name: {{ systemd_unit_name }}
-            daemon_reload: yes
-            state: restarted
+      - name: FILE | Remove CID file
+        file:
+          path: "/var/run/{{ run_as_user }}/{{ podman_image_name | replace('/','_') }}.cid"
+          state: absent
 
-      when: _copy_digest.changed
+      when: _podman_cidfile.stat.exists == True and not _podman_inspect.stdout == "true"
+
+    # If the CID file survived, do nothing else start the container again
+
+    - name: STAT | check if cid file exists (final state)
+      stat:
+        path: "/var/run/{{ run_as_user }}/{{ podman_image_name | replace('/','_') }}.cid"
+      register: _podman_cidfile
+
+    - name: SHELL | podman start
+      shell: |
+        /usr/bin/podman run --log-driver=journald --cidfile=/var/run/{{ run_as_user }}/{{ podman_image_name | replace('/','_') }}.cid -d {{ podman_run_extra_args }} {{ podman_registry_url }}/{{ podman_image_name }}:{{ podman_image_tag }}
+      become_user: "{{ run_as_user }}"
+      become: yes
+      when: _podman_cidfile.stat.exists == False
+
+    # At this point, we should have a running container, if it is not the case the next execution of this playbook will see a CID file but no running container with hat CID so the container will be started again.
