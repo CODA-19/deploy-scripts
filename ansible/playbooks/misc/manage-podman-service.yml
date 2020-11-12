@@ -1,0 +1,62 @@
+---
+#
+# This playbook inspect and pulls podman images and restarts the
+# corresponding systemd workunit
+#
+# This playbook must be called
+# with the following paremeters set:d
+#  * podman_registry_url: where to fetch the container image
+#  * podman_image_name : the podman image name
+#  * podman_image_tag : the tag of podman_image_name to use
+#  * run_as_user: The user under which "podman pull" will be done (and the service will run under)
+#  * systemd_unit_name : the system unit name to restart on podman_image_name:podman_image_tag update (without the final ".service")
+#
+# Because podman images are specific to a user account (stored in ~/.local) thus not shareable
+# between accounts, this playbook *must* be invoked under the account the service corresponding
+# to  the podman image will run under.
+
+- name: "SERVICE/CONTAINERS MANAGEMENT PLAYBOOK"
+  hosts: all
+  connection: local
+  gather_facts: no
+  vars:
+    facts_file: /etc/ansible/facts.d/coda19.fact
+    vault_pass_file: /etc/ansible/vault.pass
+  environment:
+    http_proxy: "{{ ansible_local.coda19.proxy }}"
+    https_proxy: "{{ ansible_local.coda19.proxy }}"
+
+  tasks:
+
+    - fail: "FAIL | Check if all input variables are set up"
+      when: "(podman_registry_url is undefined or podman_registry_url == '' or podman_registry_url is None) or
+             (podman_image_name is undefined or podman_image_name == "" or podman_image_name is None) or
+             (podman_image_tag is undefined or podman_image_tag == "" or podman_image_tag is None) or
+             (run_as_user is undefined or run_as_user == "" or run_as_user is None) or
+             (systemd_unit_name is undefined or run_as_user == "" or run_as_user is None) or
+
+    - name: "SHELL | skopeo inspect docker://{{ podman_registry_url }}/{{ podman_image_name }}:{{ podman_image_tag }}"
+      shell: "/usr/bin/skopeo inspect docker://{{ podman_registry_url }}/{{ podman_image_name }}:{{ podman_image_tag }} | jq '.Digest'"
+      register: _podman_image_digest
+
+    - name: "COPY | Keep a souvenir of the remote image digest"
+      copy:
+        dest: "/var/run/{{ run_as_user }}/remote_digest }}"
+        content: "{{ _podman_image_digest.stdout }}"
+      register: _copy_digest.changed
+
+    - block:
+        - name: PODMAN_IMAGE | Pull the image
+          podman_image:
+            name: "{{ podman_registry_url }}/{{ podman_image_name }}:{{ podman_image_tag }}"
+            force: yes
+          become_user: "{{ run_as_user }}"
+          become: yes
+
+        - name: SYSTEMD | Restart service
+          systemd:
+            name: {{ systemd_unit_name }}
+            daemon_reload: yes
+            state: restarted
+
+      when: _copy_digest.changed
