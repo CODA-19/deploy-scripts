@@ -32,8 +32,8 @@
              (podman_run_extra_args is undefined or podman_run_extra_args == '' ) or
              (run_as_user is undefined or run_as_user == '' )"
 
-    # First, check what exists (locally), remeber podman images are per user account :)
-    # if nothing exists, we will see the string  'null'
+    # First, check what exists (locally), remember podman images are per user account :)
+    # If nothing exists, we will see the string  'null'
 
     - name: SHELL | Check local image for {{ podman_image_name }}:{{ podman_image_tag }}
       shell: |
@@ -43,6 +43,7 @@
       become: yes
 
     # Check what the remote image digest is
+    # If nothing exists, we will see an empty string
 
     - name: SHELL | Check the remote image digest
       shell: |
@@ -59,7 +60,7 @@
     - name: FAIL | Missing remote image
       fail:
         msg: "FATAL: Missing remote image : {{ podman_registry_url }}/{{ podman_image_name }}:{{ podman_image_tag }}"
-      when: remote_image_digest.stdout  == 'null'
+      when: remote_image_digest.stdout  == ''
 
     # If the remote image changed, pull and stop the running container
 
