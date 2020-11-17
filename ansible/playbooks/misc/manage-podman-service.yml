@@ -63,7 +63,7 @@
 
     # If the remote image changed, stop the running container and pull the image again
     # do not suppress anything at this time, the next step will catch it (CID file is there but no running container)
-    # In thecase we have no local image (i.e. local_image_digest.stdout == 'null'), we must skip this step of course...
+    # In the case we have no local image (i.e. local_image_digest.stdout == 'null'), we must skip this step of course...
 
     - block:
 
@@ -72,6 +72,8 @@
           OLD_CID=`cat /var/run/{{ RUN_AS_USER }}/{{ PODMAN_IMAGE_NAME | replace('/','_') }}.cid`
           /usr/bin/podman stop -t 60 ${OLD_CID}
           /usr/bin/podman inspect ${OLD_CID} | /bin/jq '.[0].State.Running' | grep 'true'
+          # Return success even grep reports no matches
+          exit 0
         register: _podman_stop
 
       - name: FAIL | Check if the container is still running after a stop which is totally wrong at this point
