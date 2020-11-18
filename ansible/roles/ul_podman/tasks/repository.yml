@@ -19,9 +19,11 @@
           [devel_kubic_libcontainers_stable]
           name=Stable Releases of Upstream github.com/containers packages (CentOS_7)
           type=rpm-md
-          baseurl=https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_7/
+          #baseurl=https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_7/
+          baseurl=https://ftp.gwdg.de/pub/opensuse/repositories/devel:/kubic:/libcontainers:/stable/CentOS_7/
           gpgcheck=1
-          gpgkey=https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_7/repodata/repomd.xml.key
+          #gpgkey=https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_7/repodata/repomd.xml.key
+          gpgkey=https://ftp.gwdg.de/pub/opensuse/repositories/devel:/kubic:/libcontainers:/stable/CentOS_7/repodata/repomd.xml.key
           enabled=1
 
   when:
@@ -72,7 +74,7 @@
         creates: /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:rhcontainerbot:container-selinux.repo
 
     # OPTION 2 : Copy repository content
-    
+
     # - name: COPY | Create COPR rhcontainerbot/container-selinux repository
     #   copy:
     #     dest: /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:rhcontainerbot:container-selinux.repo
