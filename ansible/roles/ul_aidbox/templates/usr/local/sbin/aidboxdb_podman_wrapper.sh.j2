@@ -21,7 +21,7 @@ PODMAN_IMAGE_TAG={{ ul_aidbox_db_image_tag }}
 # to remap ports as the container network stacks is not isolated from the host
 PODMAN_RUN_EXTRA_ARGS="--network=host --volume=/tmp/aidboxdb:/tmp:z --volume=/data/aidboxdb:/data:z"
 
-if [[ ${USER} != "root"]];
+if [[ ${USER} != "root"]]
 then
   echo "$0 is intended to be run by root"
   exit 1
