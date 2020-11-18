@@ -53,7 +53,7 @@
     owner: root
     group: root
     mode: 0664
-    
+
 # Generates the wrapper script for AidBox
 - name: TEMPLATE | Copy the wrapper script for AidBoxDB
   template:
@@ -76,7 +76,7 @@
   cron:
     name: "aidboxdb image check"
     cron_file: "/etc/crontab"
-    user: "aidboxdb"
+    user: "root"
     minute: "*/15"
     hour: "*"
     day: "*"
@@ -161,7 +161,7 @@
   cron:
     name: "AidBox image check"
     cron_file: "/etc/crontab"
-    user: "aidbox"
+    user: "root"
     minute: "*/15"
     hour: "*"
     day: "*"

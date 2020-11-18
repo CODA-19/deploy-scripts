@@ -21,7 +21,7 @@ PODMAN_IMAGE_TAG={{ ul_aidbox_image_tag }}
 # to remap ports as the container network stacks is not isolated from the host
 PODMAN_RUN_EXTRA_ARGS="--network=host"
 
-if [[ ${USER} != "root"]]
+if [[ `/bin/whoami` != "root" ]] ;
 then
   echo "$0 is intended to be run by root"
   exit 1

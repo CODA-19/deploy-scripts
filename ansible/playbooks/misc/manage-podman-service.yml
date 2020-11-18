@@ -8,7 +8,7 @@
 #  * PODMAN_REGISTRY_URL: where to fetch the container image
 #  * PODMAN_IMAGE_NAME : the podman image name
 #  * PODMAN_IMAGE_TAG : the tag of podman_image_name to use
-#  * RUN_AS_USER: The user under which "podman pull" will be done (and the service will run under)
+#  * PODMAN_RUN_AS: The user under which "podman pull" will be done (and the service will run under)
 #
 # Because podman images are specific to a user account (stored in ~/.local) thus not shareable
 # between accounts, this playbook *must* be invoked under the account the service corresponding
@@ -30,23 +30,23 @@
              (PODMAN_IMAGE_NAME is undefined or PODMAN_IMAGE_NAME == '' ) or
              (PODMAN_IMAGE_TAG is undefined or PODMAN_IMAGE_TAG == '' ) or
              (PODMAN_RUN_EXTRA_ARGS is undefined or PODMAN_RUN_EXTRA_ARGS == '' ) or
-             (RUN_AS_USER is undefined or RUN_AS_USER == '' )"
+             (PODMAN_RUN_AS is undefined or PODMAN_RUN_AS == '' )"
 
-    - name: FILE: Ensure /var/run/{{ RUN_AS_USER }} is present
+    - name: "FILE | Ensure /var/run/RUN_AS is present"
       file:
-        path: /var/run/{{ RUN_AS_USER }}
+        path: "/var/run/{{ PODMAN_RUN_AS }}"
         mode: 0770
-        owner: {{ RUN_AS_USER }}
+        owner: "{{ PODMAN_RUN_AS }}"
         state: directory
 
     # Check what exists (locally), remeber podman images are per user account :)
     # if nothing exists, we will see the string  'null'
 
-    - name: SHELL | Check local image for {{ podman_image_name }}:{{ podman_image_tag }}
+    - name: SHELL | Check the local image digest
       shell: |
         /usr/bin/podman inspect {{ PODMAN_REGISTRY_URL }}/{{ PODMAN_IMAGE_NAME }}:{{ PODMAN_IMAGE_TAG }} 2> /dev/null | jq '.[0].Digest'
       register: local_image_digest
-      become_user: "{{ RUN_AS_USER }}"
+      become_user: "{{ PODMAN_RUN_AS }}"
       become: yes
 
     # Check what the remote image digest is
@@ -55,7 +55,7 @@
       shell: |
         /usr/bin/skopeo --authfile=/tmp/dummy.json inspect docker://{{ PODMAN_REGISTRY_URL }}/{{ PODMAN_IMAGE_NAME }}:{{ PODMAN_IMAGE_TAG }} 2> /dev/null  | jq '.Digest'
       register: remote_image_digest
-      become_user: "{{ RUN_AS_USER }}"
+      become_user: "{{ PODMAN_RUN_AS }}"
       become: yes
       environment:
         http_proxy: "{{ ansible_local.coda19.site.proxy }}"
@@ -76,7 +76,7 @@
 
       - name: SHELL | podman stop
         shell: |
-          OLD_CID=`cat /var/run/{{ RUN_AS_USER }}/{{ PODMAN_IMAGE_NAME | replace('/','_') }}.cid`
+          OLD_CID=`cat /var/run/{{ PODMAN_RUN_AS }}/{{ PODMAN_IMAGE_NAME | replace('/','_') }}.cid`
           /usr/bin/podman stop -t 60 ${OLD_CID}
           /usr/bin/podman inspect ${OLD_CID} | /bin/jq '.[0].State.Running' | grep 'true'
           # Return success even grep reports no matches
@@ -89,7 +89,7 @@
         when: _podman_stop.stdout == 'true'
 
       when: (remote_image_digest.stdout != local_image_digest.stdout) and (local_image_digest.stdout != 'null')
-      become_user: "{{ RUN_AS_USER }}"
+      become_user: "{{ PODMAN_RUN_AS }}"
       become: yes
 
     # If the container image has changed (or if we have no initial image) => pull
@@ -103,7 +103,7 @@
           http_proxy: "{{ ansible_local.coda19.site.proxy }}"
           https_proxy: "{{ ansible_local.coda19.site.proxy }}"
       when: remote_image_digest.stdout != local_image_digest.stdout
-      become_user: "{{ RUN_AS_USER }}"
+      become_user: "{{ PODMAN_RUN_AS }}"
       become: yes
 
     # ....If the system is in a clean state, we should not have any cidfile (non-existing as a initial condition, or previously removed in the just above step)
@@ -112,16 +112,16 @@
 
     - name: STAT | Check if the CID file exists
       stat:
-        path: "/var/run/{{ RUN_AS_USER }}/{{ PODMAN_IMAGE_NAME | replace('/','_') }}.cid"
+        path: "/var/run/{{ PODMAN_RUN_AS }}/{{ PODMAN_IMAGE_NAME | replace('/','_') }}.cid"
       register: _podman_cidfile
 
     # If a CID file exists, check if we have a running container. If nothing is running _podman_inspect.stdout will contain "false". If an invalid container ID is checked, the output will be empty
     - name: SYSTEM | Inspect for a running container
       ignore_errors: yes
       shell: |
-        /usr/bin/podman inspect `cat /var/run/{{ RUN_AS_USER }}/{{ PODMAN_IMAGE_NAME | replace('/','_') }}.cid` 2> /dev/null | /bin/jq '.[0].State.Running' | grep -v null
+        /usr/bin/podman inspect `cat /var/run/{{ PODMAN_RUN_AS }}/{{ PODMAN_IMAGE_NAME | replace('/','_') }}.cid` 2> /dev/null | /bin/jq '.[0].State.Running' | grep -v null
       register: _podman_inspect
-      become_user: "{{ RUN_AS_USER }}"
+      become_user: "{{ PODMAN_RUN_AS }}"
       become: yes
       when: _podman_cidfile.stat.exists == True
 
@@ -133,13 +133,13 @@
       - name: SHELL | Remove the dead container (do not abort if this fails)
         ignore_errors: yes
         shell: |
-          /usr/bin/podman rm  `cat /var/run/{{ RUN_AS_USER }}/{{ PODMAN_IMAGE_NAME | replace('/','_') }}.cid`
-        become_user: "{{ RUN_AS_USER }}"
+          /usr/bin/podman rm  `cat /var/run/{{ PODMAN_RUN_AS }}/{{ PODMAN_IMAGE_NAME | replace('/','_') }}.cid`
+        become_user: "{{ PODMAN_RUN_AS }}"
         become: yes
 
       - name: FILE | Remove the CID file
         file:
-          path: "/var/run/{{ RUN_AS_USER }}/{{ PODMAN_IMAGE_NAME | replace('/','_') }}.cid"
+          path: "/var/run/{{ PODMAN_RUN_AS }}/{{ PODMAN_IMAGE_NAME | replace('/','_') }}.cid"
           state: absent
 
       when: _podman_cidfile.stat.exists == True and not _podman_inspect.stdout == "true"
@@ -148,13 +148,13 @@
 
     - name: STAT | Check if the CID file exists (again)
       stat:
-        path: "/var/run/{{ RUN_AS_USER }}/{{ PODMAN_IMAGE_NAME | replace('/','_') }}.cid"
+        path: "/var/run/{{ PODMAN_RUN_AS }}/{{ PODMAN_IMAGE_NAME | replace('/','_') }}.cid"
       register: _podman_cidfile
 
     - name: SHELL | podman run
       shell: |
-        /usr/bin/podman run --log-driver=journald --cidfile=/var/run/{{ RUN_AS_USER }}/{{ PODMAN_IMAGE_NAME | replace('/','_') }}.cid -d {{ PODMAN_RUN_EXTRA_ARGS }} {{ PODMAN_REGISTRY_URL }}/{{ PODMAN_IMAGE_NAME }}:{{ PODMAN_IMAGE_TAG }}
-      become_user: "{{ RUN_AS_USER }}"
+        /usr/bin/podman run --log-driver=journald --cidfile=/var/run/{{ PODMAN_RUN_AS }}/{{ PODMAN_IMAGE_NAME | replace('/','_') }}.cid -d {{ PODMAN_RUN_EXTRA_ARGS }} {{ PODMAN_REGISTRY_URL }}/{{ PODMAN_IMAGE_NAME }}:{{ PODMAN_IMAGE_TAG }}
+      become_user: "{{ PODMAN_RUN_AS }}"
       become: yes
       when: _podman_cidfile.stat.exists == False
 
