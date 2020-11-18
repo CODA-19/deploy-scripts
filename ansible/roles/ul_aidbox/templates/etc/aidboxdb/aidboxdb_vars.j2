@@ -1,10 +1,10 @@
 ###
 ### {{ ansible_managed }}
 ###
-# This a set of variables used when systemd calls "podman run" to spawn
-# the AidBox REST service API.
-# KEEP THIS FILE PRIVATE AS IT CONTAINS YOUR LICENCE KEY
 
+## Used by AidBoxDB
+
+# Used by the "AidboxDB" container
 POSTGRES_USER={{ ul_aidbox_db_owner }}
 POSTGRES_DB={{ ul_aidbox_db_name }}
 POSTGRES_PASSWORD={{ ul_aidbox_db_password }}

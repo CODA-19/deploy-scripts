@@ -1,4 +1,11 @@
 #!/bin/bash
+
+
+# ** OSBOLETE ** DO NOT USE ** KEPT FOR ARCHEOLOGICAL PURPOSES **
+# ** OSBOLETE ** DO NOT USE ** KEPT FOR ARCHEOLOGICAL PURPOSES **
+# ** OSBOLETE ** DO NOT USE ** KEPT FOR ARCHEOLOGICAL PURPOSES **
+
+
 #
 # Updates a podman image and invokes systemctl restart as needed
 #

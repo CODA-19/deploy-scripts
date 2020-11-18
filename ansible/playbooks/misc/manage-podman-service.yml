@@ -32,7 +32,14 @@
              (PODMAN_RUN_EXTRA_ARGS is undefined or PODMAN_RUN_EXTRA_ARGS == '' ) or
              (RUN_AS_USER is undefined or RUN_AS_USER == '' )"
 
-    # First, check what exists (locally), remeber podman images are per user account :)
+    - name: FILE: Ensure /var/run/{{ RUN_AS_USER }} is present
+      file:
+        path: /var/run/{{ RUN_AS_USER }}
+        mode: 0770
+        owner: {{ RUN_AS_USER }}
+        state: directory
+
+    # Check what exists (locally), remeber podman images are per user account :)
     # if nothing exists, we will see the string  'null'
 
     - name: SHELL | Check local image for {{ podman_image_name }}:{{ podman_image_tag }}
@@ -130,7 +137,7 @@
         become_user: "{{ RUN_AS_USER }}"
         become: yes
 
-      - name: FILE | Remove CID file
+      - name: FILE | Remove the CID file
         file:
           path: "/var/run/{{ RUN_AS_USER }}/{{ PODMAN_IMAGE_NAME | replace('/','_') }}.cid"
           state: absent

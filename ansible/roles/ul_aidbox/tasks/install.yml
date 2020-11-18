@@ -45,16 +45,7 @@
     group: aidboxdb
     mode: 0640
 
-- name: FILE | Ensure /run/aidboxdb is present
-  file:
-    dest: /run/aidboxdb
-    owner: aidboxdb
-    group: aidboxdb
-    mode: 0750
-    state: directory
-
 # Generates the systemd workunit
-# Ref.
 - name: TEMPLATE | Copy systemd workunit
   template:
     src: etc/systemd/system/aidboxdb.service.j2
@@ -62,6 +53,15 @@
     owner: root
     group: root
     mode: 0664
+    
+# Generates the wrapper script for AidBox
+- name: TEMPLATE | Copy the wrapper script for AidBoxDB
+  template:
+    src: usr/local/sbin/aidboxdb_podman_wrapper.sh.j2
+    dest: /usr/local/sbin/aidboxdb_podman_wrapper.sh
+    owner: root
+    group: root
+    mode: 0770
 
 # 'podman system update' is required else, an error will be thrown :
 # "there might not be enough IDs available in the namespace (requested 0:42 for /etc/gshadow): lchown /etc/gshadow: invalid argument"
@@ -69,15 +69,6 @@
   command: /bin/podman system migrate
   become: yes
   become_user: aidboxdb
-
-# systemctl start will be initiated but the rootless cronjob, add adequate sudoers definitions
-- name: COPY | Copy the AidBoxDB sudoers file
-  copy:
-    src: etc/sudoers.d/aidboxdb
-    dest: /etc/sudoers.d/aidboxdb
-    mode: 0644
-    owner: root
-    group: root
 
 # Install the cron job that will check/pull the podman image and start the service upon it next run
 # The script has been installed by the _common role
@@ -91,16 +82,7 @@
     day: "*"
     month: "*"
     weekday: "*"
-    job: "/usr/local/bin/update_podman_image.sh {{ ul_aidbox_db_image_registry }} {{ ul_aidbox_db_image }} {{ ul_aidbox_db_image_tag }} aidboxdb"
-
-# TODO: Investigate how to do this behind a proxy (pull fails)
-#- name: "PODMAN_IMAGE | Ensure «aidboxdb» image is present: {{ ul_aidbox_db_image_registry }}/{{ ul_aidbox_db_image }}:{{ ul_aidbox_db_image_tag }}"
-#  podman_image:
-#    name: "{{ ul_aidbox_db_image_registry }}/{{ ul_aidbox_db_image }}"
-#    tag: "{{ ul_aidbox_db_image_tag }}"
-#    state: present
-#  become: true
-#  become_user: aidboxdb
+    job: "/usr/local/sbin/aidboxdb_podman_wrapper.sh"
 
 # At the end, enable !
 # NOTE: As we use ansible_pull on this role, this paragraph will be excuted on each call, to disable the service,
@@ -135,7 +117,7 @@
     dest: /etc/aidbox
     owner: aidbox
     group: aidbox
-    mode: 0750
+    mode: 0770
     state: directory
 
 # Generate the file that contains the variables for the REST service container
@@ -148,24 +130,23 @@
     group: aidbox
     mode: 0640
 
-# Only root can write inside /run
-- name: FILE | Ensure /run/aidbox is present
-  file:
-    dest: /run/aidbox
-    owner: aidbox
-    group: aidbox
-    mode: 0750
-    state: directory
-
 # Generates the systemd workunit
-# Ref.
-- name: TEMPLATE | Copy systemd workunit
+- name: TEMPLATE | Copy the systemd workunit for AidBox
   template:
     src: etc/systemd/system/aidbox.service.j2
     dest: /etc/systemd/system/aidbox.service
     owner: root
     group: root
     mode: 0664
+
+# Generates the wrapper script for AidBox
+- name: TEMPLATE | Copy the wrapper script for AidBox
+  template:
+    src: usr/local/sbin/aidbox_podman_wrapper.sh.j2
+    dest: /usr/local/sbin/aidbox_podman_wrapper.sh
+    owner: root
+    group: root
+    mode: 0770
 
 # 'podman system update' is required else, an error will be thrown :
 # "there might not be enough IDs available in the namespace (requested 0:42 for /etc/gshadow): lchown /etc/gshadow: invalid argument"
@@ -174,20 +155,11 @@
   become: yes
   become_user: aidbox
 
-# systemctl start will be initiated but the rootless cronjob, add adequate sudoers definitions
-- name: COPY | Copy the AidBox sudoers file
-  copy:
-    src: etc/sudoers.d/aidbox
-    dest: /etc/sudoers.d/aidbox
-    mode: 0644
-    owner: root
-    group: root
-
 # Install the cron job that will check/pull the podman image and start the service upon it next run
 # The script has been installed by the _common role
 - name: CRON | Create the "pull & restart" job for AidBoxDB
   cron:
-    name: "aidbox image check"
+    name: "AidBox image check"
     cron_file: "/etc/crontab"
     user: "aidbox"
     minute: "*/15"
@@ -195,17 +167,7 @@
     day: "*"
     month: "*"
     weekday: "*"
-    job: "/usr/local/bin/update_podman_image.sh {{ ul_aidbox_image_registry }} {{ ul_aidbox_image }} {{ ul_aidbox_image_tag }} aidbox"
-
-# TODO: Investigate how to do this behind a proxy (pull fails)
-#- name: "PODMAN_IMAGE | Ensure «aidbox» image is present: {{ ul_aidbox_image_registry }}/{{ ul_aidbox_image }}:{{ ul_aidbox_image_tag }}"
-#  podman_image:
-#    name: "{{ ul_aidbox_image_registry }}/{{ ul_aidbox_image }}"
-#    tag: "{{ ul_aidbox_image_tag }}"
-#    state: present
-#  become: true
-#  become_user: aidbox
-
+    job: "/usr/local/sbin/aidbox_podman_wrapper.sh"
 
 # At the end, enable !
 # NOTE: As we use ansible_pull on this role, this paragraph will be excuted on each call, to disable the service,

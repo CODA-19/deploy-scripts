@@ -2,26 +2,18 @@
 ### {{ ansible_managed }}
 ###
 
+# The purpose of this systemd WU is to run the Ansible playbook for AidBoxDB
+# at system startup without waiting after crond to be awake.
+
 [Unit]
 Description=AidBox One (AidBox REST API)
 Wants=network.target
 After=network-online.target
 
 [Service]
-User=aidbox
-Group=aidbox
-Restart=on-failure
-RuntimeDirectory=aidbox
-RuntimeDirectoryMode=0775
-Restart=on-failure
-ExecStartPre=/usr/bin/rm -f /%t/aidbox/%n-pid /%t/aidbox/%n-cid
-ExecStart=/usr/bin/podman run --env-file /etc/aidbox/aidbox_vars --log-driver journald --conmon-pidfile  /%t/aidbox/%n-pid  --cidfile /%t/aidbox/%n-cid --network host -p {{ ul_aidbox_port }}:{{ ul_aidbox_port }} -d {{ ul_aidbox_image_registry }}/{{ ul_aidbox_image }}:{{ ul_aidbox_image_tag }}
-ExecStop=/usr/bin/podman stop --ignore --cidfile /%t/aidbox/%n-cid -t 30
-ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile /%t/aidbox/%n-cid
-ExecStopPost=/usr/bin/rm -f /tmp/aidbox.last
+ExecStart=/usr/local/sbin/aidbox_podman_wrapper.sh
 KillMode=none
-Type=forking
-PIDFile=/%t/aidbox/%n-pid
+Type=oneshot
 TimeoutSec={{ ul_aidbox_wu_timeout }}
 
 [Install]
