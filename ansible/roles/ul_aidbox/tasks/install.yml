@@ -82,7 +82,7 @@
     day: "*"
     month: "*"
     weekday: "*"
-    job: "/usr/local/sbin/aidboxdb_podman_wrapper.sh > /var/log/ansible/aidboxdb_podman_wrapper-$( date +\%Y\%m\%d-\%H\%M\%S ).log 2>&1"
+    job: "/usr/local/sbin/aidboxdb_podman_wrapper.sh > /var/log/ansible/aidboxdb_podman_wrapper-$( date +\\%Y\\%m\\%d-\\%H\\%M\\%S ).log 2>&1"
 
 # At the end, enable !
 # NOTE: As we use ansible_pull on this role, this paragraph will be excuted on each call, to disable the service,
@@ -167,7 +167,7 @@
     day: "*"
     month: "*"
     weekday: "*"
-    job: "/usr/local/sbin/aidbox_podman_wrapper.sh > /var/log/ansible/aidbox_podman_wrapper-$( date +\%Y\%m\%d-\%H\%M\%S ).log 2>&1"
+    job: "/usr/local/sbin/aidbox_podman_wrapper.sh > /var/log/ansible/aidbox_podman_wrapper-$( date +\\%Y\\%m\\%d-\\%H\\%M\\%S ).log 2>&1"
 
 # At the end, enable !
 # NOTE: As we use ansible_pull on this role, this paragraph will be excuted on each call, to disable the service,
