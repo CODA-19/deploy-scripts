@@ -45,7 +45,7 @@
     mode: 0664
 
 # Generates the wrapper script for Coda Green
-- name: TEMPLATE | Copy the wrapper script for AidBox
+- name: TEMPLATE | Copy the wrapper script for Coda green
   template:
     src: usr/local/sbin/coda_green_podman_wrapper.sh.j2
     dest: /usr/local/sbin/coda_green_podman_wrapper.sh
