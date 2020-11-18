@@ -44,6 +44,15 @@
     group: root
     mode: 0664
 
+# Generates the wrapper script for Coda Green
+- name: TEMPLATE | Copy the wrapper script for AidBox
+  template:
+    src: usr/local/sbin/coda_green_podman_wrapper.sh.j2
+    dest: /usr/local/sbin/coda_green_podman_wrapper.sh
+    owner: root
+    group: root
+    mode: 0770
+
 # 'podman system migrate' is required else, an error will be thrown :
 # "there might not be enough IDs available in the namespace (requested 0:42 for /etc/gshadow): lchown /etc/gshadow: invalid argument"
 - name: COMMAND | podman system migrate
@@ -63,4 +72,4 @@
     day: "*"
     month: "*"
     weekday: "*"
-    job: "/usr/local/sbin/aidboxdb_podman_wrapper.sh > /var/log/ansible/coda_green_podman_wrapper-$( date +\\%Y\\%m\\%d-\\%H\\%M\\%S ).log 2>&1"
+    job: "/usr/local/sbin/coda_green_podman_wrapper.sh > /var/log/ansible/coda_green_podman_wrapper-$( date +\\%Y\\%m\\%d-\\%H\\%M\\%S ).log 2>&1"
