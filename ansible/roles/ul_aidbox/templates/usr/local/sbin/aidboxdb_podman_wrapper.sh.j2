@@ -19,7 +19,7 @@ PODMAN_IMAGE_TAG={{ ul_aidbox_db_image_tag }}
 
 # We use --network=host, so it is a non-sense to use the "--publish" ("-p") option
 # to remap ports as the container network stacks is not isolated from the host
-PODMAN_RUN_EXTRA_ARGS=--network=host --volume=/tmp/aidboxdb:/tmp:z --volume=/data/aidboxdb:/data:z
+PODMAN_RUN_EXTRA_ARGS="--network=host --volume=/tmp/aidboxdb:/tmp:z --volume=/data/aidboxdb:/data:z"
 
 if [[ ${USER} != "root"]];
 then
@@ -33,6 +33,6 @@ ${CODA19_ANSIBLE_VENV_BIN_PATH}/ansible-playbook -e "PODMAN_RUN_AS=${PODMAN_RUN_
                                                  -e "PODMAN_IMAGE_NAME=${PODMAN_IMAGE_NAME}" \
                                                  -e "PODMAN_IMAGE_TAG=${PODMAN_IMAGE_TAG}" \
                                                  -e "PODMAN_RUN_EXTRA_ARGS=${PODMAN_RUN_EXTRA_ARGS}" \
-                                                 -e @/etc/aidbox/aidboxdb_vars -i ${CODA19_ANSIBLE_BASE_PATH} \
+                                                 -e @/etc/aidboxdb/aidboxdb_vars \
                                                  -i ${CODA19_ANSIBLE_BASE_PATH}/hosts.localhost \
                                                  ${CODA19_ANSIBLE_BASE_PATH}/playbooks/misc/manage-podman-service.yml
