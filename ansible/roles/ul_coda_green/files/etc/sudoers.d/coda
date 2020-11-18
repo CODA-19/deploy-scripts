@@ -1,3 +1,0 @@
-Cmnd_Alias SYSTEMCTL_CMD_CODA_GREEN=/bin/systemctl * coda_green
-
-coda  ALL=(root) NOPASSWD: SYSTEMCTL_CMD_CODA_GREEN

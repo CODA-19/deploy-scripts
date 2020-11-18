@@ -8,19 +8,9 @@ Wants=network.target
 After=network-online.target
 
 [Service]
-User=coda
-Group=coda
-Restart=on-failure
-RuntimeDirectory=coda
-RuntimeDirectoryMode=0775
-Restart=on-failure
-ExecStartPre=/usr/bin/rm -f /%t/coda/%n-pid /%t/coda/%n-cid
-ExecStart=/usr/bin/podman run --env-file /etc/coda/coda_green_vars --log-driver journald --conmon-pidfile  /%t/coda/%n-pid  --cidfile /%t/coda/%n-cid --network host -p {{ ul_coda_green_port }}:{{ ul_coda_green_port }} -d {{ ul_coda_green_image_registry }}/{{ ul_coda_green_image }}:{{ ul_coda_green_image_tag }}
-ExecStop=/usr/bin/podman stop --ignore --cidfile /%t/coda/%n-cid -t 30
-ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile /%t/coda/%n-cid
+ExecStart=/usr/local/sbin/coda_green_podman_wrapper.sh
 KillMode=none
-Type=forking
-PIDFile=/%t/coda/%n-pid
+Type=oneshot
 TimeoutSec={{ ul_coda_green_timeout }}
 
 [Install]

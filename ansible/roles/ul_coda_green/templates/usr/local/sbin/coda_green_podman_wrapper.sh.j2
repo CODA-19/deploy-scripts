@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# This script is intended to be called by either cron or systemd
+# its purpose is to call the Ansble playbook responsible to pull and
+# (re)start the podman container for AidBoxDB
+#
+# Also, the Ansible playbook grabs its proxy setting directly from the
+# local fact files located under /etc/ansible/fact.d so no need to
+# source the proxy definition.
+
+CODA19_BASE_PATH=/opt/coda19
+CODA19_ANSIBLE_VENV_BIN_PATH=${CODA19_BASE_PATH}/venv-ansible/bin
+CODA19_ANSIBLE_BASE_PATH=${CODA19_BASE_PATH}/deploy-scripts-pull/ansible
+
+PODMAN_RUN_AS=coda
+PODMAN_REGISTRY_URL={{ ul_coda_green_image_registry }}
+PODMAN_IMAGE_NAME={{ ul_coda_green_image_name }}
+PODMAN_IMAGE_TAG={{ ul_coda_green_image_tag }}
+
+# We use --network=host, so it is a non-sense to use the "--publish" ("-p") option
+# to remap ports as the container network stacks is not isolated from the host
+PODMAN_RUN_EXTRA_ARGS="--network=host"
+
+if [[ `/bin/whoami` != "root" ]] ;
+then
+  echo "$0 is intended to be run by root"
+  exit 1
+fi
+
+source ${CODA19_ANSIBLE_VENV_BIN_PATH}/activate
+${CODA19_ANSIBLE_VENV_BIN_PATH}/ansible-playbook -e "PODMAN_RUN_AS=${PODMAN_RUN_AS}" \
+                                                 -e "PODMAN_REGISTRY_URL=${PODMAN_REGISTRY_URL}" \
+                                                 -e "PODMAN_IMAGE_NAME=${PODMAN_IMAGE_NAME}" \
+                                                 -e "PODMAN_IMAGE_TAG=${PODMAN_IMAGE_TAG}" \
+                                                 -e "PODMAN_RUN_EXTRA_ARGS=${PODMAN_RUN_EXTRA_ARGS}" \
+                                                 -e @/etc/coda/coda_green_vars \
+                                                 -i ${CODA19_ANSIBLE_BASE_PATH}/hosts.localhost \
+                                                 ${CODA19_ANSIBLE_BASE_PATH}/playbooks/misc/manage-podman-service.yml
