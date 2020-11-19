@@ -8,11 +8,11 @@
     path: /var/lib/coda19/ansible_bootstrap_done
   register: _bootstrap_cookie
 
-# Reboot after? podman system migrate seems to nothing sometimes
-- block:
-  - name: SHELL | podman system migrate
-    shell: |
-      /bin/podman system migrate
-    become: yes
-    become_user: coda
-  when: not _bootstrap_cookie.stat.exists
+# podman system migrate
+# For some yet-to-be found circumstances, podman pulls fais, the work around seems to to do a podman systemmigrate
+- name: SYSTEM | Force "podman system migrate"
+  ignore_errors: yes
+  shell: |
+    /usr/bin/podman system migrate
+  become_user: coda
+  become: yes
