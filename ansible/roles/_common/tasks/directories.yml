@@ -5,3 +5,4 @@
     mode: 0775
     owner: root
     group: root
+    state: directory
