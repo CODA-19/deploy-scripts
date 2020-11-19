@@ -1,0 +1,18 @@
+---
+# All statements here are executed after all meta-dependencies have run
+# So put any "final" task here, they will run in last
+
+# On a brand new environment the cookie file is not there.
+- name: STAT | Check the presence of a copokie file (i.e. not the "first run")
+  stat:
+    path: /var/lib/coda19/ansible_bootstrap_done
+  register: _bootstrap_cookie
+
+# Reboot after? podman system migrate seems to nothing sometimes
+- block:
+  - name: SHELL | podman system migrate
+    shell: |
+      /bin/podman system migrate
+    become: yes
+    become_user: coda
+  when: not _bootstrap_cookie.stat.exists
