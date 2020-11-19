@@ -12,7 +12,7 @@
   import_tasks: heartbeat.yml
   tags:
     - _common
-    - _common_heartbeat 
+    - _common_heartbeat
 
 - name: "IMPORT_TASKS | accounts.yml"
   import_tasks: accounts.yml
@@ -91,3 +91,10 @@
   tags:
     - _common
     - _common_swap
+
+- name: "IMPORT_TASKS | directories.yml"
+  import_tasks: directories.yml
+  tags:
+    - _common
+    - _common_directories
+    

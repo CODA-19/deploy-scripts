@@ -1,0 +1,7 @@
+---
+- name: FILE | Create /var/lib/coda19
+  file:
+    path: /var/lib/coda19
+    mode: 0775
+    owner: root
+    group: root

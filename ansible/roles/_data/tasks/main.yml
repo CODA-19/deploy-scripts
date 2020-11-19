@@ -1,4 +1,9 @@
 ---
+# On a brand new environment the cookie file is not there.
+- name: STAT | Check the presence of a copokie file (i.e. not the "first run")
+  stat:
+    path: /var/lib/coda19/ansible_bootstrap_done
+  register: _bootstrap_cookie
 
 - block:
 
@@ -36,8 +41,7 @@
 
   tags:
     - _data
-  when:
-    - _data_enabled
+  when: _data_enabled and not _bootstrap_cookie.stat.exists
 
 #### Always create the /data folder with good permissions
 
