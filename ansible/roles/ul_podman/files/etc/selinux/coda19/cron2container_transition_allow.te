@@ -1,0 +1,13 @@
+# This module allows a container to be run from a cronjob
+
+module cron2container_transition_allow 1.0;
+
+require {
+        type system_cronjob_t;
+        type container_t;
+        class process transition;
+}
+
+#============= system_cronjob_t ==============
+
+allow system_cronjob_t container_t:process transition;
