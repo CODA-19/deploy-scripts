@@ -52,8 +52,9 @@ _common_packages:
   - htop
   - iotop
   - iptraf-ng
-  - jq 
+  - jq
   - mlocate
+  - nano
   - net-tools
   - nethogs
   - sysstat
