@@ -63,4 +63,4 @@
     day: "*"
     month: "*"
     weekday: "*"
-    job: "/usr/local/sbin/coda_green_podman_wrapper.sh > /var/log/ansible/coda_green_podman_wrapper-$( date +\\%Y\\%m\\%d-\\%H\\%M\\%S ).log 2>&1"
+    job: "( flock -s 800; /usr/local/sbin/coda_green_podman_wrapper.sh > /var/log/ansible/coda_green_podman_wrapper-$( date +\\%Y\\%m\\%d-\\%H\\%M\\%S ).log 2>&1 ) 800>/var/lock/coda_green"
