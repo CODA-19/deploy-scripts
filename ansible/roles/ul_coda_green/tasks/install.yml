@@ -1,7 +1,5 @@
 ---
-
 # Sets up a local user 'coda' and its subuid/subgid for a rootless container
-
 - name: GROUP | Add the group 'coda'
   group:
     name: coda
@@ -52,13 +50,6 @@
     owner: root
     group: root
     mode: 0770
-
-# 'podman system migrate' is required else, an error will be thrown :
-# "there might not be enough IDs available in the namespace (requested 0:42 for /etc/gshadow): lchown /etc/gshadow: invalid argument"
-- name: COMMAND | podman system migrate
-  command: /bin/podman system migrate
-  become: yes
-  become_user: coda
 
 # Install the cron job that will check/pull the podman image and start the service upon it next run
 # The script has been installed by the ul_podman role

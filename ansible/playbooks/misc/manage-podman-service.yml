@@ -93,6 +93,13 @@
       become: yes
 
     # If the container image has changed (or if we have no initial image) => pull
+    # For some yet-to-be found circumstances, podman pulls fais, the work around seems to to do a podman systemmigrate
+    - name: SYSTEM | Force "podman system migrate"
+      ignore_errors: yes
+      shell: |
+        /usr/bin/podman system migrate
+      become_user: "{{ PODMAN_RUN_AS }}"
+      become: yes
 
     - name: PODMAN_IMAGE | Pull the image
       podman_image:

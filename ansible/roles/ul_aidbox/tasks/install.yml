@@ -63,13 +63,6 @@
     group: root
     mode: 0770
 
-# 'podman system update' is required else, an error will be thrown :
-# "there might not be enough IDs available in the namespace (requested 0:42 for /etc/gshadow): lchown /etc/gshadow: invalid argument"
-- name: COMMAND | podman system migrate
-  command: /bin/podman system migrate
-  become: yes
-  become_user: aidboxdb
-
 # Install the cron job that will check/pull the podman image and start the service upon it next run
 # The script has been installed by the _common role
 - name: CRON | Create the "pull & restart" job for AidBoxDB
@@ -147,13 +140,6 @@
     owner: root
     group: root
     mode: 0770
-
-# 'podman system update' is required else, an error will be thrown :
-# "there might not be enough IDs available in the namespace (requested 0:42 for /etc/gshadow): lchown /etc/gshadow: invalid argument"
-- name: COMMAND | podman system migrate
-  command: /bin/podman system migrate
-  become: yes
-  become_user: aidbox
 
 # Install the cron job that will check/pull the podman image and start the service upon it next run
 # The script has been installed by the _common role
