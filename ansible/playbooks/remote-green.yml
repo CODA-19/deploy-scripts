@@ -1,8 +1,18 @@
 ---
-
+#
+# REMOTE DEPLOYMENT
+#
+# ansible-playbook --inventory hosts.pr \
+#                  --vault-password-file vault.115.pass \
+#                  --user ul-a-brlav35 \
+#                  --ask-become-pass \
+#                  playbooks/remote-green.yml \
+#                  --limit s115
+#
 - name: Deploy and maintain the «green boxes»
   hosts: green
+  become: yes
   vars_files:
-    - "{{ inventory_dir }}/group_vars/vault.{{ coda19.site.id }}"
+    - "{{ inventory_dir }}/vaults/vault.{{ coda19_site_id }}"
   roles:
     - _green
