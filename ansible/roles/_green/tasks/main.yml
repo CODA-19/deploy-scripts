@@ -10,9 +10,9 @@
 
 # podman system migrate
 # For some yet-to-be found circumstances, podman pulls fais, the work around seems to to do a podman systemmigrate
-- name: SYSTEM | Force "podman system migrate"
-  ignore_errors: yes
-  shell: |
-    /usr/bin/podman system migrate
-  become_user: coda
-  become: yes
+# - name: SYSTEM | Force "podman system migrate"
+#   ignore_errors: yes
+#   shell: |
+#     /usr/bin/podman system migrate
+#   become_user: coda
+#   become: yes
