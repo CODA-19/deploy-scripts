@@ -29,6 +29,7 @@ coda19_host_role=orange
 
 [orange:children]
 s110_orange
+s115_orange
 s116_orange
 
 ### green
@@ -38,6 +39,7 @@ coda19_host_role=green
 
 [green:children]
 s110_green
+s115_green
 s116_green
 
 #------------------------------------------------------------------------------
@@ -74,6 +76,21 @@ s110_green
 #------------------------------------------------------------------------------
 # 115 - CHUQC - Centre Hospitalier Universitaire de Québec
 #------------------------------------------------------------------------------
+
+[s115:vars]
+coda19_site_id=115
+
+[s115:children]
+s115_orange
+s115_green
+
+[s115_orange]
+ul-cod-pr-chu01.l.ul.ca   # Without internet
+ul-cod-pr-chu03.l.ul.ca   # With internet
+
+[s115_green]
+ul-cod-pr-chu02.l.ul.ca   # Without internet
+ul-cod-pr-chu04.l.ul.ca   # With internet
 
 #------------------------------------------------------------------------------
 # 116 - CISSS-CA - CISSS Chaudière-Appalaches
