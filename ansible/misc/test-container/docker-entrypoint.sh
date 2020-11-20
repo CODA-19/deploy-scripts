@@ -1,6 +1,9 @@
 #!/bin/sh
 
+STRING=$(cat /cookie.txt)
+
 while true; do
-  date -Iseconds
+  DATE=$(date -Iseconds)
+  echo "${DATE} ${STRING}"
   sleep 5
 done
