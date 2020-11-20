@@ -8,7 +8,7 @@ Wants=network.target
 After=network-online.target
 
 [Service]
-ExecStart=/usr/local/sbin/coda_green_podman_wrapper.sh
+ExecStart=( flock -s 800; /usr/local/sbin/coda_green_podman_wrapper.sh > /var/log/ansible/systemd-coda_green_podman_wrapper-$( date +\\%Y\\%m\\%d-\\%H\\%M\\%S ).log 2>&1 ) 800>/var/lock/coda_green"
 KillMode=none
 Type=oneshot
 TimeoutSec={{ ul_coda_green_timeout }}
