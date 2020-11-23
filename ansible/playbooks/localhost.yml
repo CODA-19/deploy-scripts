@@ -80,13 +80,6 @@
       tags:
         - always
 
-    - name: INCLUDE_ROLE | _PURPLE
-      include_role:
-        name: _purple
-      when: "coda19_host_role == 'purple'"
-      tags:
-        - always
-
   post_tasks:
 
       - name: COPY | Create the "Boot strap has been run" cookie
@@ -96,4 +89,3 @@
           owner: root
           group: root
           mode: 0660
-          
