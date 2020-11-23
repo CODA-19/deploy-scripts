@@ -61,7 +61,7 @@ Vagrant.configure("2") do |config|
       yum install -y epel-release
       yum update -y
 
-      sed -Ei '/^metalink/d'              /etc/yum.repos.d/epel.repo
+      sed -Ei 's/^metalink/#metalink/g'   /etc/yum.repos.d/epel.repo
       sed -Ei 's/^#\s?baseurl/baseurl/g'  /etc/yum.repos.d/epel.repo
 
       yum-config-manager --save --setopt=epel.baseurl='http://fedora-epel.mirror.iweb.ca/$releasever/$basearch/' >/dev/null
