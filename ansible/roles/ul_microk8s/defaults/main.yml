@@ -12,7 +12,7 @@ ul_microk8s_channel: latest/stable
 #
 # Addons list: https://microk8s.io/docs/addons#heading--list
 #
-# State is either «enable» or «disable», defaulting to enable when not specified.
+# Action is either «enable» or «disable», defaulting to «enable» when not specified.
 
 ul_microk8s_addons:
   - name: dns
