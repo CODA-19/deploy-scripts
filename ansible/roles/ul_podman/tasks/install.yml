@@ -1,4 +1,10 @@
 ---
+
+- name: "YUM | Install dependencies"
+  yum:
+    name: "{{ ul_podman_dependencies }}"
+    state: present
+
 - name: "YUM | Install PODMAN"
   yum:
     name: "{{ ul_podman_packages }}"
