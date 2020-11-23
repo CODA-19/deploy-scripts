@@ -14,8 +14,8 @@
 ###### DEFINING SCRIPT VARIABLES AND PARAMETERS
 ################################################################################
 
-CODA19_SITE_ID={{ ansible_local.coda19.site.id }}
-CODA19_HOST_ROLE={{ ansible_local.coda19.host.role }}
+CODA19_SITE_ID={{ coda19_site_id }}
+CODA19_HOST_ROLE={{ coda19_host_role }}
 
 CODA19_HEARTBEAT_TOKEN=$( cat /etc/coda19/heartbeat-token )
 CODA19_HEARTBEAT_BASE_URL={{ _common_heartbeat_base_url }}
