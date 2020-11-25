@@ -1,0 +1,6 @@
+---
+
+- name: COPY | Create repository file by content
+  copy:
+    dest: /etc/yum.repos.d/nginx.repo
+    content: "{{ ul_nginx_repository_content }}"
