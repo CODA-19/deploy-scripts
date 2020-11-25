@@ -11,21 +11,21 @@
     state: present
 
 # Creates a new SELinux rule to allow cron to spawn containers (denied by default)
-- name: FILE | Ensure /etc/selinux/coda19 is here
-  file:
-    name: /etc/selinux/coda19
-    state: directory
-    mode: 0755
-    owner: root
-    group: root
-
-- name: COPY | Copy cron2container_transition_allow.te
-  copy:
-    src: etc/selinux/coda19/cron2container_transition_allow.te
-    dest: /etc/selinux/coda19/cron2container_transition_allow.te
-
-- name: SHELL | Compile and insert cron2container_transition_allow
-  shell: |
-    checkmodule -M -m -o /etc/selinux/coda19/cron2container_transition_allow.mod /etc/selinux/coda19/cron2container_transition_allow.te
-    semodule_package -o /etc/selinux/coda19/cron2container_transition_allow.pp -m /etc/selinux/coda19/cron2container_transition_allow.mod
-    semodule -i /etc/selinux/coda19/cron2container_transition_allow.pp
+# - name: FILE | Ensure /etc/selinux/coda19 is here
+#   file:
+#     name: /etc/selinux/coda19
+#     state: directory
+#     mode: 0755
+#     owner: root
+#     group: root
+#
+# - name: COPY | Copy cron2container_transition_allow.te
+#   copy:
+#     src: etc/selinux/coda19/cron2container_transition_allow.te
+#     dest: /etc/selinux/coda19/cron2container_transition_allow.te
+#
+# - name: SHELL | Compile and insert cron2container_transition_allow
+#   shell: |
+#     checkmodule -M -m -o /etc/selinux/coda19/cron2container_transition_allow.mod /etc/selinux/coda19/cron2container_transition_allow.te
+#     semodule_package -o /etc/selinux/coda19/cron2container_transition_allow.pp -m /etc/selinux/coda19/cron2container_transition_allow.mod
+#     semodule -i /etc/selinux/coda19/cron2container_transition_allow.pp
