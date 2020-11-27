@@ -1,19 +1,12 @@
 ---
 
+#### AIDBOX
+
 ul_aidbox_firewalld_zones:
   - zone: public
     state: enabled
 
-# Aidbox.One listening port (TCP)
-
 ul_aidbox_port: 8888
-
-ul_aidbox_db_owner: aidbox
-ul_aidbox_db_name: aidbox
-ul_aidbox_db_host: 127.0.0.1
-ul_aidbox_db_port: 5432
-
-# Those are used for aidbox_svc.conf.j2
 
 ul_aidbox_conf_admin_id: admin
 ul_aidbox_conf_admin_password: password
@@ -25,10 +18,25 @@ ul_aidbox_image_registry: docker.io
 ul_aidbox_image_name: healthsamurai/aidboxone
 ul_aidbox_image_tag: 0.5.0-SNAPSHOT
 
+#### AIDBOXDB
+
+ul_aidbox_db_user: aidboxdb
+ul_aidbox_db_name: aidboxdb
+ul_aidbox_db_host: 127.0.0.1
+ul_aidbox_db_port: 5432
+
 ul_aidbox_db_image_registry: docker.io
 ul_aidbox_db_image_name: aidbox/db
 ul_aidbox_db_image_tag: 13.0.0
 
-# Startup timeouts expressed in seconds
-ul_aidbox_wu_timeout: 120
-ul_aidbox_db_wu_timeout: 120
+#### General and common stuff
+
+# Systemd stuff
+ul_aidbox_systemd_temp_dir: "{{ '/tmp' if ansible_os_family == 'RedHat' and ansible_distribution_major_version|int == 7 else '%T' }}"
+ul_aidbox_systemd_timeout_start_sec: 120
+ul_aidbox_systemd_restart_sec: 30
+
+# Podman stuff
+ul_aidbox_container_stop_timeout: 30
+ul_aidbox_container_cidfile: "{{ ul_aidbox_systemd_temp_dir }}/%n-cid"
+ul_aidbox_container_pidfile: "{{ ul_aidbox_systemd_temp_dir }}/%n-pid"

@@ -5,8 +5,16 @@
     - ul_aidbox
     - ul_aidbox_firewall
 
-- name: "IMPORT_TASKS | install.yml"
-  import_tasks: install.yml
+- name: "IMPORT_TASKS | install-aidboxdb.yml"
+  import_tasks: install-aidboxdb.yml
   tags:
     - ul_aidbox
     - ul_aidbox_install
+    - ul_aidbox_install_aidboxdb
+
+- name: "IMPORT_TASKS | install-aidbox.yml"
+  import_tasks: install-aidbox.yml
+  tags:
+    - ul_aidbox
+    - ul_aidbox_install
+    - ul_aidbox_install_aidbox

@@ -1,0 +1,39 @@
+###
+### {{ ansible_managed }}
+###
+
+# **KEEP THIS FILE PRIVATE AS IT CONTAINS YOUR LICENSE KEY**
+
+## Used by AidBox
+
+# This information is in the vault file
+# Licensing information
+AIDBOX_LICENSE_ID={{ ul_aidbox_conf_license_id }}
+AIDBOX_LICENSE_KEY={{ ul_aidbox_conf_license_key }}
+
+# Client credentials
+AIDBOX_CLIENT_ID={{ ul_aidbox_conf_client_id }}
+AIDBOX_CLIENT_SECRET={{ ul_aidbox_conf_client_secret}}
+
+# Admin credential
+AIDBOX_ADMIN_ID={{ ul_aidbox_conf_admin_id }}
+AIDBOX_ADMIN_PASSWORD={{ ul_aidbox_conf_admin_password }}
+
+# The REST service listens on this port
+AIDBOX_PORT={{ ul_aidbox_port }}
+
+# Do not change, unless you know what you are doing
+AIDBOX_FHIR_VERSION=3.0.1
+
+# FHIR Database
+PGHOST={{ ul_aidbox_db_host }}
+PGPORT={{ ul_aidbox_db_port }}
+PGDATABASE={{ ul_aidbox_db_name }}
+PGUSER={{ ul_aidbox_db_user }}
+PGPASSWORD={{ ul_aidbox_db_password }}
+
+{% if ansible_local.coda19.site.proxy is defined %}
+# Extra-parameters for the JVM.
+# The licensing id/key info is checked with a host somewhere in the cloud (TLS is used => -Dhttps.proxy)
+JAVA_OPTS='-Dhttps.proxyHost={{ ansible_local.coda19.site.proxy | urlsplit('hostname') }} -Dhttps.proxyPort={{ ansible_local.coda19.site.proxy | urlsplit('port') | default("3128", true) }} -Dhttp.nonProxyHosts="localhost|127.0.0.1"'
+{% endif %}

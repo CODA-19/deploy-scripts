@@ -1,1 +1,15 @@
 ---
+
+- name: restart aidboxdb
+  systemd:
+    name: aidboxdb
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+
+- name: restart aidbox
+  systemd:
+    name: aidbox
+    state: restarted
+    enabled: yes
+    daemon_reload: yes

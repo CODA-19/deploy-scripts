@@ -2,19 +2,40 @@
 ### {{ ansible_managed }}
 ###
 
-# The purpose of this systemd WU is to run the Ansible playbook for AidBoxDB
-# at system startup without waiting after crond to be awake.
-
 [Unit]
-Description=AidBox REST API
-Wants=network.target
-After=network-online.target
+Description=AIDBOX Podman Container
+After=network.target
 
 [Service]
-ExecStart=/usr/local/sbin/aidbox_podman_wrapper.sh
+Type=simple
+
+User=aidbox
+Group=aidbox
+
+ExecStartPre=-/usr/bin/rm -f {{ ul_aidbox_container_pidfile }} {{ ul_aidbox_container_cidfile }}
+ExecStartPre=/bin/mkdir -p /tmp/%n.tmp
+
+ExecStart=/usr/bin/podman run --name aidbox \
+  --conmon-pidfile {{ ul_aidbox_container_pidfile }} \
+  --cidfile {{ ul_aidbox_container_cidfile }} \
+  --env-file /etc/default/aidbox \
+  --log-driver journald \
+  --network host \
+  --publish {{ ul_aidbox_port }}:{{ ul_aidbox_port }} \
+  --volume /data/aidbox:/data:z \
+  --volume /tmp/%n.tmp:/tmp:z \
+  --rm --detach \
+  {{ ul_aidbox_image_registry }}/{{ ul_aidbox_image_name }}:{{ ul_aidbox_image_tag }}
+
+ExecStop=/usr/bin/sh -c "/usr/bin/podman stop --cidfile {{ ul_aidbox_container_cidfile }} --ignore --time {{ ul_aidbox_container_stop_timeout }} "
+ExecStop=/usr/bin/sh -c "/usr/bin/podman rm   --cidfile {{ ul_aidbox_container_cidfile }} --ignore --force "
+
+Restart=on-failure
+RestartSec={{ ul_aidbox_systemd_restart_sec }}
+TimeoutStartSec={{ ul_aidbox_systemd_timeout_start_sec }}
+
 KillMode=none
-Type=oneshot
-TimeoutSec={{ ul_aidbox_wu_timeout }}
+PIDFile={{ ul_aidbox_container_pidfile }}
 
 [Install]
 WantedBy=multi-user.target

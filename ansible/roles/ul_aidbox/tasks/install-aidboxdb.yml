@@ -1,0 +1,64 @@
+---
+
+- name: AIDBOXDB | GROUP | Add the group 'aidboxdb'
+  group:
+    name: aidboxdb
+    system: no
+
+- name: AIDBOXDB | USER | Add the user 'aidboxdb'
+  user:
+    name: aidboxdb
+    comment: AidBox DB Service account
+    group: aidboxdb
+    home: /var/lib/aidboxdb
+    system: no
+
+- name: AIDBOXDB | TEMPLATE | Generate /etc/default/aidboxdb
+  template:
+    src: etc/default/aidboxdb.j2
+    dest: /etc/default/aidboxdb
+    owner: aidboxdb
+    group: aidboxdb
+    mode: 0640
+  notify:
+    - restart aidboxdb
+
+- name: AIDBOXDB | TEMPLATE | Copy systemd service unit
+  template:
+    src: etc/systemd/system/aidboxdb.service.j2
+    dest: /etc/systemd/system/aidboxdb.service
+    owner: root
+    group: root
+    mode: 0664
+  notify:
+    - restart aidboxdb
+
+# Create data directory
+- name: AIDBOXDB | FILE | Ensure /data/aidboxdb is present
+  file:
+    dest: /data/aidboxdb
+    owner: aidboxdb
+    group: aidboxdb
+    mode: 0700
+    state: directory
+
+# Ensure image is present
+- name: AIDBOXDB | PODMAN_IMAGE | Pull image
+  podman_image:
+    name: "{{ ul_aidbox_db_image_registry }}/{{ ul_aidbox_db_image_name }}"
+    tag: "{{ ul_aidbox_db_image_tag }}"
+    state: present
+    force: no
+  register: _image_pull
+  become: yes
+  become_user: aidboxdb
+
+# Let handlers do the job
+# - name: AIDBOXDB | SYSTEMD | Ensure aidboxdb.service is started and enabled
+#   systemd:
+#     name: aidboxdb
+#     state: started
+#     enabled: yes
+#     daemon_reload: yes
+
+- meta: flush_handlers
