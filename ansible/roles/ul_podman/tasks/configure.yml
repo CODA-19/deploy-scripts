@@ -2,30 +2,20 @@
 
 - name: "COPY | Backup original configuration files"
   copy:
-    src: "/etc/containers/{{ item }}"
-    dest: "/etc/containers/{{item }}.orig"
+    src: "{{ item }}"
+    dest: "{{item }}.orig"
     remote_src: yes
     force: no
   with_items:
-    - policy.json
-    - registries.conf
-    - storage.conf
+    - /etc/containers/policy.json
+    - /etc/containers/registries.conf
+    - /etc/containers/storage.conf
+    - /usr/share/containers/containers.conf
+    - /usr/share/containers/mounts.conf
+    - /usr/share/containers/seccomp.json
 
 - name: "SYSCTL | Set max_user_namespaces={{ ul_podman_max_user_namespaces }}"
   sysctl:
     name: user.max_user_namespaces
     value: "{{ ul_podman_max_user_namespaces }}"
     state: present
-
-# On CentOS 7 *only*, the line in storage.conf
-#   mountopt = "nodev,metacopy=on"
-# MUST be changed to:
-#   mountopt = "nodev"
-# Else weird behavior occurs with commands like "podman networks ..."
-# - name: "LINEINFILE | Remove 'metacopy=on' from /etc/containers/storage.conf"
-#   lineinfile:
-#     path: /etc/containers/storage.conf
-#     regex: '^mountopt = "nodev,metacopy=on"'
-#     line: 'mountopt = "nodev"'
-#     state: present
-#   when: ansible_distribution_major_version == '7'

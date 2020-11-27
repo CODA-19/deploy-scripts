@@ -10,23 +10,22 @@
     name: "{{ ul_podman_packages }}"
     state: present
 
-# The Kubic repo recently pushed a more tailored containers.conf but it breaks
-# things. Basically this step deploys the file packaged with an older version
-# of containers-common (containers-common-1.2.0-3.el7.x86_64.rpm)
-# See GitHub issue => https://github.com/containers/podman/issues/8430
-# TODO: Skip this step and try to overwrite runc with its most recent version
-# See https://github.com/containers/podman/issues/8430#issuecomment-733067424
+- block:
 
-- name: "FILE | Restore the older version of containers.conf"
-  file:
-    src: usr/share/containers/containers.conf
-    dest: /usr/share/containers/containers.conf
-    owner: root
-    group: root
-    mode: 0644
-    setype: usr_t
-    seuser: system_u
-    serole: object_r
+    - name: "COPY | Backup orignal runc binary"
+      copy:
+        src: "/usr/bin/runc"
+        dest: "/usr/bin/runc.orig"
+        remote_src: yes
+        force: no
+
+    - name: "GET_URL | Download runc binary"
+      get_url:
+        url:  "{{ ul_podman_runc_binary_url  }}"
+        dest: "{{ ul_podman_runc_binary_dest }}"
+        sha256sum: "{{ ul_podman_runc_binary_sha256sum }}"
+
+  when: ul_podman_runc_replace|bool
 
 # Creates a new SELinux rule to allow cron to spawn containers (denied by default)
 # - name: FILE | Ensure /etc/selinux/coda19 is here
