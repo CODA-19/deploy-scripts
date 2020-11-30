@@ -19,7 +19,6 @@ ul-cod-pr-gw02.l.ul.ca
 # GENERAL - AGGREGATE GROUPS
 #
 # Don't forget to complete children entries as we activate sites.
-#
 #------------------------------------------------------------------------------
 
 ### ORANGE
@@ -32,7 +31,7 @@ s110_orange
 s115_orange
 s116_orange
 
-### green
+### GREEN
 
 [green:vars]
 coda19_host_role=green
