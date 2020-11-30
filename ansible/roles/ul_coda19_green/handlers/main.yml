@@ -1,0 +1,8 @@
+---
+
+- name: restart coda19-site-api
+  systemd:
+    name: coda19-site-api
+    state: restarted
+    enabled: yes
+    daemon_reload: yes

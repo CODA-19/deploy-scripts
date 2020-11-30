@@ -1,0 +1,95 @@
+---
+
+################################################################################
+### CODA19-SITE-API
+################################################################################
+
+- name: CODA19-SITE-API | GROUP | Add the group 'coda19-site-api'
+  group:
+    name: coda19-site-api
+    system: no
+
+- name: CODA19-SITE-API | USER | Add the user 'coda19-site-api'
+  user:
+    name: coda19-site-api
+    group: coda19-site-api
+    home: /var/lib/coda19-site-api
+    system: no
+
+- name: CODA19-SITE-API | TEMPLATE | Generate /etc/default/coda19-site-api
+  template:
+    src: etc/default/coda19-site-api.j2
+    dest: /etc/default/coda19-site-api
+    owner: coda19-site-api
+    group: coda19-site-api
+    mode: 0640
+  notify:
+    - restart coda19-site-api
+
+- name: CODA19-SITE-API | TEMPLATE | Copy systemd service unit
+  template:
+    src: etc/systemd/system/coda19-site-api.service.j2
+    dest: /etc/systemd/system/coda19-site-api.service
+    owner: root
+    group: root
+    mode: 0664
+  notify:
+    - restart coda19-site-api
+
+# Create data directory
+- name: CODA19-SITE-API | FILE | Ensure /data/coda19-site-api is present
+  file:
+    dest: /data/coda19-site-api
+    owner: coda19-site-api
+    group: coda19-site-api
+    mode: 0750
+    state: directory
+
+# Get remote image digest and print
+- name: CODA19-SITE-API | SHELL | Get remote image digest
+  shell: |
+    /usr/bin/skopeo inspect --no-creds docker://{{ ul_coda19_green_site_api_image_registry }}/{{ ul_coda19_green_site_api_image_name }}:{{ ul_coda19_green_site_api_image_tag }} |  jq -r '.Digest'
+  changed_when: false
+  failed_when: false
+  register: _image_remote
+
+- name: CODA19-SITE-API | DEBUG | Remote image digest
+  debug:
+    var: _image_remote.stdout
+
+# Get local image digest and print
+- name: CODA19-SITE-API | SHELL | Get local image digest
+  shell: |
+    /usr/bin/podman inspect --format '{{ '{{' }} .Digest {{ '}}' }}' {{ ul_coda19_green_site_api_image_registry }}/{{ ul_coda19_green_site_api_image_name }}:{{ ul_coda19_green_site_api_image_tag }} 2>/dev/null
+  changed_when: false
+  failed_when: false
+  register: _image_local
+  become: yes
+  become_user: coda19-site-api
+
+- name: CODA19-SITE-API | DEBUG | Local image digest
+  debug:
+    var: _image_local.stdout
+
+# Ensure image is present
+# Force a pull when remote digest is different from local one
+- name: CODA19-SITE-API | PODMAN_IMAGE | Pull image
+  podman_image:
+    name: "{{ ul_coda19_green_site_api_image_registry }}/{{ ul_coda19_green_site_api_image_name }}"
+    tag: "{{ ul_coda19_green_site_api_image_tag }}"
+    state: present
+    force: "{{ (_image_remote.stdout == _image_local.stdout) | ternary(False, True) }}"
+  become: yes
+  become_user: coda19-site-api
+  notify:
+    - restart coda19-site-api
+
+# Let handlers do the job
+# - name: AIDBOX | SYSTEMD | Ensure aidbox.service is started and enabled
+#   systemd:
+#     name: aidbox
+#     state: started
+#     enabled: yes
+#     daemon_reload: yes
+
+- meta: flush_handlers

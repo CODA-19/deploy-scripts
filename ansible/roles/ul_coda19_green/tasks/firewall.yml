@@ -1,8 +1,8 @@
 ---
 - name: TEMPLATE | Put the CODA19-API service definition
   template:
-    src: etc/firewalld/services/coda_green.xml.j2
-    dest: /etc/firewalld/services/coda_green.xml
+    src: etc/firewalld/services/coda19-site-api.xml.j2
+    dest: /etc/firewalld/services/coda19-site-api.xml
   register: _svc
 
 - name: SYSTEMD | Reload firewalld
@@ -14,8 +14,8 @@
 - name: FIREWALLD | Manage CODA19-API service zones
   firewalld:
     zone: "{{ item.zone }}"
-    service: coda_green
+    service: coda19-site-api
     state: "{{ item.state | default('enabled') }}"
     permanent: yes
     immediate: yes
-  with_items: "{{ ul_coda_green_firewalld_zones }}"
+  with_items: "{{ ul_coda19_green_firewalld_zones }}"

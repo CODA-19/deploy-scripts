@@ -1,0 +1,41 @@
+###
+### {{ ansible_managed }}
+###
+
+[Unit]
+Description=coda19-site-api
+After=network.target
+
+[Service]
+Type=simple
+
+User=coda19-site-api
+Group=coda19-site-api
+
+ExecStartPre=-/usr/bin/rm -f {{ ul_coda19_green_container_pidfile }} {{ ul_coda19_green_container_cidfile }}
+ExecStartPre=/bin/mkdir -p /tmp/%n.tmp
+
+ExecStart=/usr/bin/podman run --name coda19-site-api \
+  --conmon-pidfile {{ ul_coda19_green_container_pidfile }} \
+  --cidfile {{ ul_coda19_green_container_cidfile }} \
+  --env-file /etc/default/coda19-site-api \
+  --log-driver journald \
+  --network host \
+  --publish {{ ul_coda19_green_site_api_port }}:{{ ul_coda19_green_site_api_port }} \
+  --volume /data/coda19-site-api:/data:z \
+  --volume /tmp/%n.tmp:/tmp:z \
+  --rm --detach \
+  {{ ul_coda19_green_site_api_image_registry }}/{{ ul_coda19_green_site_api_image_name }}:{{ ul_coda19_green_site_api_image_tag }}
+
+ExecStop=/usr/bin/sh -c "/usr/bin/podman stop --cidfile {{ ul_coda19_green_container_cidfile }} --ignore --time {{ ul_coda19_green_container_stop_timeout }} "
+ExecStop=/usr/bin/sh -c "/usr/bin/podman rm   --cidfile {{ ul_coda19_green_container_cidfile }} --ignore --force "
+
+Restart=on-failure
+RestartSec={{ ul_coda19_green_systemd_restart_sec }}
+TimeoutStartSec={{ ul_coda19_green_systemd_timeout_start_sec }}
+
+KillMode=none
+PIDFile={{ ul_coda19_green_container_pidfile }}
+
+[Install]
+WantedBy=multi-user.target

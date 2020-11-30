@@ -1,0 +1,35 @@
+---
+
+# Control Plane Address
+
+ul_coda19_green_hub_api_url: https://api-poc.hub.coda19.com
+
+ul_coda19_green_firewalld_zones:
+  - zone: public
+    state: enabled
+
+################################################################################
+#### CODA19-SITE-API
+################################################################################
+
+# Listening port (TCP)
+ul_coda19_green_site_api_port: 5148
+
+# Image and tag to use
+ul_coda19_green_site_api_image_registry: docker.io
+ul_coda19_green_site_api_image_name: coda19/coda19-site-api
+ul_coda19_green_site_api_image_tag: latest
+
+################################################################################
+#### General and common stuff
+################################################################################
+
+# Systemd stuff
+ul_coda19_green_systemd_temp_dir: "{{ '/tmp' if ansible_os_family == 'RedHat' and ansible_distribution_major_version|int == 7 else '%T' }}"
+ul_coda19_green_systemd_timeout_start_sec: 120
+ul_coda19_green_systemd_restart_sec: 15
+
+# Podman stuff
+ul_coda19_green_container_stop_timeout: 15
+ul_coda19_green_container_cidfile: "{{ ul_coda19_green_systemd_temp_dir }}/%n-cid"
+ul_coda19_green_container_pidfile: "{{ ul_coda19_green_systemd_temp_dir }}/%n-pid"
