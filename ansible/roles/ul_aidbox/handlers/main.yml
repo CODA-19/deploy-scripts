@@ -6,6 +6,8 @@
     state: restarted
     enabled: yes
     daemon_reload: yes
+  # Don't start + restart service with handlers, usualy on first run
+  when: not _systemd_aidboxdb.changed
 
 - name: restart aidbox
   systemd:
@@ -13,3 +15,5 @@
     state: restarted
     enabled: yes
     daemon_reload: yes
+  # Don't start + restart service with handlers, usualy on first run
+  when: not _systemd_aidbox.changed

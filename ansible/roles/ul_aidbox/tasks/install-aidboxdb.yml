@@ -12,6 +12,7 @@
     group: aidboxdb
     home: /var/lib/aidboxdb
     system: no
+  register: _user
 
 - name: AIDBOXDB | TEMPLATE | Generate /etc/default/aidboxdb
   template:
@@ -42,6 +43,21 @@
     mode: 0700
     state: directory
 
+# Workarounds for these errors:
+#   https://github.com/containers/podman/issues/8539
+#   ERRO[0000] cannot mkdir /var/lib/aidboxdb/rundir/libpod: mkdir /var/lib/aidboxdb/rundir/libpod: no such file or directory
+- name: AIDBOXDB | WORKAROUND | SHELL | Create missing directories and symlinks
+  shell: |
+    mkdir -p  /tmp/run-{{ _user.uid }}
+    ln -sT    /tmp/run-{{ _user.uid }} /tmp/podman-run-{{ _user.uid }}
+    mkdir -p  /tmp/run-{{ _user.uid }}/libpod
+    mkdir -p  {{ _user.home }}/rundir/libpod
+  args:
+    creates: "/tmp/podman-run-{{ _user.uid }}"
+    warn: false
+  become: yes
+  become_user: aidboxdb
+
 # Ensure image is present
 - name: AIDBOXDB | PODMAN_IMAGE | Pull image
   podman_image:
@@ -53,12 +69,14 @@
   become: yes
   become_user: aidboxdb
 
-# Let handlers do the job
-# - name: AIDBOXDB | SYSTEMD | Ensure aidboxdb.service is started and enabled
-#   systemd:
-#     name: aidboxdb
-#     state: started
-#     enabled: yes
-#     daemon_reload: yes
+- name: AIDBOXDB | SYSTEMD | Ensure aidboxdb.service is started and enabled
+  systemd:
+    name: aidboxdb
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  # We register this task status.
+  # Don't start + restart service with handlers, usualy on first run.
+  register: _systemd_aidboxdb
 
 - meta: flush_handlers
