@@ -12,6 +12,13 @@
 - name: Deploy and maintain the «green boxes»
   hosts: green
   become: yes
+  environment:
+    http_proxy: "{{ _common_global_proxy }}"
+    https_proxy: "{{ _common_global_proxy }}"
+    no_proxy: "{{ _common_global_noproxy }}"
+    HTTP_PROXY: "{{ _common_global_proxy }}"
+    HTTPS_PROXY: "{{ _common_global_proxy }}"
+    NO_PROXY: "{{ _common_global_noproxy }}"
   vars_files:
     - "{{ inventory_dir }}/vaults/vault.{{ coda19_site_id }}"
   roles:
