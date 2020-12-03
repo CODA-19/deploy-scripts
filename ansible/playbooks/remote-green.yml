@@ -9,7 +9,7 @@
 #                  playbooks/remote-green.yml \
 #                  --limit s115
 #
-- name: Deploy and maintain the «green boxes»
+- name: DEPLOY AND MAINTAIN THE «GREEN BOXES»
   hosts: green
   become: yes
   environment:

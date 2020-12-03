@@ -1,0 +1,7 @@
+---
+
+- name: Include «orange» playbook
+  import_playbook: remote-orange.yml
+
+- name: Include «green» playbook
+  import_playbook: remote-green.yml

@@ -4,7 +4,7 @@
 #
 # For instructions, please refer to remote-green.yml playbook.
 #
-- name: Deploy and maintain the «orange boxes»
+- name: DEPLOY AND MAINTAIN THE «ORANGE BOXES»
   hosts: orange
   become: yes
   environment:
