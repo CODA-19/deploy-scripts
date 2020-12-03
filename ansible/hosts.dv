@@ -1,3 +1,7 @@
+#
+# For virtual machines reference, refer to: https://wiki.dti.ulaval.ca/x/2Z--Bw
+#
+
 [all:vars]
 env=dv
 
