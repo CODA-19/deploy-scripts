@@ -43,20 +43,21 @@
     mode: 0700
     state: directory
 
-# Workarounds for these errors:
+# Workarounds for these errors.
+# As of 2020-12-03, it only happens when using upstream podman distribution.
 #   https://github.com/containers/podman/issues/8539
 #   ERRO[0000] cannot mkdir /var/lib/aidboxdb/rundir/libpod: mkdir /var/lib/aidboxdb/rundir/libpod: no such file or directory
-- name: AIDBOXDB | WORKAROUND | SHELL | Create missing directories and symlinks
-  shell: |
-    mkdir -p  /tmp/run-{{ _user.uid }}
-    ln -sT    /tmp/run-{{ _user.uid }} /tmp/podman-run-{{ _user.uid }}
-    mkdir -p  /tmp/run-{{ _user.uid }}/libpod
-    mkdir -p  {{ _user.home }}/rundir/libpod
-  args:
-    creates: "/tmp/podman-run-{{ _user.uid }}"
-    warn: false
-  become: yes
-  become_user: aidboxdb
+# - name: AIDBOXDB | WORKAROUND | SHELL | Create missing directories and symlinks
+#   shell: |
+#     mkdir -p  /tmp/run-{{ _user.uid }}
+#     ln -sT    /tmp/run-{{ _user.uid }} /tmp/podman-run-{{ _user.uid }}
+#     mkdir -p  /tmp/run-{{ _user.uid }}/libpod
+#     mkdir -p  {{ _user.home }}/rundir/libpod
+#   args:
+#     creates: "/tmp/podman-run-{{ _user.uid }}"
+#     warn: false
+#   become: yes
+#   become_user: aidboxdb
 
 # Ensure image is present
 - name: AIDBOXDB | PODMAN_IMAGE | Pull image
