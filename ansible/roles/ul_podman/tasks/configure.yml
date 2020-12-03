@@ -6,6 +6,8 @@
     dest: "{{item }}.orig"
     remote_src: yes
     force: no
+  # Some files missing in some distributions / branches, simply ignore on error
+  ignore_errors: yes
   with_items:
     - /etc/containers/policy.json
     - /etc/containers/registries.conf

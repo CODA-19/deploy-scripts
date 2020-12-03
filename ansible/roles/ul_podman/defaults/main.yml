@@ -7,7 +7,7 @@
 # Use latest version from upstream project rather than from official repositories or EPEL
 # This simply follow these instructions: https://podman.io/getting-started/installation
 
-ul_podman_install_upstream: yes
+ul_podman_install_upstream: no
 
 # Maximum namespaces per user
 
@@ -15,7 +15,7 @@ ul_podman_max_user_namespaces: 65536
 
 # Replace runc binary when needed
 
-ul_podman_runc_replace: yes
+ul_podman_runc_replace: no
 ul_podman_runc_version: v1.0.0-rc92
 ul_podman_runc_binary_sha256sum: 256bd490a55a1939a4c9cd15c043404b79a86429ee04129c00d33dab8c0cf040
 ul_podman_runc_binary_url: "https://github.com/opencontainers/runc/releases/download/{{ ul_podman_runc_version }}/runc.amd64"
