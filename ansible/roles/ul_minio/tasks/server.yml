@@ -24,6 +24,7 @@
     url: https://dl.min.io/server/minio/release/linux-amd64/minio
     dest: /usr/local/bin/minio
     mode: 0755
+    timeout: 30
 
 - name: "TEMPLATE | Generate config - /etc/default/minio"
   template:
