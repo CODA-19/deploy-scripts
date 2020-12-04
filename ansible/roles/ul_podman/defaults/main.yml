@@ -11,7 +11,7 @@ ul_podman_install_upstream: no
 
 # Maximum namespaces per user
 
-ul_podman_max_user_namespaces: 65536
+ul_podman_max_user_namespaces: '65536'
 
 # Replace runc binary when needed
 
