@@ -37,6 +37,6 @@ ul_aidbox_systemd_timeout_start_sec: 120
 ul_aidbox_systemd_restart_sec: 30
 
 # Podman stuff
-ul_aidbox_container_stop_timeout: 30
+ul_aidbox_container_stop_timeout: 15
 ul_aidbox_container_cidfile: "{{ ul_aidbox_systemd_temp_dir }}/%n-cid"
 ul_aidbox_container_pidfile: "{{ ul_aidbox_systemd_temp_dir }}/%n-pid"
