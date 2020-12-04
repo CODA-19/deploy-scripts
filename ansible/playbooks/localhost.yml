@@ -79,13 +79,3 @@
       when: "coda19_host_role == 'green'"
       tags:
         - always
-
-  post_tasks:
-
-      - name: COPY | Create the "Boot strap has been run" cookie
-        copy:
-          content: ''
-          dest: /var/lib/coda19/ansible_bootstrap_done
-          owner: root
-          group: root
-          mode: 0660
