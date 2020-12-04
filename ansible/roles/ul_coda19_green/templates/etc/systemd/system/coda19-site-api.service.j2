@@ -12,6 +12,10 @@ Type=simple
 User=coda19-site-api
 Group=coda19-site-api
 
+# Take no chances, force a stop and remove before starting.
+# NOTE: In podman v1.6 there's no --ignore switches for «stop» and «rm»
+ExecStartPre=-/usr/bin/podman stop --time {{ ul_coda19_green_container_stop_timeout }} coda19-site-api
+ExecStartPre=-/usr/bin/podman rm --force coda19-site-api
 ExecStartPre=-/usr/bin/rm -f {{ ul_coda19_green_container_pidfile }} {{ ul_coda19_green_container_cidfile }}
 ExecStartPre=/bin/mkdir -p /tmp/%n.tmp
 
@@ -27,8 +31,10 @@ ExecStart=/usr/bin/podman run --name coda19-site-api \
   --rm --detach \
   {{ ul_coda19_green_site_api_image_registry }}/{{ ul_coda19_green_site_api_image_name }}:{{ ul_coda19_green_site_api_image_tag }}
 
-ExecStop=/usr/bin/sh -c "/usr/bin/podman stop --cidfile {{ ul_coda19_green_container_cidfile }} --ignore --time {{ ul_coda19_green_container_stop_timeout }} "
-ExecStop=/usr/bin/sh -c "/usr/bin/podman rm   --cidfile {{ ul_coda19_green_container_cidfile }} --ignore --force "
+# Stop and remove
+# NOTE: In podman v1.6 there's no --ignore switches for «stop» and «rm»
+ExecStop=-/usr/bin/podman stop --time {{ ul_coda19_green_container_stop_timeout }} coda19-site-api
+ExecStop=-/usr/bin/podman rm --force coda19-site-api
 
 Restart=on-failure
 RestartSec={{ ul_coda19_green_systemd_restart_sec }}

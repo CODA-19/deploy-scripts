@@ -6,3 +6,4 @@
     state: restarted
     enabled: yes
     daemon_reload: yes
+  when: not _systemd_coda19_site_api.changed

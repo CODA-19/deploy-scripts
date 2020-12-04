@@ -30,6 +30,6 @@ ul_coda19_green_systemd_timeout_start_sec: 120
 ul_coda19_green_systemd_restart_sec: 15
 
 # Podman stuff
-ul_coda19_green_container_stop_timeout: 15
+ul_coda19_green_container_stop_timeout: 5
 ul_coda19_green_container_cidfile: "{{ ul_coda19_green_systemd_temp_dir }}/%n-cid"
 ul_coda19_green_container_pidfile: "{{ ul_coda19_green_systemd_temp_dir }}/%n-pid"

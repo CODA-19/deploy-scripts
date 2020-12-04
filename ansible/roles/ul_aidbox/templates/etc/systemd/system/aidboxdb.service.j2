@@ -13,6 +13,10 @@ Type=simple
 User=aidboxdb
 Group=aidboxdb
 
+# Take no chances, force a stop and remove before starting.
+# NOTE: In podman v1.6 there's no --ignore switches for «stop» and «rm»
+ExecStartPre=-/usr/bin/podman stop --time {{ ul_aidbox_container_stop_timeout }} aidboxdb
+ExecStartPre=-/usr/bin/podman rm --force aidboxdb
 ExecStartPre=-/usr/bin/rm -f {{ ul_aidbox_container_pidfile }} {{ ul_aidbox_container_cidfile }}
 ExecStartPre=/bin/mkdir -p /tmp/%n.tmp
 
@@ -28,8 +32,10 @@ ExecStart=/usr/bin/podman run --name aidboxdb \
   --rm --detach \
   {{ ul_aidbox_db_image_registry }}/{{ ul_aidbox_db_image_name }}:{{ ul_aidbox_db_image_tag }}
 
-ExecStop=/usr/bin/sh -c "/usr/bin/podman stop --cidfile {{ ul_aidbox_container_cidfile }} --ignore --time {{ ul_aidbox_container_stop_timeout }} "
-ExecStop=/usr/bin/sh -c "/usr/bin/podman rm   --cidfile {{ ul_aidbox_container_cidfile }} --ignore --force "
+# Stop and remove
+# NOTE: In podman v1.6 there's no --ignore switches for «stop» and «rm»
+ExecStop=-/usr/bin/podman stop --time {{ ul_aidbox_container_stop_timeout }} aidboxdb
+ExecStop=-/usr/bin/podman rm --force aidboxdb
 
 Restart=on-failure
 RestartSec={{ ul_aidbox_systemd_restart_sec }}

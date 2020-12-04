@@ -84,12 +84,15 @@
   notify:
     - restart coda19-site-api
 
-# Let handlers do the job
-# - name: AIDBOX | SYSTEMD | Ensure aidbox.service is started and enabled
-#   systemd:
-#     name: aidbox
-#     state: started
-#     enabled: yes
-#     daemon_reload: yes
+# Start and enable service
+- name: CODA19-SITE-API | SYSTEMD | Ensure coda19-site-api.service is started and enabled
+  systemd:
+    name: coda19-site-api
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  # We register this task status.
+  # Don't start + restart service with handlers, usualy on first run.
+  register: _systemd_coda19_site_api
 
 - meta: flush_handlers
