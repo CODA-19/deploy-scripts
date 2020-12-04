@@ -45,6 +45,45 @@
     mode: 0750
     state: directory
 
+# Create SELinux rules to make this service work correctly (CentOS 7 only)
+- block:
+
+    - name: "CODA19-SITE-API | SELINUX | FILE | Ensure target directory exists: {{ _selinux_module_dir }}"
+      file:
+        path: "{{ _selinux_module_dir }}"
+        state: directory
+
+    - name: "CODA19-SITE-API | SELINUX | COPY | {{ _selinux_module_dir }}/{{ _selinux_module_name }}.te"
+      copy:
+        src: "etc/selinux/coda19/{{ _selinux_module_name }}.te"
+        dest: "{{ _selinux_module_dir }}/{{ _selinux_module_name }}.te"
+      register: _selinux
+
+    - name: "CODA19-SITE-API | SELINUX | COMMAND | checkmodule"
+      command: checkmodule -M -m -o {{ _selinux_module_name }}.mod {{ _selinux_module_name }}.te
+      args:
+        chdir: "{{ _selinux_module_dir }}"
+      when: _selinux.changed
+
+    - name: "CODA19-SITE-API | SELINUX | COMMAND | semodule_package"
+      command: semodule_package -o {{ _selinux_module_name }}.pp -m {{ _selinux_module_name }}.mod
+      args:
+        chdir: "{{ _selinux_module_dir }}"
+      when: _selinux.changed
+
+    - name: "CODA19-SITE-API | SELINUX | COMMAND | semodule"
+      command: semodule -i {{ _selinux_module_name }}.pp
+      args:
+        chdir: "{{ _selinux_module_dir }}"
+      when: _selinux.changed
+
+  vars:
+    _selinux_module_dir: /etc/selinux/coda19
+    _selinux_module_name: coda19-site-api
+  when:
+    - ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == '7'    
+
 # Get remote image digest and print
 - name: CODA19-SITE-API | SHELL | Get remote image digest
   shell: |
