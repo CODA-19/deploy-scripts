@@ -32,7 +32,7 @@ PGDATABASE={{ ul_aidbox_db_name }}
 PGUSER={{ ul_aidbox_db_user }}
 PGPASSWORD={{ ul_aidbox_db_password }}
 
-{% if _common_global_proxy|length > 0  %}
+{% if _common_global_proxy is defined and _common_global_proxy|length > 0  %}
 # Extra-parameters for the JVM.
 # The licensing id/key info is checked with a host somewhere in the cloud (TLS is used => -Dhttps.proxy)
 JAVA_OPTS='-Dhttps.proxyHost={{ _common_global_proxy | urlsplit('hostname') }} -Dhttps.proxyPort={{ _common_global_proxy | urlsplit('port') | default("3128", true) }} -Dhttp.nonProxyHosts="{{ _common_global_noproxy | replace(',','|') }}"'
