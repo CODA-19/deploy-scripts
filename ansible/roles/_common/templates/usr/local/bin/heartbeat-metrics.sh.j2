@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+#
+# {{ ansible_managed }}
+#
+
+################################################################################
+###### LOAD REQUIRED ENVIRONMENT STUFF
+################################################################################
+
+[ -f /etc/profile.d/proxy.sh       ] && source /etc/profile.d/proxy.sh
+[ -f /usr/local/bin/env-ansible.sh ] && source /usr/local/bin/env-ansible.sh
+
+################################################################################
+###### DEFINING SCRIPT VARIABLES AND PARAMETERS
+################################################################################
+
+# Global
+
+CODA19_SITE_ID={{ coda19_site_id }}
+CODA19_HOST_ROLE={{ coda19_host_role }}
+
+CODA19_HEARTBEAT_BASE_URL={{ _common_heartbeat_base_url }}
+CODA19_HEARTBEAT_TOKEN=$( cat /etc/coda19/heartbeat-token )
+CODA19_HEARTBEAT_CONNECT_TIMEOUT=5
+
+# Script specifics
+
+SLEEP_TIME=10
+
+################################################################################
+###### QUERY LOCAL NODE_EXPORTER AND PUSH TO HEARTBEAT SERVICE
+################################################################################
+
+# This part should not execute in parallel
+(
+  # If already running: dont continue and exit
+  flock -n 300 || exit 1
+
+  # Loop: fetch, submit, sleep, and repeat
+  while true; do
+
+    # Fetch
+    METRICS_FILE=$( mktemp )
+    curl \
+      --silent \
+      --output ${METRICS_FILE} \
+      http://localhost:9100/metrics
+
+    # Submit
+    curl \
+      --silent \
+      --connect-timeout ${CODA19_HEARTBEAT_CONNECT_TIMEOUT} \
+      --request POST \
+      --header "X-Token: ${CODA19_HEARTBEAT_TOKEN}" \
+      --header "Content-Type: text/plain" \
+      --data-binary @${METRICS_FILE} \
+      ${CODA19_HEARTBEAT_BASE_URL}/metrics/${CODA19_SITE_ID}/${CODA19_HOST_ROLE}
+
+    # Clean and sleep
+    rm -rf ${METRICS_FILE}
+    sleep ${SLEEP_TIME}
+
+  done
+) 300>/var/lock/push-metrics.lock
