@@ -1,7 +1,7 @@
 ---
 
 - name: COMMAND | wipefs - Liste des tables de partitions pour les devices spécifiées
-  command: "wipefs {{ item.1 }}"
+  command: "/sbin/wipefs {{ item.1 }}"
   register: wipefs
   changed_when: false
   with_subelements:
@@ -9,7 +9,7 @@
     - disks
 
 - name: COMMAND | wipefs - Effacer tables de partitions autre que LVM2
-  command: "wipefs --all --force {{ item.item.1 }}"
+  command: "/sbin/wipefs --all --force {{ item.item.1 }}"
   with_items:
     - "{{ wipefs.results }}"
   when:
