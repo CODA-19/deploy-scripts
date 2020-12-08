@@ -1,0 +1,25 @@
+---
+
+###### ANSIBLE-VENV
+
+# TODO
+
+###### ANSIBLE-ACTIVATORS
+
+# TODO
+
+###### ANSIBLE-PULL
+
+- name: TEMPLATE | Generate /usr/local/bin/execute-ansible-pull.sh
+  template:
+    src: usr/local/bin/execute-ansible-pull.sh.j2
+    dest: /usr/local/bin/execute-ansible-pull.sh
+    mode: 0750
+
+# NOTE: this CRON NAME and FILE must converge with the cron installed while bootstrapping (playbooks/misc/bootstrap.yml)
+- name: CRON | Create ansible-pull cron job
+  cron:
+    name: "{{ _common_ansible_pull_cron_name }}"
+    job: /usr/local/bin/execute-ansible-pull.sh >/dev/null
+    minute: "*/{{ _common_ansible_pull_cron_interval }}"
+    user: root

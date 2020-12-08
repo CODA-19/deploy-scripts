@@ -33,15 +33,23 @@ _common_yum_proxy_enabled: yes
 _common_yum_proxy: "{{ _common_global_proxy }}"
 
 ###### HEARTBEAT
-#
-# Heartbeat service will be automatically enabled by default if and only if
-# there's a token defined with a length greater than 32 characters long.
-#
 
-_common_heartbeat_enabled: yes
-_common_heartbeat_base_url: https://heartbeat.hub.coda19.com
 _common_heartbeat_token: ""
+_common_heartbeat_base_url: https://heartbeat.hub.coda19.com
 _common_heartbeat_interval: 5
+
+###### ANSIBLE PULL
+
+# Should be disabled when running fully in remote deployment mode
+_common_ansible_pull_enabled: yes
+
+_common_ansible_pull_repo_url: https://github.com/CODA-19/deploy-scripts.git
+_common_ansible_pull_directory: /opt/coda19/deploy-scripts-pull
+_common_ansible_pull_log_dir: /var/log/ansible
+
+# Cron job name and interval in minutes
+_common_ansible_pull_cron_name: "EXECUTE_ANSIBLE_PULL"
+_common_ansible_pull_cron_interval: 10
 
 ###### PACKAGES
 

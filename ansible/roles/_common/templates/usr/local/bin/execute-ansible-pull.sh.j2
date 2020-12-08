@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+#
+# {{ ansible_managed }}
+#
+
+################################################################################
+###### LOAD REQUIRED ENVIRONMENT STUFF
+################################################################################
+
+[ -f /etc/profile.d/proxy.sh       ] && source /etc/profile.d/proxy.sh
+[ -f /usr/local/bin/env-ansible.sh ] && source /usr/local/bin/env-ansible.sh
+
+################################################################################
+###### DEFINING SCRIPT VARIABLES AND PARAMETERS
+################################################################################
+
+# Global
+
+CODA19_SITE_ID={{ coda19_site_id }}
+CODA19_HOST_ROLE={{ coda19_host_role }}
+
+CODA19_HEARTBEAT_BASE_URL={{ _common_heartbeat_base_url }}
+CODA19_HEARTBEAT_TOKEN=$( cat /etc/coda19/heartbeat-token )
+CODA19_HEARTBEAT_CONNECT_TIMEOUT=5
+
+# Script specifics
+
+PULL_BASE={{ _common_ansible_pull_directory }}
+ANSIBLE_BASE=${PULL_BASE}/ansible
+ANSIBLE_LOG_DIR={{ _common_ansible_pull_log_dir }}
+
+# ANSIBLE_ROLES_PATH must be exported to be visible by ansible-pull command
+
+export ANSIBLE_ROLES_PATH=${ANSIBLE_BASE}/roles
+
+################################################################################
+###### EXECUTE ANSIBLE-PULL
+################################################################################
+
+# Ensure logging directory is there with good privileges
+mkdir -p ${ANSIBLE_LOG_DIR}
+chmod go-rwx ${ANSIBLE_LOG_DIR}
+
+# This part should not execute in parallel
+(
+  # If already running: dont continue and exit
+  flock -n 200 || exit 1
+
+  # Determine log file
+  ANSIBLE_LOG_FILE=${ANSIBLE_LOG_DIR}/ansible-pull-$( date +%Y%m%d-%H%M%S ).log
+
+  # Fire!
+  ansible-pull \
+    --url {{ _common_ansible_pull_repo_url }} \
+    --vault-password-file /etc/ansible/vault.pass \
+    --directory ${PULL_BASE} \
+    --inventory ${ANSIBLE_BASE}/hosts.localhost \
+    ${ANSIBLE_BASE}/playbooks/localhost.yml \
+        | tee ${ANSIBLE_LOG_FILE}
+
+  # Push log to heartbeat service
+
+  curl \
+    --silent \
+    --connect-timeout ${CODA19_HEARTBEAT_CONNECT_TIMEOUT} \
+    --request POST \
+    --header "X-Token: ${CODA19_HEARTBEAT_TOKEN}" \
+    --header "Content-Type: text/plain" \
+    --data-binary @${LOG_DIR}/${LOG_FILE} \
+    ${CODA19_HEARTBEAT_BASE_URL}/logs/${CODA19_SITE_ID}/${CODA19_HOST_ROLE}/ansible
+
+) 200>/var/lock/execute-ansible-pull.lock
+
+################################################################################
+###### CLEANUP LOG FILES OLDER THAN 7 DAYS
+################################################################################
+
+find ${ANSIBLE_LOG_DIR}/ansible-pull-* -mtime +7 -exec rm {} \;
