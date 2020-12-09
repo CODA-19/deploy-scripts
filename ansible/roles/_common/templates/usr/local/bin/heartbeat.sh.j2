@@ -88,7 +88,7 @@ SYSINFO=$( mktemp )
   echo
   journalctl --unit=aidboxdb --full --lines=25 --no-pager --boot
 
-  header "AIDBOXDB.SERVICE STATUS AND LOGS"
+  header "AIDBOX.SERVICE STATUS AND LOGS"
   systemctl  status aidbox --full --lines=0
   echo
   journalctl --unit=aidbox --full --lines=25 --no-pager --boot
