@@ -66,7 +66,7 @@ chmod go-rwx ${ANSIBLE_LOG_DIR}
     --request POST \
     --header "X-Token: ${CODA19_HEARTBEAT_TOKEN}" \
     --header "Content-Type: text/plain" \
-    --data-binary @${LOG_DIR}/${LOG_FILE} \
+    --data-binary @${ANSIBLE_LOG_FILE} \
     ${CODA19_HEARTBEAT_BASE_URL}/logs/${CODA19_SITE_ID}/${CODA19_HOST_ROLE}/ansible
 
 ) 200>/var/lock/execute-ansible-pull.lock
