@@ -75,26 +75,35 @@ function header {
 
 SYSINFO=$( mktemp )
 
-header "PROCESS TREE"
-ps auxf >> ${SYSINFO}
+{
 
-header "LISTENING TCP SOCKETS"
-netstat -lntp   >> ${SYSINFO}
+  header "PROCESS TREE"
+  ps auxf
 
-header "AIDBOXDB.SERVICE STATUS AND LOGS"
-systemctl  status aidboxdb --full --lines=0                      >> ${SYSINFO}
-echo
-journalctl --unit=aidboxdb --full --lines=25 --no-pager --boot   >> ${SYSINFO}
+  header "LISTENING TCP SOCKETS"
+  netstat -lntp
 
-header "AIDBOXDB.SERVICE STATUS AND LOGS"
-systemctl  status aidbox --full --lines=0                        >> ${SYSINFO}
-echo
-journalctl --unit=aidbox --full --lines=25 --no-pager --boot     >> ${SYSINFO}
+  header "AIDBOXDB.SERVICE STATUS AND LOGS"
+  systemctl  status aidboxdb --full --lines=0
+  echo
+  journalctl --unit=aidboxdb --full --lines=25 --no-pager --boot
 
-header "MINIO.SERVICE STATUS AND LOGS"
-systemctl  status minio  --full --lines=0                        >> ${SYSINFO}
-echo
-journalctl --unit=minio  --full --lines=25 --no-pager --boot     >> ${SYSINFO}
+  header "AIDBOXDB.SERVICE STATUS AND LOGS"
+  systemctl  status aidbox --full --lines=0
+  echo
+  journalctl --unit=aidbox --full --lines=25 --no-pager --boot
+
+  header "MINIO.SERVICE STATUS AND LOGS"
+  systemctl  status minio  --full --lines=0
+  echo
+  journalctl --unit=minio  --full --lines=25 --no-pager --boot
+
+  header "CODA19-SITE-API.SERVICE STATUS AND LOGS"
+  systemctl  status coda19-site-api  --full --lines=0
+  echo
+  journalctl --unit=coda19-site-api  --full --lines=25 --no-pager --boot
+
+} >> ${SYSINFO}
 
 # PUSH
 

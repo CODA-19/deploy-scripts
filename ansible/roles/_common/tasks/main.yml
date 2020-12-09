@@ -8,11 +8,23 @@
   tags:
     - always
 
+- name: "IMPORT_TASKS | proxy.yml"
+  import_tasks: proxy.yml
+  tags:
+    - _common
+    - _common_proxy
+
 - name: "IMPORT_TASKS | heartbeat.yml"
   import_tasks: heartbeat.yml
   tags:
     - _common
     - _common_heartbeat
+
+- name: "IMPORT_TASKS | ansible.yml"
+  import_tasks: ansible.yml
+  tags:
+    - _common
+    - _common_ansible
 
 - name: "IMPORT_TASKS | accounts.yml"
   import_tasks: accounts.yml
@@ -31,12 +43,6 @@
   tags:
     - _common
     - _common_sudoers
-
-- name: "IMPORT_TASKS | proxy.yml"
-  import_tasks: proxy.yml
-  tags:
-    - _common
-    - _common_proxy
 
 - name: "IMPORT_TASKS | fail2ban.yml"
   import_tasks: fail2ban.yml
@@ -97,4 +103,3 @@
   tags:
     - _common
     - _common_directories
-    
