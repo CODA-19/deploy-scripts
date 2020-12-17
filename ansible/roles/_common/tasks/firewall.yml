@@ -29,10 +29,11 @@
     permanent: yes
   register: _fw_local_green
 
+# TODO: REMOVE
 - name: "FIREWALLD | Add local-purple zone"
   firewalld:
     zone: local-purple
-    state: present
+    state: absent
     permanent: yes
   register: _fw_local_purple
 
