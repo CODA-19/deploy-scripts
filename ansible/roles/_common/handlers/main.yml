@@ -39,3 +39,8 @@
   systemd:
     name: firewalld
     state: reloaded
+
+######
+
+- name: kill heartbeat-metrics
+  command: pkill -f heartbeat-metrics.sh

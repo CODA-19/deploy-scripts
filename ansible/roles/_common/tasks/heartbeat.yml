@@ -18,7 +18,6 @@
     owner: root
     group: wheel
 
-
 ###### HEARTBEAT - MAIN SCRIPT
 
 - name: TEMPLATE | Generate /usr/local/bin/heartbeat.sh
@@ -42,6 +41,9 @@
     src: usr/local/bin/heartbeat-metrics.sh.j2
     dest: /usr/local/bin/heartbeat-metrics.sh
     mode: 0750
+  notify:
+    # We need to notify because heatbeat-metrics run in a loop once launched
+    - kill heartbeat-metrics
 
 - name: CRON | Create cronjob to execute the heartbeat-metrics process
   cron:
