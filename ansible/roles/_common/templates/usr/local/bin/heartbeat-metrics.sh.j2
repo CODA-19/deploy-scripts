@@ -51,7 +51,7 @@ SLEEP_TIME=10
       --silent \
       --connect-timeout ${CODA19_HEARTBEAT_CONNECT_TIMEOUT} \
       --request POST \
-      --header "X-Token: ${CODA19_HEARTBEAT_TOKEN}" \
+      --header "Authorization: ${CODA19_HEARTBEAT_TOKEN}" \
       --header "Content-Type: text/plain" \
       --data-binary @${METRICS_FILE} \
       ${CODA19_HEARTBEAT_BASE_URL}/metrics/${CODA19_SITE_ID}/${CODA19_HOST_ROLE}

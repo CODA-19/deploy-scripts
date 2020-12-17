@@ -3,4 +3,5 @@ become.pass
 become.pass.*
 vault.pass
 vault.*.pass
+heartbeat-token.*
 venv/

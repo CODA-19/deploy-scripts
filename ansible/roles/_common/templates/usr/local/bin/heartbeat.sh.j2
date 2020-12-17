@@ -47,7 +47,7 @@ curl \
   --silent \
   --connect-timeout ${CODA19_HEARTBEAT_CONNECT_TIMEOUT} \
   --request POST \
-  --header "X-Token: ${CODA19_HEARTBEAT_TOKEN}" \
+  --header "Authorization: ${CODA19_HEARTBEAT_TOKEN}" \
   --header "Content-Type: application/json" \
   --data-binary @${FACTS} \
   ${CODA19_HEARTBEAT_BASE_URL}/facts/${CODA19_SITE_ID}/${CODA19_HOST_ROLE}
@@ -58,7 +58,7 @@ rm -f $FACTS
 
 # curl \
 #   --request GET \
-#   --header "X-Token: ${CODA19_HEARTBEAT_TOKEN}" \
+#   --header "Authorization: ${CODA19_HEARTBEAT_TOKEN}" \
 #   ${CODA19_HEARTBEAT_BASE_URL}/facts/${CODA19_SITE_ID}/${CODA19_HOST_ROLE}
 
 ################################################################################
@@ -111,7 +111,7 @@ curl \
   --silent \
   --connect-timeout ${CODA19_HEARTBEAT_CONNECT_TIMEOUT} \
   --request POST \
-  --header "X-Token: ${CODA19_HEARTBEAT_TOKEN}" \
+  --header "Authorization: ${CODA19_HEARTBEAT_TOKEN}" \
   --header "Content-Type: text/plain" \
   --data-binary @${SYSINFO} \
   ${CODA19_HEARTBEAT_BASE_URL}/sysinfo/${CODA19_SITE_ID}/${CODA19_HOST_ROLE}
