@@ -75,4 +75,4 @@ chmod go-rwx ${ANSIBLE_LOG_DIR}
 ###### CLEANUP LOG FILES OLDER THAN 7 DAYS
 ################################################################################
 
-find ${ANSIBLE_LOG_DIR}/ansible-pull-* -mtime +7 -exec rm {} \;
+find ${ANSIBLE_LOG_DIR}/ansible-pull-* -mtime +7 -exec rm {} \; &>/dev/null
