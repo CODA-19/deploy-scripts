@@ -1,1 +1,43 @@
 ---
+
+# Components to install from repository
+#
+# Server components
+#   - alertmanager
+#   - blackbox_exporter
+#   - prometheus # Prometheus 1.x
+#   - prometheus2 # Prometheus 2.x
+#   - sachet
+#
+# Exporters:
+#   - apache_exporter
+#   - collectd_exporter
+#   - consul_exporter
+#   - elasticsearch_exporter
+#   - graphite_exporter
+#   - haproxy_exporter
+#   - jmx_exporter
+#   - mysqld_exporter
+#   - node_exporter
+#   - postgres_exporter
+#   - pushgateway
+#   - redis_exporter
+#   - snmp_exporter
+#
+
+ul_prometheus_components:
+  - prometheus2
+
+# Reposotiry configuration
+
+ul_prometheus_repo_content: |
+  [prometheus]
+  name=prometheus
+  baseurl=https://packagecloud.io/prometheus-rpm/release/el/$releasever/$basearch
+  repo_gpgcheck=1
+  gpgcheck=0
+  enabled=1
+  gpgkey=https://packagecloud.io/prometheus-rpm/release/gpgkey
+  sslverify=1
+  sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+  metadata_expire=300

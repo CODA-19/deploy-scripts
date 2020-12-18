@@ -1,0 +1,20 @@
+---
+
+- name: DEPLOY AND MAINTAIN HUB MONITORING
+  hosts: hub_mon
+  become: yes
+  environment:
+    http_proxy: "{{ _common_global_proxy }}"
+    https_proxy: "{{ _common_global_proxy }}"
+    no_proxy: "{{ _common_global_noproxy }}"
+    HTTP_PROXY: "{{ _common_global_proxy }}"
+    HTTPS_PROXY: "{{ _common_global_proxy }}"
+    NO_PROXY: "{{ _common_global_noproxy }}"
+  vars:
+    # Needed because not defined in vault and we don't load _common role
+    _common_global_noproxy: 127.0.0.1,localhost
+  vars_files:
+    - "{{ inventory_dir }}/vaults/vault.{{ coda19_site_id }}"
+  roles:
+    - ul_prometheus
+    - ul_grafana

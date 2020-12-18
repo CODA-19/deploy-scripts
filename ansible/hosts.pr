@@ -10,10 +10,14 @@ coda19_site_id=100
 
 [hub:children]
 hub_gw
+hub_mon
 
 [hub_gw]
 ul-cod-pr-gw01.l.ul.ca
 ul-cod-pr-gw02.l.ul.ca
+
+[hub_mon]
+ul-cod-pr-mon01.l.ul.ca
 
 #------------------------------------------------------------------------------
 # GENERAL - AGGREGATE GROUPS

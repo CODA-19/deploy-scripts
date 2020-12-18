@@ -1,0 +1,6 @@
+---
+
+- name: YUM | Install package
+  yum:
+    name: grafana
+    state: present

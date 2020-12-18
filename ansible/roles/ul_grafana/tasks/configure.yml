@@ -1,0 +1,18 @@
+---
+
+# - name: TEMPLATE | Generate grafana.ini
+#   template:
+#     src: grafana.ini.j2
+#     dest: /etc/grafana/grafana.ini
+#     owner: grafana
+#     group: grafana
+#     mode: 0600
+#     backup: yes
+#   notify: restart grafana
+#
+
+- name: SYSTEMD | Ensure grafana service is started and enabled
+  systemd:
+    name: grafana-server
+    state: started
+    enabled: yes

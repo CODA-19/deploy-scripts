@@ -1,0 +1,26 @@
+---
+
+- name: "IMPORT_TASKS | repository.yml"
+  import_tasks: repository.yml
+  tags:
+    - ul_grafana
+    - ul_grafana_repository
+
+- name: "IMPORT_TASKS | install.yml"
+  import_tasks: install.yml
+  tags:
+    - ul_grafana
+    - ul_grafana_install
+
+- name: "IMPORT_TASKS | configure.yml"
+  import_tasks: configure.yml
+  tags:
+    - ul_grafana
+    - ul_grafana_configure
+
+- name: "IMPORT_TASKS | firewall.yml"
+  import_tasks: firewall.yml
+  tags:
+    - ul_grafana
+    - ul_grafana_firewall
+    - firewall

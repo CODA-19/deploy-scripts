@@ -1,0 +1,6 @@
+---
+
+- name: REPOSITORY | FILE | Install repository file by content
+  copy:
+    content: "{{ ul_grafana_repo_content }}"
+    dest: /etc/yum.repos.d/grafana.repo
