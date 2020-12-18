@@ -8,7 +8,7 @@
 #   ansible-playbook \
 #     --inventory localhost, \
 #     --vault-password-file /etc/ansible/vault.pass \
-#     localhost.yml
+#     playbooks/localhost.yml
 #
 # To run correctly, this playbook minimaly need these localfacts:
 #
@@ -74,15 +74,15 @@
 
   tasks:
 
-    - name: INCLUDE_ROLE | _ORANGE
-      include_role:
+    - name: IMPORT_ROLE | _ORANGE
+      import_role:
         name: _orange
       when: "coda19_host_role == 'orange'"
       tags:
         - always
 
-    - name: INCLUDE_ROLE | _GREEN
-      include_role:
+    - name: IMPORT_ROLE | _GREEN
+      import_role:
         name: _green
       when: "coda19_host_role == 'green'"
       tags:
