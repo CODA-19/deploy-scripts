@@ -1,14 +1,4 @@
 ---
-#
-# REMOTE DEPLOYMENT
-#
-# ansible-playbook --inventory hosts.pr \
-#                  --vault-password-file vault.115.pass \
-#                  --user ul-a-brlav35 \
-#                  --ask-become-pass \
-#                  playbooks/remote-green.yml \
-#                  --limit s115
-#
 - name: DEPLOY AND MAINTAIN THE «GREEN BOXES»
   hosts: green
   become: yes

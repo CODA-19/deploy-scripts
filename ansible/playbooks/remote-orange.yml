@@ -1,9 +1,4 @@
 ---
-#
-# REMOTE DEPLOYMENT
-#
-# For instructions, please refer to remote-green.yml playbook.
-#
 - name: DEPLOY AND MAINTAIN THE «ORANGE BOXES»
   hosts: orange
   become: yes

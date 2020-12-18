@@ -1,4 +1,14 @@
 ---
+#
+# REMOTE DEPLOYMENT
+#
+# ansible-playbook --inventory hosts.pr \
+#                  --vault-password-file vault.115.pass \
+#                  --user ul-a-brlav35 \
+#                  --ask-become-pass \
+#                  playbooks/remote.yml \
+#                  --limit s115
+#
 
 - name: Include «orange» playbook
   import_playbook: remote-orange.yml
