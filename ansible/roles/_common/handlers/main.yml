@@ -43,4 +43,5 @@
 ######
 
 - name: kill heartbeat-metrics
-  command: pkill -f heartbeat-metrics.sh
+  command: /usr/bin/pkill -f heartbeat-metrics.sh
+  ignore_errors: yes
