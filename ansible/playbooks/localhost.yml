@@ -74,15 +74,15 @@
 
   tasks:
 
-    - name: IMPORT_ROLE | _ORANGE
-      import_role:
+    - name: INCLUDE_ROLE | _ORANGE
+      include_role:
         name: _orange
       when: "coda19_host_role == 'orange'"
       tags:
         - always
 
-    - name: IMPORT_ROLE | _GREEN
-      import_role:
+    - name: INCLUDE_ROLE | _GREEN
+      include_role:
         name: _green
       when: "coda19_host_role == 'green'"
       tags:
