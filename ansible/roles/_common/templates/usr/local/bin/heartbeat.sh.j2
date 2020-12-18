@@ -83,6 +83,8 @@ SYSINFO=$( mktemp )
   header "LISTENING TCP SOCKETS"
   netstat -lntp
 
+{% if coda19_host_role == 'orange' %}
+
   header "AIDBOXDB.SERVICE STATUS AND LOGS"
   systemctl  status aidboxdb --full --lines=0
   echo
@@ -98,10 +100,14 @@ SYSINFO=$( mktemp )
   echo
   journalctl --unit=minio  --full --lines=25 --no-pager --boot
 
+{% elif coda19_host_role == 'green' %}
+
   header "CODA19-SITE-API.SERVICE STATUS AND LOGS"
   systemctl  status coda19-site-api  --full --lines=0
   echo
   journalctl --unit=coda19-site-api  --full --lines=25 --no-pager --boot
+
+{% endif %}
 
 } >> ${SYSINFO}
 
