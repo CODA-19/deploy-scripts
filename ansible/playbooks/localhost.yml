@@ -43,13 +43,13 @@
     - "{{ playbook_dir }}/../group_vars/{{ ansible_local.coda19.site.id }}"
     - "{{ playbook_dir }}/../vaults/vault.{{ ansible_local.coda19.site.id }}"
 
-  environment:
-    http_proxy:  "{{ _common_global_proxy   | default('') }}"
-    https_proxy: "{{ _common_global_proxy   | default('') }}"
-    no_proxy:    "{{ _common_global_noproxy | default('') }}"
-    HTTP_PROXY:  "{{ _common_global_proxy   | default('') }}"
-    HTTPS_PROXY: "{{ _common_global_proxy   | default('') }}"
-    NO_PROXY:    "{{ _common_global_noproxy | default('') }}"
+  # environment:
+  #   http_proxy:  "{{ _common_global_proxy   | default('') }}"
+  #   https_proxy: "{{ _common_global_proxy   | default('') }}"
+  #   no_proxy:    "{{ _common_global_noproxy | default('') }}"
+  #   HTTP_PROXY:  "{{ _common_global_proxy   | default('') }}"
+  #   HTTPS_PROXY: "{{ _common_global_proxy   | default('') }}"
+  #   NO_PROXY:    "{{ _common_global_noproxy | default('') }}"
 
   pre_tasks:
 
