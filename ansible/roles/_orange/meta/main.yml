@@ -5,3 +5,4 @@ dependencies:
   - role: ul_podman
   - role: ul_minio
   - role: ul_aidbox
+  - role: ul_nginx
