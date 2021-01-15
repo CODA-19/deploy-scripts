@@ -1,1 +1,7 @@
 ---
+
+- name: "IMPORT_TASKS | repository.yml"
+  import_tasks: repository.yml
+  tags:
+    - ul_nginx
+    - ul_nginx_repository
