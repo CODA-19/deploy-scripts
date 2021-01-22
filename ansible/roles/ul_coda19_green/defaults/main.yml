@@ -2,7 +2,7 @@
 
 # Control Plane Address
 
-ul_coda19_green_hub_api_url: https://api-poc.hub.coda19.com
+ul_coda19_green_hub_api_url: 	https://api.hub.coda19.com
 
 ul_coda19_green_firewalld_zones:
   - zone: public
@@ -14,6 +14,11 @@ ul_coda19_green_firewalld_zones:
 
 # Listening port (TCP)
 ul_coda19_green_site_api_port: 5148
+
+# Environnement variables
+coda19_site_api_keycloak_url_and_realm: https://auth.hub.coda19.com/auth/realms/coda19-pr/
+coda19_site_api_keycloak_client_id: coda19-site
+coda19_site_api_stats_api_endpoint:
 
 # Image and tag to use
 ul_coda19_green_site_api_image_registry: docker.io
