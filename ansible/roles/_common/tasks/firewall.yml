@@ -29,16 +29,19 @@
     permanent: yes
   register: _fw_local_green
 
-# TODO: REMOVE
-- name: "FIREWALLD | Add local-purple zone"
-  firewalld:
-    zone: local-purple
-    state: absent
-    permanent: yes
-  register: _fw_local_purple
-
 - name: "FIREWALLD | Reload if new zones added"
   systemd:
     name: firewalld
     state: reloaded
-  when: _fw_local_red.changed or _fw_local_orange.changed or _fw_local_green.changed or _fw_local_purple.changed
+  when: _fw_local_red.changed or _fw_local_orange.changed or _fw_local_green.changed
+
+###### Manage zones sources
+
+- name: "FIREWALLD | Manage local zones sources"
+  firewalld:
+    zone: "{{ item.zone }}"
+    source: "{{ item.source }}"
+    state: "{{ item.state | default('present') }}"
+    permanent: yes
+    immediate: yes
+  with_items: "{{ _common_local_firewalld_zones_sources }}"
