@@ -41,7 +41,7 @@
   firewalld:
     zone: "{{ item.zone }}"
     source: "{{ item.source }}"
-    state: "{{ item.state | default('present') }}"
+    state: "{{ item.state | default('enabled') }}"
     permanent: yes
     immediate: yes
   with_items: "{{ _common_local_firewalld_zones_sources }}"
