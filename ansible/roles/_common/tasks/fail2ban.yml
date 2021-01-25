@@ -5,8 +5,8 @@
     name: fail2ban
     state: present
 
-- name: FIREWALLD | Ensure fail2ban is enabled and started
-  firewalld:
+- name: SYSTEMD | Ensure fail2ban is enabled and started
+  systemd:
     name: fail2ban
     state: started
     enabled: yes
