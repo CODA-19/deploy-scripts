@@ -8,12 +8,14 @@ ul_coda19_green_firewalld_zones:
   - zone: public
     state: enabled
 
+ul_coda19_docker_image_registry: docker.io
+
 ################################################################################
 #### CODA19-SITE-API
 ################################################################################
 
 # Listening port (TCP)
-ul_coda19_green_site_api_port: 5148
+coda19_site_api_port: 5148
 
 # Environnement variables
 coda19_site_api_keycloak_url_and_realm: https://auth.hub.coda19.com/auth/realms/coda19-pr/
@@ -21,9 +23,24 @@ coda19_site_api_keycloak_client_id: coda19-site
 coda19_site_api_stats_api_endpoint:
 
 # Image and tag to use
-ul_coda19_green_site_api_image_registry: docker.io
-ul_coda19_green_site_api_image_name: coda19/coda19-site-api
-ul_coda19_green_site_api_image_tag: latest
+coda19_site_api_image_name: coda19/coda19-site-api
+coda19_site_api_image_tag: latest
+
+################################################################################
+#### CODA19-STATS-API
+################################################################################
+
+# Listening port (TCP)
+coda19_stats_api_port: 5427
+
+# Environnement variables
+coda19_stats_api_fake_aidbox: true
+coda19_stats_api_aidbox_url:
+coda19_stats_api_aidbox_token:
+
+  # Image and tag to use
+coda19_stats_api_image_name: coda19/coda19-stats-api
+coda19_stats_api_image_tag: latest
 
 ################################################################################
 #### General and common stuff

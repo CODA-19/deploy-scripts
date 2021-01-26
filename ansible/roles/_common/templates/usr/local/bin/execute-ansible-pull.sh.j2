@@ -52,6 +52,7 @@ chmod go-rwx ${ANSIBLE_LOG_DIR}
   # Fire!
   ansible-pull \
     --url {{ _common_ansible_pull_repo_url }} \
+    --checkout {{ _common_ansible_pull_repo_branch }} \
     --vault-password-file /etc/ansible/vault.pass \
     --directory ${PULL_BASE} \
     --inventory ${ANSIBLE_BASE}/hosts.localhost \

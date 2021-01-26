@@ -1,0 +1,10 @@
+module coda19-stats-api 1.0;
+
+require {
+  type fusefs_t;
+  type container_t;
+  class sock_file { create setattr write };
+}
+
+#============== container_t ===============
+allow container_t fusefs_t:sock_file { create setattr write };
