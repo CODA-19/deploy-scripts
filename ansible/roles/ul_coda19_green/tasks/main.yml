@@ -10,7 +10,6 @@
   tags:
     - ul_coda19_green
     - ul_coda19_green_install
-    - test_kevin
   vars:
     - task_title: CODA19-SITE-API
     - container_name: coda19-site-api
@@ -31,14 +30,12 @@
   tags:
     - ul_coda19_green
     - ul_coda19_green_install
-    - test_kevin
     
 - name: "IMPORT_TASKS | CODA19-STATS-API | install.yml"
   import_tasks: install.yml
   tags:
     - ul_coda19_green
     - ul_coda19_green_install
-    - test_kevin
   vars:
     - task_title: CODA19-STATS-API
     - container_name: coda19-stats-api
@@ -59,4 +56,3 @@
   tags:
     - ul_coda19_green
     - ul_coda19_green_install
-    - test_kevin
