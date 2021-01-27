@@ -20,7 +20,7 @@ coda19_site_api_port: 5148
 # Environnement variables
 coda19_site_api_keycloak_url_and_realm: https://auth.hub.coda19.com/auth/realms/coda19-pr/
 coda19_site_api_keycloak_client_id: coda19-site
-coda19_site_api_stats_api_endpoint:
+coda19_site_api_stats_api_endpoint: http://localhost:5427
 
 # Image and tag to use
 coda19_site_api_image_name: coda19/coda19-site-api
@@ -34,7 +34,7 @@ coda19_site_api_image_tag: latest
 coda19_stats_api_port: 5427
 
 # Environnement variables
-coda19_stats_api_fake_aidbox: true
+coda19_stats_api_fake_aidbox: "true"
 coda19_stats_api_aidbox_url:
 coda19_stats_api_aidbox_token:
 
