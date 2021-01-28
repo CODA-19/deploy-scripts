@@ -56,3 +56,5 @@
   tags:
     - ul_coda19_green
     - ul_coda19_green_install
+
+- meta: flush_handlers

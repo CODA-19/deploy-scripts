@@ -122,5 +122,3 @@
   become_user: "{{ container_name }}"
   notify:
     - "restart {{ container_name }}"
-
-- meta: flush_handlers
