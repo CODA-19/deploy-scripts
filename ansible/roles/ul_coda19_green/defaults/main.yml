@@ -2,7 +2,7 @@
 
 # Control Plane Address
 
-ul_coda19_green_hub_api_url: 	https://api.hub.coda19.com
+ul_coda19_green_hub_api_url: https://api.hub.coda19.com
 
 ul_coda19_green_firewalld_zones:
   - zone: public

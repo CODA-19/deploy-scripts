@@ -107,6 +107,11 @@ SYSINFO=$( mktemp )
   echo
   journalctl --unit=coda19-site-api  --full --lines=25 --no-pager --boot
 
+  header "CODA19-STATS-API.SERVICE STATUS AND LOGS"
+  systemctl  status coda19-stats-api  --full --lines=0
+  echo
+  journalctl --unit=coda19-stats-api  --full --lines=25 --no-pager --boot
+
 {% endif %}
 
 } >> ${SYSINFO}
