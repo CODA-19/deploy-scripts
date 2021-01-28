@@ -1,77 +1,77 @@
 ---
 
 ################################################################################
-### CODA19-SITE-API
+### "{{ task_title }}"
 ################################################################################
 
-- name: CODA19-SITE-API | GROUP | Add the group 'coda19-site-api'
+- name: "{{ task_title }} | GROUP | Add the group '{{ container_name }}'"
   group:
-    name: coda19-site-api
+    name: "{{ container_name }}"
     system: no
 
-- name: CODA19-SITE-API | USER | Add the user 'coda19-site-api'
+- name: "{{ task_title }} | USER | Add the user '{{ container_name }}'"
   user:
-    name: coda19-site-api
-    group: coda19-site-api
-    home: /var/lib/coda19-site-api
+    name: "{{ container_name }}"
+    group: "{{ container_name }}"
+    home: "/var/lib/{{ container_name }}"
     system: no
 
-- name: CODA19-SITE-API | TEMPLATE | Generate /etc/default/coda19-site-api
+- name: "{{ task_title }} | TEMPLATE | Generate /etc/default/{{ container_name }}"
   template:
-    src: etc/default/coda19-site-api.j2
-    dest: /etc/default/coda19-site-api
-    owner: coda19-site-api
-    group: coda19-site-api
+    src: "etc/default/{{ container_name }}.j2"
+    dest: "/etc/default/{{ container_name }}"
+    owner: "{{ container_name }}"
+    group: "{{ container_name }}"
     mode: 0640
   notify:
-    - restart coda19-site-api
+    - "restart {{ container_name }}"
 
-- name: CODA19-SITE-API | TEMPLATE | Copy systemd service unit
+- name: "{{ task_title }} | TEMPLATE | Copy systemd service unit"
   template:
-    src: etc/systemd/system/coda19-site-api.service.j2
-    dest: /etc/systemd/system/coda19-site-api.service
+    src: etc/systemd/system/coda19-container-api.service.j2
+    dest: "/etc/systemd/system/{{ container_name }}.service"
     owner: root
     group: root
     mode: 0664
   notify:
-    - restart coda19-site-api
+    - "restart {{ container_name }}"
 
 # Create data directory
-- name: CODA19-SITE-API | FILE | Ensure /data/coda19-site-api is present
+- name: "{{ task_title }} | FILE | Ensure /data/{{ container_name }} is present"
   file:
-    dest: /data/coda19-site-api
-    owner: coda19-site-api
-    group: coda19-site-api
+    dest: "/data/{{ container_name }}"
+    owner: "{{ container_name }}"
+    group: "{{ container_name }}"
     mode: 0750
     state: directory
 
 # Create SELinux rules to make this service work correctly (CentOS 7 only)
 - block:
 
-    - name: "CODA19-SITE-API | SELINUX | FILE | Ensure target directory exists: {{ _selinux_module_dir }}"
+    - name: "{{ task_title }} | SELINUX | FILE | Ensure target directory exists: {{ _selinux_module_dir }}"
       file:
         path: "{{ _selinux_module_dir }}"
         state: directory
 
-    - name: "CODA19-SITE-API | SELINUX | COPY | {{ _selinux_module_dir }}/{{ _selinux_module_name }}.te"
+    - name: "{{ task_title }} | SELINUX | COPY | {{ _selinux_module_dir }}/{{ _selinux_module_name }}.te"
       copy:
         src: "etc/selinux/coda19/{{ _selinux_module_name }}.te"
         dest: "{{ _selinux_module_dir }}/{{ _selinux_module_name }}.te"
       register: _selinux
 
-    - name: "CODA19-SITE-API | SELINUX | COMMAND | checkmodule"
+    - name: "{{ task_title }} | SELINUX | COMMAND | checkmodule"
       command: checkmodule -M -m -o {{ _selinux_module_name }}.mod {{ _selinux_module_name }}.te
       args:
         chdir: "{{ _selinux_module_dir }}"
       when: _selinux.changed
 
-    - name: "CODA19-SITE-API | SELINUX | COMMAND | semodule_package"
+    - name: "{{ task_title }} | SELINUX | COMMAND | semodule_package"
       command: semodule_package -o {{ _selinux_module_name }}.pp -m {{ _selinux_module_name }}.mod
       args:
         chdir: "{{ _selinux_module_dir }}"
       when: _selinux.changed
 
-    - name: "CODA19-SITE-API | SELINUX | COMMAND | semodule"
+    - name: "{{ task_title }} | SELINUX | COMMAND | semodule"
       command: semodule -i {{ _selinux_module_name }}.pp
       args:
         chdir: "{{ _selinux_module_dir }}"
@@ -79,59 +79,48 @@
 
   vars:
     _selinux_module_dir: /etc/selinux/coda19
-    _selinux_module_name: coda19-site-api
+    _selinux_module_name: "{{ container_name }}"
   when:
     - ansible_distribution == "CentOS"
     - ansible_distribution_major_version == '7'    
 
 # Get remote image digest and print
-- name: CODA19-SITE-API | SHELL | Get remote image digest
+- name: "{{ task_title }} | SHELL | Get remote image digest"
   shell: |
-    /usr/bin/skopeo inspect --no-creds docker://{{ ul_coda19_green_site_api_image_registry }}/{{ ul_coda19_green_site_api_image_name }}:{{ ul_coda19_green_site_api_image_tag }} |  jq -r '.Digest'
+    /usr/bin/skopeo inspect --no-creds docker://{{ ul_coda19_docker_image_registry }}/{{ docker_image_name }}:{{ docker_image_tag }} |  jq -r '.Digest'
   changed_when: false
   failed_when: false
   register: _image_remote
 
-- name: CODA19-SITE-API | DEBUG | Remote image digest
+- name: "{{ task_title }} | DEBUG | Remote image digest"
   debug:
     var: _image_remote.stdout
 
 # Get local image digest and print
-- name: CODA19-SITE-API | SHELL | Get local image digest
+- name: "{{ task_title }} | SHELL | Get local image digest"
   shell: |
-    /usr/bin/podman inspect --format '{{ '{{' }} .Digest {{ '}}' }}' {{ ul_coda19_green_site_api_image_registry }}/{{ ul_coda19_green_site_api_image_name }}:{{ ul_coda19_green_site_api_image_tag }} 2>/dev/null
+    /usr/bin/podman inspect --format '{{ '{{' }} .Digest {{ '}}' }}' {{ ul_coda19_docker_image_registry }}/{{ docker_image_name }}:{{ docker_image_tag }} 2>/dev/null
   changed_when: false
   failed_when: false
   register: _image_local
   become: yes
-  become_user: coda19-site-api
+  become_user: "{{ container_name }}"
 
-- name: CODA19-SITE-API | DEBUG | Local image digest
+- name: "{{ task_title }}| DEBUG | Local image digest"
   debug:
     var: _image_local.stdout
 
 # Ensure image is present
 # Force a pull when remote digest is different from local one
-- name: CODA19-SITE-API | PODMAN_IMAGE | Pull image
+- name: "{{ task_title }} | PODMAN_IMAGE | Pull image"
   podman_image:
-    name: "{{ ul_coda19_green_site_api_image_registry }}/{{ ul_coda19_green_site_api_image_name }}"
-    tag: "{{ ul_coda19_green_site_api_image_tag }}"
+    name: "{{ ul_coda19_docker_image_registry }}/{{ docker_image_name }}"
+    tag: "{{ docker_image_tag }}"
     state: present
     force: "{{ (_image_remote.stdout == _image_local.stdout) | ternary(False, True) }}"
   become: yes
-  become_user: coda19-site-api
+  become_user: "{{ container_name }}"
   notify:
-    - restart coda19-site-api
-
-# Start and enable service
-- name: CODA19-SITE-API | SYSTEMD | Ensure coda19-site-api.service is started and enabled
-  systemd:
-    name: coda19-site-api
-    state: started
-    enabled: yes
-    daemon_reload: yes
-  # We register this task status.
-  # Don't start + restart service with handlers, usualy on first run.
-  register: _systemd_coda19_site_api
+    - "restart {{ container_name }}"
 
 - meta: flush_handlers

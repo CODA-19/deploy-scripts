@@ -7,3 +7,12 @@
     enabled: yes
     daemon_reload: yes
   when: not _systemd_coda19_site_api.changed
+
+
+- name: restart coda19-stats-api
+  systemd:
+    name: coda19-stats-api
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+  when: not _systemd_coda19_stats_api.changed

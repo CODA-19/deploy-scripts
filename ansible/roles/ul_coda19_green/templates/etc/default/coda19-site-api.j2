@@ -1,9 +1,14 @@
 ###
 ### {{ ansible_managed }}
 ###
-CODA19_SITE_API_SERVER_PORT={{ ul_coda19_green_site_api_port }}
+CODA19_SITE_API_SERVER_PORT={{ coda19_site_api_port }}
 CODA19_SITE_API_HUB_API_URL={{ ul_coda19_green_hub_api_url }}
 CODA19_SITE_API_HOSPITAL_CODE={{ coda19_site_id }}
+CODA19_SITE_API_KEYCLOAK_URL_AND_REALM={{ coda19_site_api_keycloak_url_and_realm }}
+CODA19_SITE_API_KEYCLOAK_CLIENT_ID={{ coda19_site_api_keycloak_client_id }}
+CODA19_SITE_API_KEYCLOAK_APP_USERNAME={{ coda19_site_api_keycloak_app_username }}
+CODA19_SITE_API_KEYCLOAK_APP_PASSWORD={{ coda19_site_api_keycloak_app_password }}
+CODA19_SITE_API_STATS_API_ENDPOINT={{ coda19_site_api_stats_api_endpoint }}
 
 # TODO: manage proxy correctly
 #CODA19_SITE_API_PROXY=
