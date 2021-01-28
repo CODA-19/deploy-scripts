@@ -15,7 +15,7 @@ ul_coda19_docker_image_registry: docker.io
 ################################################################################
 
 # Listening port (TCP)
-coda19_site_api_port: 5148
+coda19_site_api_port: 5418
 
 # Environnement variables
 coda19_site_api_keycloak_url_and_realm: https://auth.hub.coda19.com/auth/realms/coda19-pr/
