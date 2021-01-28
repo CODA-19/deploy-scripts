@@ -34,7 +34,7 @@ curl \
   --silent \
   --connect-timeout ${CODA19_HEARTBEAT_CONNECT_TIMEOUT} \
   --request GET \
-  --header "X-Token: ${CODA19_HEARTBEAT_TOKEN}" \
+  --header "Authorization: ${CODA19_HEARTBEAT_TOKEN}" \
   ${CODA19_HEARTBEAT_BASE_URL}/logs/${CODA19_SITE_ID}/${CODA19_HOST_ROLE}/ansible | tail -n 50
 
 header "SYSTEM INFORMATION"
@@ -44,7 +44,7 @@ curl \
   --silent \
   --connect-timeout ${CODA19_HEARTBEAT_CONNECT_TIMEOUT} \
   --request GET \
-  --header "X-Token: ${CODA19_HEARTBEAT_TOKEN}" \
+  --header "Authorization: ${CODA19_HEARTBEAT_TOKEN}" \
   ${CODA19_HEARTBEAT_BASE_URL}/sysinfo/${CODA19_SITE_ID}/${CODA19_HOST_ROLE}
 
 header "NODE_EXPORTER METRICS TAIL"
@@ -54,5 +54,5 @@ curl \
   --silent \
   --connect-timeout ${CODA19_HEARTBEAT_CONNECT_TIMEOUT} \
   --request GET \
-  --header "X-Token: ${CODA19_HEARTBEAT_TOKEN}" \
+  --header "Authorization: ${CODA19_HEARTBEAT_TOKEN}" \
   ${CODA19_HEARTBEAT_BASE_URL}/metrics/${CODA19_SITE_ID}/${CODA19_HOST_ROLE} | head -n 5
