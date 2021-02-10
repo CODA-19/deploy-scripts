@@ -1,5 +1,10 @@
 ---
 
+- name: YUM | Install epel-release
+  yum:
+    name: epel-release
+    state: present
+
 - name: YUM | Install fail2ban
   yum:
     name: fail2ban
