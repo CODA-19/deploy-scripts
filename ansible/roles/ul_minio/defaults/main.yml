@@ -11,7 +11,3 @@ ul_minio_home_dir: /var/lib/minio
 ul_minio_server_firewalld_zones:
   - zone: public
     state: enabled
-  - zone: local-red
-    state: enabled
-  - zone: local-green
-    state: enabled    
