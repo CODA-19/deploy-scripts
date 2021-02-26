@@ -34,9 +34,10 @@ coda19_site_api_image_tag: latest
 coda19_stats_api_port: 5427
 
 # Environnement variables
-coda19_stats_api_fake_aidbox: "true"
-coda19_stats_api_aidbox_url:
-coda19_stats_api_aidbox_token:
+coda19_stats_api_fake_aidbox: "false"
+coda19_stats_api_aidbox_url: http://localhost:8888
+coda19_stats_api_aidbox_client_id: client
+coda19_stats_api_aidbox_client_secret: secret
 
   # Image and tag to use
 coda19_stats_api_image_name: coda19/coda19-stats-api
