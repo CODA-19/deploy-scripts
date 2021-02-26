@@ -56,6 +56,7 @@ ul-cod-dv-dev02.l.ul.ca
 
 [s102:vars]
 coda19_site_id=102
+coda19_stats_api_aidbox_url=http://ul-cod-dv-dev03.l.ul.ca:8888
 
 [s102:children]
 s102_orange
