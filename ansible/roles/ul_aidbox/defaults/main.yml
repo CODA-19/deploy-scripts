@@ -5,10 +5,6 @@
 ul_aidbox_firewalld_zones:
   - zone: public
     state: enabled
-  - zone: local-red
-    state: enabled
-  - zone: local-green
-    state: enabled    
 
 ul_aidbox_port: 8888
 
