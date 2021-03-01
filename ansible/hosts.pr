@@ -82,6 +82,7 @@ s110_green
 
 [s115:vars]
 coda19_site_id=115
+coda19_stats_api_aidbox_url=http://ul-cod-pr-chu01.l.ul.ca:8888
 
 [s115:children]
 s115_orange
