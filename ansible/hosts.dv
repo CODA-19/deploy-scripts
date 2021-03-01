@@ -39,6 +39,7 @@ s104_green
 
 [s101:vars]
 coda19_site_id=101
+coda19_stats_api_aidbox_url=http://ul-cod-dv-dev01.l.ul.ca:8888
 
 [s101:children]
 s101_orange
@@ -56,6 +57,7 @@ ul-cod-dv-dev02.l.ul.ca
 
 [s102:vars]
 coda19_site_id=102
+coda19_stats_api_aidbox_url=http://ul-cod-dv-dev03.l.ul.ca:8888
 
 [s102:children]
 s102_orange
@@ -73,6 +75,7 @@ ul-cod-dv-dev04.l.ul.ca
 
 [s103:vars]
 coda19_site_id=103
+coda19_stats_api_aidbox_url=http://ul-cod-dv-dev05.l.ul.ca:8888
 
 [s103:children]
 s103_orange
@@ -90,6 +93,7 @@ ul-cod-dv-dev06.l.ul.ca
 
 [s104:vars]
 coda19_site_id=104
+coda19_stats_api_aidbox_url=http://ul-cod-dv-dev07.l.ul.ca:8888
 
 [s104:children]
 s104_orange
