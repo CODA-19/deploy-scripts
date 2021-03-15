@@ -16,7 +16,7 @@ ul_aidbox_conf_client_secret: secret
 
 ul_aidbox_image_registry: docker.io
 ul_aidbox_image_name: healthsamurai/aidboxone
-ul_aidbox_image_tag: 0.5.0-SNAPSHOT
+ul_aidbox_image_tag: stable
 
 #### AIDBOXDB
 
