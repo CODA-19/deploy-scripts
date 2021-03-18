@@ -60,7 +60,7 @@
 #   become_user: aidbox
 
 # Ensure image is present
-- name: AIDBOX | PODMAN_IMAGE | Pull image
+- name: "AIDBOX | PODMAN_IMAGE | Pull image {{ ul_aidbox_image_registry }}/{{ ul_aidbox_image_name }}:{{ ul_aidbox_image_tag }}"
   podman_image:
     name: "{{ ul_aidbox_image_registry }}/{{ ul_aidbox_image_name }}"
     tag: "{{ ul_aidbox_image_tag }}"
