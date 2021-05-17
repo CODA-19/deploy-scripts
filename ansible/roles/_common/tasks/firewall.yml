@@ -45,3 +45,28 @@
     permanent: yes
     immediate: yes
   with_items: "{{ _common_local_firewalld_zones_sources }}"
+
+
+# SSH is allowed from trusted zone only (i.e. secured SSH jumphosts)
+- name: "FIREWALLD | Manage trusted sources"
+  firewalld:
+    zone: trusted
+    source: "{{ item.source }}"
+    state: "{{ item.state | default('enabled') }}"
+    permanent: yes
+    immediate: yes
+  with_items: "{{ _common_trusted_firewalld_zones_sources }}"
+
+
+# Remove the ssh service from the public zone, at this point only the
+# trust zone can access the machine. If no trust zone are defined,
+# leave the public zone untouched.
+
+- name: "FIREWALLD | Disable ssh from the public zone"
+  firewalld:
+    zone: public
+    service: ssh
+    permanent: yes
+    immediate: yes
+    state: disabled
+  when: _common_trusted_firewalld_zones_sources | length > 0

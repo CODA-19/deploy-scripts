@@ -33,8 +33,10 @@ _common_yum_proxy_enabled: yes
 _common_yum_proxy: "{{ _common_global_proxy }}"
 
 ###### FIREWALL
-
 _common_local_firewalld_zones_sources: []
+
+# If defined, ssh will be only allowed from those networks/hosts
+_common_trusted_firewalld_zones_sources: []
 
 ###### HEARTBEAT
 
