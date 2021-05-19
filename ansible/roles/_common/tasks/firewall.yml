@@ -47,7 +47,7 @@
   with_items: "{{ _common_local_firewalld_zones_sources }}"
 
 
-# SSH is allowed from trusted zone only (i.e. secured SSH jumphosts)
+# all services are allowed from trusted zone only (i.e. can only SSH via well-known trusted SSH jumphosts)
 - name: "FIREWALLD | Manage trusted sources"
   firewalld:
     zone: trusted
