@@ -74,6 +74,12 @@
 
   tasks:
 
+    - name: INCLUDE_ROLE | _ONEOFFS
+      include_role:
+        name: _oneoffs
+      tags:
+        - always
+
     - name: INCLUDE_ROLE | _ORANGE
       include_role:
         name: _orange

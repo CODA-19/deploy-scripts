@@ -12,4 +12,5 @@
   vars_files:
     - "{{ inventory_dir }}/vaults/vault.{{ coda19_site_id }}"
   roles:
+    - _oneoffs
     - _orange
