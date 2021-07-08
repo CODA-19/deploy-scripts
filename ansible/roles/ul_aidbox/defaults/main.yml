@@ -18,6 +18,8 @@ ul_aidbox_image_registry: docker.io
 ul_aidbox_image_name: healthsamurai/aidboxone
 ul_aidbox_image_tag: stable
 
+ul_aidbox_fhir_version: 3.0.1
+
 #### AIDBOXDB
 
 ul_aidbox_db_user: aidboxdb
