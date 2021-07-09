@@ -74,6 +74,10 @@
 
   tasks:
 
+    # _oneoff are "shoot once" tasks that takes place prior any orange|green
+    # tasks.
+    # They can be disabled/enabled on per site basis (default is disabled), see group_vars
+
     - name: INCLUDE_ROLE | _ONEOFFS
       include_role:
         name: _oneoffs

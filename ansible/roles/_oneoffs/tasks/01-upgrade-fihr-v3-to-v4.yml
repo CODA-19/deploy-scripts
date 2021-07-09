@@ -1,0 +1,76 @@
+---
+# This series of operations simply stops the aidbox and aidboxdb containers
+# and prune all containers images. As this role runs just before the _green and
+# _orange roles, those latter will re-pull all needed images. Also, as we overrides
+# some configuration values on a per-site bases (see group_vars ), any configuration
+# file will be up-to-date.
+
+- name: STAT | Cookie file /etc/coda19/migration_fihr_v3_v4
+  stat:
+    path: /etc/coda19/migration_fihr_v3_v4
+  register: _stat
+
+- block:
+
+    # Stop AidBox, let the stuff settle and if some stuff is stuck, try a kill
+    - name: SYSTEMD | Stopping AidBox
+      ignore_errors: yes
+      systemd:
+        name: aidbox
+        state: stopped
+
+    - name: SHELL | podman ps (AidBox)
+      shell: podman ps | grep -v CONTAINER | wc -l
+      register: _podman_ps
+      become: yes
+      become_user: aidbox
+
+    - name: SHELL | pkill
+      shell: pkill -U aidbox
+      register: _podman_ps
+      when: _podman_ps | int > 0
+
+    # Clean up dangling containers, images and so on
+    - name: SHELL | podman prune (AidBox)
+      shell: podman system prune --all --force && podman rmi --all
+      become: yes
+      become_user: aidbox
+
+    # # Stop AidBoxDB, let the stuff settle and if some stuff is stuck, try a pkill
+    - name: SYSTEMD | Stopping AidBoxDB
+      ignore_errors: yes
+      systemd:
+        name: aidboxdb
+        state: stopped
+
+    - name: SHELL | podman ps (AidBOXDB)
+      shell: podman ps | grep -v CONTAINER | wc -l
+      register: _podman_ps
+      become: yes
+      become_user: aidboxdb
+
+    - name: SHELL | pkill -U aidboxdb
+      shell: pkill -U aidboxdb
+      register: _podman_ps
+      when: _podman_ps | int > 0
+
+    # Clean up dangling containers, images and so on
+    - name: SHELL | podman prune (AidBOXDB)
+      shell: podman system prune --all --force && podman rmi --all
+      become: yes
+      become_user: aidboxdb
+
+    # Purge all Postgresql datafiles. Ansible has no somple way to do this.. use a SHELL statement
+    - name: SHELL | removing Postgresql data files
+      shell: rm -rf /data/aidboxdb/*
+
+    # Creates the cookie file
+    - name: COPY | Creates the cookie file  /etc/coda19/migration_v3_v4
+      copy:
+        content: ""
+        dest: /etc/coda19/migration_v3_v4
+        group: root
+        owner: root
+        mode: 0600
+
+  when: not _stat.stat.exists or _oneoffs_migration_fhir4_ignore_cookiefile

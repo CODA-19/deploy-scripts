@@ -1,0 +1,12 @@
+---
+# OneOffs are globally disabled (enabled per site, see group_vars)
+
+- debug:
+    msg: "coda19_host_role => {{ coda19_host_role }} / _oneoffs_migration_fhir4 => {{ _oneoffs_migration_fhir4 }}"
+
+- name: "IMPORT_TASKS | oneoffs/01-upgrade-fihr-v3-to-v4 (for orange VMs)"
+  import_tasks: 01-upgrade-fihr-v3-to-v4.yml
+  tags:
+      - ul_oneoffs
+      - ul_oneoffs_aidbox_fihr_migration
+  when: _oneoffs_migration_fhir4 and  coda19_host_role == 'orange'
