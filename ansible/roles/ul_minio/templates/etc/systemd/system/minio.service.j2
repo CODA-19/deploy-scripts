@@ -12,7 +12,7 @@ AssertFileIsExecutable=/usr/local/bin/minio
 User=minio
 Group=minio
 EnvironmentFile=/etc/default/minio
-ExecStart=/usr/local/bin/minio server --address ":{{ ul_minio_server_port }}" {{ ul_minio_server_opts }} {{ ul_minio_home_dir }}
+ExecStart=/usr/local/bin/minio server --address ":{{ ul_minio_server_api_port }}" --console-address ":{{ ul_minio_server_console_port }}" {{ ul_minio_server_opts }} {{ ul_minio_home_dir }}
 Restart=on-failure
 
 # Specifies the maximum file descriptor number that can be opened by this process

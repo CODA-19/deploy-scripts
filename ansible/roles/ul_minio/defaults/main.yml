@@ -1,10 +1,11 @@
 ---
 
-ul_minio_server_access_key:
-ul_minio_server_secret_key:
+ul_minio_root_user:
+ul_minio_root_password:
 ul_minio_server_opts:
 
-ul_minio_server_port: 9000
+ul_minio_server_api_port: 9000
+ul_minio_server_console_port: 9001
 
 ul_minio_home_dir: /var/lib/minio
 

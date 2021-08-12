@@ -11,7 +11,7 @@ _common_accounts:
     - name: vad
       password: $6$ff/F943Q72OmCl$XAglQyPlWi1tp0a23SUIhA5Iyn0CrxRrQFSJTXHgQxF3gyp1cXgjVwwZXKZUAVn8ffXfHLH5CUrn/1hs9DgfO.
       groups: wheel
-      
+
 _common_global_noproxy: 127.0.0.1,localhost
 
 ################################################################################
@@ -35,6 +35,10 @@ ul_postgresql_ext_jsonknife: yes
 ################################################################################
 ###### UL_MINIO
 ################################################################################
+
+# minio env vars changed names, but we don't want to rekey all vaults now...
+ul_minio_root_user: "{{ ul_minio_server_access_key }}"
+ul_minio_root_password: "{{ ul_minio_server_secret_key }}"
 
 ul_minio_home_dir: /data/minio/
 

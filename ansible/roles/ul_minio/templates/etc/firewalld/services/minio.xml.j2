@@ -2,5 +2,6 @@
 <service>
   <short>MinIO</short>
   <description>High Performance, Kubernetes Native Object Storage</description>
-  <port protocol="tcp" port="{{ ul_minio_server_port }}"/>
+  <port protocol="tcp" port="{{ ul_minio_server_api_port }}"/>
+  <port protocol="tcp" port="{{ ul_minio_server_console_port }}"/>
 </service>
