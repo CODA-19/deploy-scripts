@@ -3,6 +3,8 @@
 # {{ ansible_managed }}
 #
 
+set -e
+
 ################################################################################
 ###### LOAD REQUIRED ENVIRONMENT STUFF
 ################################################################################
@@ -21,7 +23,7 @@ CODA19_HOST_ROLE={{ coda19_host_role }}
 
 CODA19_HEARTBEAT_BASE_URL={{ _common_heartbeat_base_url }}
 CODA19_HEARTBEAT_TOKEN=$( cat /etc/coda19/heartbeat-token )
-CODA19_HEARTBEAT_CONNECT_TIMEOUT=5
+CODA19_CURL_MAX_TIME=10
 
 # Script specifics
 
@@ -45,7 +47,7 @@ ansible \
 
 curl \
   --silent \
-  --connect-timeout ${CODA19_HEARTBEAT_CONNECT_TIMEOUT} \
+  --max-time ${CODA19_CURL_MAX_TIME} \
   --request POST \
   --header "Authorization: ${CODA19_HEARTBEAT_TOKEN}" \
   --header "Content-Type: application/json" \
@@ -123,7 +125,7 @@ SYSINFO=$( mktemp )
 
 curl \
   --silent \
-  --connect-timeout ${CODA19_HEARTBEAT_CONNECT_TIMEOUT} \
+  --max-time ${CODA19_CURL_MAX_TIME} \
   --request POST \
   --header "Authorization: ${CODA19_HEARTBEAT_TOKEN}" \
   --header "Content-Type: text/plain" \
