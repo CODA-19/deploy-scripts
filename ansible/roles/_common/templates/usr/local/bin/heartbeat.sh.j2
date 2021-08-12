@@ -95,6 +95,9 @@ SYSINFO=$( mktemp )
   echo
   journalctl --unit=aidbox --full --lines=25 --no-pager --boot
 
+  header "MINIO.VERSION"
+  [ -f /usr/local/bin/minio  ] && /usr/local/bin/minio --version
+
   header "MINIO.SERVICE STATUS AND LOGS"
   systemctl  status minio  --full --lines=0
   echo
