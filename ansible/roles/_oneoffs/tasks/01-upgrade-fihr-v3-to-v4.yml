@@ -65,12 +65,9 @@
       shell: rm -rf /data/aidboxdb/*
 
     # Creates the cookie file
-    - name: COPY | Creates the cookie file  /etc/coda19/migration_v3_v4
-      copy:
-        content: ""
-        dest: /etc/coda19/migration_v3_v4
-        group: root
-        owner: root
-        mode: 0600
+    - name: FILE | Touch cookie file /etc/coda19/migration_fihr_v3_v4
+      file:
+        path: /etc/coda19/migration_fihr_v3_v4
+        state: touch
 
   when: not _stat.stat.exists or _oneoffs_migration_fhir4_ignore_cookiefile
