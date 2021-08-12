@@ -1,0 +1,5 @@
+---
+
+ul_redis_firewalld_zones:
+  - zone: public
+    state: enabled

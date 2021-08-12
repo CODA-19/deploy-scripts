@@ -61,3 +61,11 @@ ul_aidbox_firewalld_zones:
     state: enabled
   - zone: local-red
     state: enabled
+
+################################################################################
+###### UL_REDIS
+################################################################################
+
+ul_redis_firewalld_zones:
+  - zone: local-green
+    state: enabled

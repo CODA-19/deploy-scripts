@@ -2,5 +2,6 @@
 dependencies:
   - role: _common
   - role: _data
+  - role: ul_redis
   - role: ul_podman
   - role: ul_coda19_green

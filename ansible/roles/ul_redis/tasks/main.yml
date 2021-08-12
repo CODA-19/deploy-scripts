@@ -1,0 +1,13 @@
+---
+
+- name: "IMPORT_TASKS | firewall.yml"
+  import_tasks: firewall.yml
+  tags:
+    - ul_redis
+    - ul_redis_firewall
+
+- name: "IMPORT_TASKS | install.yml"
+  import_tasks: install.yml
+  tags:
+    - ul_redis
+    - ul_redis_install 

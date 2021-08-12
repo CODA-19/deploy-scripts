@@ -1,0 +1,23 @@
+---
+
+- name: YUM | Install epel-release
+  yum:
+    name: epel-release
+    state: present
+
+- name: YUM | Install redis
+  yum:
+    name: redis
+    state: present
+
+- name: LINEINFILE | Bind service to 0.0.0.0
+  lineinfile:
+    path: /etc/redis.conf
+    regexp: '^bind'
+    line: bind 0.0.0.0
+
+- name: SYSTEMD | Ensure redis is started and enabled
+  systemd:
+    name: redis
+    state: started
+    enabled: yes
