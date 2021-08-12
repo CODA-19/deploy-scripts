@@ -37,6 +37,10 @@ export ANSIBLE_ROLES_PATH=${ANSIBLE_BASE}/roles
 ###### EXECUTE ANSIBLE-PULL
 ################################################################################
 
+# Disable python output buffering
+
+export PYTHONUNBUFFERED=1
+
 # Ensure logging directory is there with good privileges
 mkdir -p ${ANSIBLE_LOG_DIR}
 chmod go-rwx ${ANSIBLE_LOG_DIR}
