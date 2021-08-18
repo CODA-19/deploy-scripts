@@ -10,11 +10,12 @@
     name: redis
     state: present
 
-- name: LINEINFILE | Bind service to 0.0.0.0
-  lineinfile:
-    path: /etc/redis.conf
-    regexp: '^bind'
-    line: bind 0.0.0.0
+- name: TEMPLATE | Manage /etc/redis.conf
+  template:
+    src: etc/redis.conf.j2
+    dest: /etc/redis.conf
+    backup: yes
+  notify: restart redis
 
 - name: SYSTEMD | Ensure redis is started and enabled
   systemd:
