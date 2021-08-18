@@ -32,7 +32,9 @@
 
     # Clean up dangling containers, images and so on
     - name: SHELL | podman prune (AidBox)
-      shell: podman system prune --all --force && podman rmi --all
+      shell: |
+        podman system prune --all --force --volumes
+        podman image  prune --all --force
       become: yes
       become_user: aidbox
 
@@ -56,7 +58,9 @@
 
     # Clean up dangling containers, images and so on
     - name: SHELL | podman prune (AidBOXDB)
-      shell: podman system prune --all --force && podman rmi --all
+      shell: |
+        podman system prune --all --force --volumes
+        podman image  prune --all --force
       become: yes
       become_user: aidboxdb
 
