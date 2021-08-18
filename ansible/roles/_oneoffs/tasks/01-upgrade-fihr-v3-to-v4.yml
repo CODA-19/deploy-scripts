@@ -32,7 +32,7 @@
     - name: SHELL | podman prune (AidBox)
       shell: |
         podman system prune --all --force --volumes
-        podman image  prune --all --force
+        podman image  prune --all
       become: yes
       become_user: aidbox
 
@@ -56,7 +56,7 @@
     - name: SHELL | podman prune (AidBOXDB)
       shell: |
         podman system prune --all --force --volumes
-        podman image  prune --all --force
+        podman image  prune --all
       become: yes
       become_user: aidboxdb
 
