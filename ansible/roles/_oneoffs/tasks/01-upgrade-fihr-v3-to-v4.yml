@@ -26,8 +26,8 @@
 
     - name: SHELL | pkill for aidbox user
       shell: |
-        pkill -U aidbox --signal=SIGKILL
-        pkill -u aidbox --signal=SIGKILL
+        pkill -U aidbox --signal SIGKILL
+        pkill -u aidbox --signal SIGKILL
 
     - name: SHELL | podman prune (AidBox)
       shell: |
@@ -50,8 +50,8 @@
 
     - name: SHELL | pkill for aidboxdb user
       shell: |
-        pkill -U aidboxdb --signal=SIGKILL
-        pkill -u aidboxdb --signal=SIGKILL
+        pkill -U aidboxdb --signal SIGKILL
+        pkill -u aidboxdb --signal SIGKILL
 
     - name: SHELL | podman prune (AidBOXDB)
       shell: |
