@@ -1,3 +1,17 @@
 ---
 
 coda19_site_id: 114
+
+## OneOffs variables for this site
+
+# Migration from FIHR 3 to FIHR 4
+_oneoffs_migration_fhir4: True
+_oneoffs_migration_fhir4_ignore_cookiefile: False
+
+# Overrides the FIHR version used by AidBox (see the role ul_aidbox)
+ul_aidbox_fhir_version: '4.0.0'
+
+# # Overrides the image name and version defined in ul_aidbox
+ul_aidbox_db_image_registry: docker.io
+ul_aidbox_db_image_name: healthsamurai/aidboxdb
+ul_aidbox_db_image_tag: "13.2"
