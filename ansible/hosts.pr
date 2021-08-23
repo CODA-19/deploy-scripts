@@ -90,11 +90,11 @@ s115_green
 
 [s115_orange]
 ul-cod-pr-chu01.l.ul.ca   # Without internet
-ul-cod-pr-chu03.l.ul.ca   # With internet
+#ul-cod-pr-chu03.l.ul.ca   # With internet
 
 [s115_green]
 ul-cod-pr-chu02.l.ul.ca   # Without internet
-ul-cod-pr-chu04.l.ul.ca   # With internet
+#ul-cod-pr-chu04.l.ul.ca   # With internet
 
 #------------------------------------------------------------------------------
 # 116 - CISSS-CA - CISSS Chaudière-Appalaches
