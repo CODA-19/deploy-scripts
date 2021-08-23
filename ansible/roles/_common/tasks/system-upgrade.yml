@@ -23,7 +23,7 @@
 
         - name: YUM | Update all packages to latest
           yum:
-            name: *
+            name: "*"
             state: latest
             update_cache: yes
           register: _yum
