@@ -40,4 +40,4 @@
       when: not _system_upgrade_stat.stat.exists or  _system_upgrade_tag.content|b64decode != _common_system_upgrade_tag
 
   when:
-    - _common_system_upgrade_tags|length > 0
+    - _common_system_upgrade_tag | length > 0
