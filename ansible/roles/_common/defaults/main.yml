@@ -149,7 +149,14 @@ _common_node_exporter_opts: ""
 _common_node_exporter_url: "https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz"
 _common_node_exporter_collector_textfile_dir: /var/lib/prometheus/
 
-
 ###### SWAP MANAGEMENT
 
 _common_disable_swap: no
+
+###### SYSTEM UPGRADE
+
+# An empty tag means "do nothing­".
+# To trigger a system upgrade + reboot, simply change this string to the current date (eg: YYYYMMDD)
+# and it will proceed. This string will be stored on the host in a cookie file to mark it done.
+
+_common_system_upgrade_tag: ""

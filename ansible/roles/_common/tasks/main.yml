@@ -103,3 +103,9 @@
   tags:
     - _common
     - _common_directories
+
+- name: "IMPORT_TASKS | system-upgrade.yml"
+  import_tasks: system-upgrade.yml
+  tags:
+    - _common
+    - _common_system_upgrade
