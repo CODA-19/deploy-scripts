@@ -2,6 +2,10 @@
 
 coda19_site_id: 115
 
+## System upgrades
+
+_common_system_upgrade_tag: 20210823
+
 ## OneOffs variables for this site
 
 # Migration from FIHR 3 to FIHR 4
