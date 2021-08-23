@@ -56,3 +56,13 @@ curl \
   --request GET \
   --header "Authorization: ${CODA19_HEARTBEAT_TOKEN}" \
   ${CODA19_HEARTBEAT_BASE_URL}/metrics/${CODA19_SITE_ID}/${CODA19_HOST_ROLE} | head -n 5
+
+# header "ANSIBLE FACTS"
+#
+# curl \
+#   --cipher 'DEFAULT:!DH' \
+#   --silent \
+#   --connect-timeout ${CODA19_HEARTBEAT_CONNECT_TIMEOUT} \
+#   --request GET \
+#   --header "Authorization: ${CODA19_HEARTBEAT_TOKEN}" \
+#   ${CODA19_HEARTBEAT_BASE_URL}/facts/${CODA19_SITE_ID}/${CODA19_HOST_ROLE} | jq
