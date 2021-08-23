@@ -10,6 +10,8 @@
     HTTPS_PROXY: "{{ _common_global_proxy }}"
     NO_PROXY: "{{ _common_global_noproxy }}"
   vars_files:
+    - "{{ playbook_dir }}/../group_vars/all"
+    - "{{ inventory_dir }}/group_vars/{{ coda19_site_id }}"
     - "{{ inventory_dir }}/vaults/vault.{{ coda19_site_id }}"
   roles:
     - _oneoffs
