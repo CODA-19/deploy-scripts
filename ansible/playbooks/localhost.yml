@@ -83,7 +83,7 @@
         - "{{ playbook_dir }}/../group_vars/{{ coda19_site_id }}.{{ coda19_host_role | lower }}"
         - "{{ playbook_dir }}/../vaults/vault.{{ coda19_site_id }}.{{ coda19_host_role | lower }}"
       tags:
-        - always        
+        - always
 
   tasks:
 
