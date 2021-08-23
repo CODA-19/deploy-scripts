@@ -1,4 +1,8 @@
 ---
+#
+# For invocation instructions and examples, see remote.yml playbook.
+#
+
 - name: DEPLOY AND MAINTAIN THE «ORANGE BOXES»
   hosts: orange
   become: yes
@@ -9,10 +13,33 @@
     HTTP_PROXY: "{{ _common_global_proxy }}"
     HTTPS_PROXY: "{{ _common_global_proxy }}"
     NO_PROXY: "{{ _common_global_noproxy }}"
+
   vars_files:
+
+    # NOTE: This file list must be identical for all playbooks: localhost.yml, remote-orange.yml, remote-green.yml
     - "{{ playbook_dir }}/../group_vars/all"
     - "{{ inventory_dir }}/group_vars/{{ coda19_site_id }}"
     - "{{ inventory_dir }}/vaults/vault.{{ coda19_site_id }}"
-  roles:
-    - _oneoffs
-    - _orange
+
+  pre_tasks:
+
+    - name: SET_FACT | Set coda19_host_role to "orange"
+      set_fact:
+        coda19_host_role: orange
+      tags:
+        - always
+
+  tasks:
+
+    - name: INCLUDE_ROLE | _ONEOFFS
+      include_role:
+        name: _oneoffs
+      tags:
+        - always
+
+    - name: INCLUDE_ROLE | _ORANGE
+      include_role:
+        name: _orange
+      when: coda19_host_role == "orange"
+      tags:
+        - always

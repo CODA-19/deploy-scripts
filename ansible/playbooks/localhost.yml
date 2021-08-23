@@ -38,11 +38,6 @@
 - name: Deploy the current box based on local facts (coda19.host.role)
   hosts: localhost
   connection: local
-  vars_files:
-    - "{{ playbook_dir }}/../group_vars/all"
-    - "{{ playbook_dir }}/../group_vars/{{ ansible_local.coda19.site.id }}"
-    - "{{ playbook_dir }}/../vaults/vault.{{ ansible_local.coda19.site.id }}"
-
   environment:
     http_proxy:  "{{ _common_global_proxy   | default('') }}"
     https_proxy: "{{ _common_global_proxy   | default('') }}"
@@ -50,6 +45,13 @@
     HTTP_PROXY:  "{{ _common_global_proxy   | default('') }}"
     HTTPS_PROXY: "{{ _common_global_proxy   | default('') }}"
     NO_PROXY:    "{{ _common_global_noproxy | default('') }}"
+
+  vars_files:
+
+    # NOTE: This file list must be identical for all playbooks: localhost.yml, remote-orange.yml, remote-green.yml
+    - "{{ playbook_dir }}/../group_vars/all"
+    - "{{ playbook_dir }}/../group_vars/{{ ansible_local.coda19.site.id }}"
+    - "{{ playbook_dir }}/../vaults/vault.{{ ansible_local.coda19.site.id }}"
 
   pre_tasks:
 
@@ -62,7 +64,7 @@
     # Provision global facts from local ones, those one should be loaded from regular mecanism (inventory)
     # when running in remote mode.
     #
-    # Some tasks across de project must refer to these vars, being executed
+    # Some tasks across the project must refer to these standard vars, being executed
     # in local or remote mode.
 
     - name: SET_FACT | Set coda19_* facts from local ones
@@ -87,13 +89,13 @@
     - name: INCLUDE_ROLE | _ORANGE
       include_role:
         name: _orange
-      when: "coda19_host_role == 'orange'"
+      when: coda19_host_role == "orange"
       tags:
         - always
 
     - name: INCLUDE_ROLE | _GREEN
       include_role:
         name: _green
-      when: "coda19_host_role == 'green'"
+      when: coda19_host_role == "green"
       tags:
         - always
