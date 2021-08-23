@@ -74,6 +74,17 @@
       tags:
         - always
 
+    # Try to load specific vars for this node role (orange|green).
+
+    - name: INCLUDE_VARS | Node's role specific vars
+      include_vars: "{{ item }}"
+      failed_when: false
+      loop:
+        - "{{ playbook_dir }}/../group_vars/{{ coda19_site_id }}.{{ coda19_host_role | lower }}"
+        - "{{ playbook_dir }}/../vaults/vault.{{ coda19_site_id }}.{{ coda19_host_role | lower }}"
+      tags:
+        - always        
+
   tasks:
 
     # _oneoff are "shoot once" tasks that takes place prior any orange|green
