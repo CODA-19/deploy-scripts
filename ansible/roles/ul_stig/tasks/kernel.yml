@@ -15,7 +15,6 @@
     - { name: 'net.ipv4.conf.all.accept_redirects',     value: "{{ ul_stig_net_ipv4_conf_all_accept_redirects }}" }
     - { name: 'net.ipv4.conf.default.accept_redirects', value: "{{ ul_stig_net_ipv4_conf_default_accept_redirects }}" }
     - { name: 'net.ipv4.icmp_echo_ignore_broadcasts',   value: "{{ ul_stig_net_ipv4_icmp_echo_ignore_broadcasts }}" }
-    - { name: 'net.ipv6.conf.all.accept_source_route',  value: "{{ ul_stig_net_ipv6_conf_all_accept_source_route }}" }
 
 - name: LINEINFILE | Ensure kernel module 'dccp' is disabled
   lineinfile:
