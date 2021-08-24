@@ -4,6 +4,8 @@
 ###### _COMMON
 ################################################################################
 
+_common_reboot_tag: "20210825"
+
 _common_system_upgrade_tag: "202108"
 
 _common_accounts:
