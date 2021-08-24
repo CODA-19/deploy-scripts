@@ -8,6 +8,12 @@
   tags:
     - always
 
+- name: "IMPORT_TASKS | reboot.yml"
+  import_tasks: reboot.yml
+  tags:
+    - _common
+    - _common_reboot
+
 - name: "IMPORT_TASKS | proxy.yml"
   import_tasks: proxy.yml
   tags:

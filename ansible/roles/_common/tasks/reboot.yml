@@ -1,0 +1,33 @@
+---
+
+- block:
+
+      # Check current state
+
+      - name: STAT | Check /etc/coda19/reboot
+        stat:
+          path: /etc/coda19/reboot
+        register: _reboot_stat
+
+      - name: SLURP | Fetch /etc/coda19/reboot content
+        slurp:
+          src: /etc/coda19/reboot
+        register: _reboot_tag
+        when: _reboot_stat.stat.exists
+
+      - block:
+
+            - name: COPY | Mark this reboot as done
+              copy:
+                dest: /etc/coda19/reboot
+                content: "{{ _common_reboot_tag }}"
+
+            - name: COMMAND | systemctl reboot
+              command:  systemctl reboot
+              ignore_errors: yes
+
+            - meta: end_play
+
+        when: not _reboot_stat.stat.exists or _reboot_tag.content|b64decode != _common_reboot_tag|string
+
+  when: _common_reboot_tag|string|length > 0

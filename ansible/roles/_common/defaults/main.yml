@@ -160,3 +160,9 @@ _common_disable_swap: no
 # and it will proceed. This string will be stored on the host in a cookie file to mark it done.
 
 _common_system_upgrade_tag: ""
+
+###### REBOOT MECANISM
+
+# Does nothing if empty string
+
+_common_reboot_tag: ""
