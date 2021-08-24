@@ -33,8 +33,13 @@
             dest: /etc/coda19/system-upgrade
             content: "{{ _common_system_upgrade_tag }}"
 
-        - name: REBOOT | Reboot system if yum changed something
-          reboot:
+        ### NOTE: not permitted in local mode
+        #- name: REBOOT | Reboot system if yum changed something
+        #  reboot:
+        #  when: _yum.changed
+
+        - name: COMMAND | systemctl reboot
+          command:  systemctl reboot
           when: _yum.changed
 
       when: not _system_upgrade_stat.stat.exists or _system_upgrade_tag.content|b64decode != _common_system_upgrade_tag|string
