@@ -7,7 +7,6 @@
 
 - name: COPY | Replace epel-release repository definition
   copy:
-    register: _epel
     dest: /etc/yum.repos.d/epel.repo
     content: |
       [epel]
@@ -17,6 +16,7 @@
       enabled=1
       gpgcheck=1
       gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+  register: _epel
 
 - name: COMMAND | yum clean metadata when epel.repo change (just to be safe)
   command: yum clean metadata
