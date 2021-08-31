@@ -1,0 +1,25 @@
+---
+
+- name: YUM | Install epel-release and yum-utils
+  yum:
+    name: epel-release
+    state: present
+
+- name: COPY | Replace epel-release repository definition
+  copy:
+    register: _epel
+    dest: /etc/yum.repos.d/epel.repo
+    content: |
+      [epel]
+      name=Extra Packages for Enterprise Linux $releasever - $basearch
+      baseurl=http://fedora-epel.mirror.iweb.ca/$releasever/$basearch
+      failovermethod=priority
+      enabled=1
+      gpgcheck=1
+      gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+
+- name: COMMAND | yum clean metadata when epel.repo change (just to be safe)
+  command: yum clean metadata
+  args:
+    warn: no
+  when: _epel.changed
