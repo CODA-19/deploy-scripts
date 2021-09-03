@@ -8,6 +8,12 @@
   tags:
     - always
 
+- name: "IMPORT_TASKS | directories.yml"
+  import_tasks: directories.yml
+  tags:
+    - _common
+    - _common_directories
+
 - name: "IMPORT_TASKS | reboot.yml"
   import_tasks: reboot.yml
   tags:
@@ -30,7 +36,7 @@
   import_tasks: packages.yml
   tags:
     - _common
-    - _common_packages    
+    - _common_packages
 
 - name: "IMPORT_TASKS | heartbeat.yml"
   import_tasks: heartbeat.yml
@@ -109,12 +115,6 @@
   tags:
     - _common
     - _common_swap
-
-- name: "IMPORT_TASKS | directories.yml"
-  import_tasks: directories.yml
-  tags:
-    - _common
-    - _common_directories
 
 - name: "IMPORT_TASKS | system-upgrade.yml"
   import_tasks: system-upgrade.yml

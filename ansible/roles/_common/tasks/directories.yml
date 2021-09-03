@@ -1,4 +1,13 @@
 ---
+
+- name: FILE | Ensure /etc/coda19 folder exists
+  file:
+    path: /etc/coda19
+    state: directory
+    mode: 0750
+    owner: root
+    group: wheel
+
 - name: FILE | Create /var/lib/coda19
   file:
     path: /var/lib/coda19

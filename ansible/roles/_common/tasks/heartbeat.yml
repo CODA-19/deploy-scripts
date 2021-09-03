@@ -2,14 +2,6 @@
 
 ###### COMMON HEARTBEAT STUFF
 
-- name: FILE | Ensure /etc/coda19 folder exists
-  file:
-    path: /etc/coda19
-    state: directory
-    mode: 0750
-    owner: root
-    group: wheel
-
 - name: COPY | Save hearbeat token into /etc/coda19/heartbeat-token
   copy:
     dest: /etc/coda19/heartbeat-token
