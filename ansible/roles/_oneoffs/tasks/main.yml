@@ -12,11 +12,11 @@
   when: _oneoffs_migration_fhir4 and  coda19_host_role == 'orange'
 
 
-  # brlav, 2021-10-08
-  #   ul_nginx not used yet and troublesome for s119, juste remove for now
-  #   by removing /etc/yum.repos.d/nginx.conf
+# brlav, 2021-10-08
+#   ul_nginx not used yet and troublesome for s119, juste remove for now
+#   by removing /etc/yum.repos.d/nginx.conf
 
-  - name: FILE | Ensure that /etc/yum.repos.d/nginx.conf absent
-    file:
-      path: /etc/yum.repos.d/nginx.conf
-      state: absent
+- name: FILE | Ensure that /etc/yum.repos.d/nginx.conf absent
+  file:
+    path: /etc/yum.repos.d/nginx.conf
+    state: absent
