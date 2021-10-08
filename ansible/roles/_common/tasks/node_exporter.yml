@@ -1,16 +1,28 @@
 ---
 
-- name: "GET_URL | Download node-exporter"
-  get_url:
-    url: "{{ _common_node_exporter_url }}"
-    dest: /tmp/node_exporter.tar.gz
-  when: _common_node_exporter_url is defined
+### Option 1: fetch and extract
 
-- name: "COMMAND | Extract node_exporter to /usr/local/bin/node_exporter"
-  command: |
-    tar -xvf /tmp/node_exporter.tar.gz -C /usr/local/bin --strip-components 1 --wildcards */node_exporter
-  args:
-    creates: /usr/local/bin/node_exporter
+#- name: "GET_URL | Download node-exporter"
+#  get_url:
+#    url: "{{ _common_node_exporter_url }}"
+#    dest: /tmp/node_exporter.tar.gz
+#  when: _common_node_exporter_url is defined
+#
+#- name: "COMMAND | Extract node_exporter to /usr/local/bin/node_exporter"
+#  command: |
+#    tar -xvf /tmp/node_exporter.tar.gz -C /usr/local/bin --strip-components 1 --wildcards */node_exporter
+#  args:
+#    creates: /usr/local/bin/node_exporter
+
+### Option 2: copy from driver to remote
+
+- name: COPY | Copy node exporter binary
+  copy:
+    src: files/softwares/node_exporter
+    dest: /usr/local/bin/node_exporter
+  notify: restart node_exporter
+
+###
 
 - name: "USER | Add prometheus user"
   user:
