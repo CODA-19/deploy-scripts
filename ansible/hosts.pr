@@ -34,6 +34,7 @@ coda19_host_role=orange
 s110_orange
 s115_orange
 s116_orange
+s117_orange
 
 ### GREEN
 
@@ -44,6 +45,7 @@ coda19_host_role=green
 s110_green
 s115_green
 s116_green
+s117_green
 
 #------------------------------------------------------------------------------
 # 110 - CHUM - Centre Hospitalier de l'Université de Montréal
@@ -114,6 +116,17 @@ s116_green
 #------------------------------------------------------------------------------
 # 117 - CHUSJ - Centre Hospitalier Universitaire de Sainte-Justine
 #------------------------------------------------------------------------------
+
+[s117:vars]
+coda19_site_id=117
+
+[s117:children]
+s117_orange
+s117_green
+
+[s117_orange]
+
+[s117_green]
 
 #------------------------------------------------------------------------------
 # 118 - OH - The Ottawa Hospital
