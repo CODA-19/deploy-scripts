@@ -20,6 +20,7 @@
   copy:
     src: files/softwares/node_exporter
     dest: /usr/local/bin/node_exporter
+    mode: 0755
   notify: restart node_exporter
 
 ###
