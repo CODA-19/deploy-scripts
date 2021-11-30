@@ -28,7 +28,12 @@ export http_proxy=${PROXY}
 export https_proxy=${PROXY}
 ```
 
-Download bootstrap script and execute it:
+Also, ensure that the following URL is whitelisted in your proxy server:
+-  https://license.aidbox.app
+
+### Bootstrapping
+
+Download the bootstrap script and execute it:
 
 ```bash
 curl -s https://raw.githubusercontent.com/CODA-19/deploy-scripts/master/ansible/scripts/bootstrap.sh \
