@@ -21,6 +21,7 @@ coda19_site_api_port: 5418
 coda19_site_api_keycloak_url_and_realm: https://auth.hub.coda19.com/auth/realms/coda19-pr/
 coda19_site_api_keycloak_client_id: coda19-site
 coda19_site_api_stats_api_endpoint: http://localhost:5427
+coda19_site_api_learning_api_endpoint: http://localhost:5445
 
 # Image and tag to use
 coda19_site_api_image_name: coda19/coda19-site-api
@@ -40,6 +41,20 @@ coda19_stats_api_aidbox_client_id: client
   # Image and tag to use
 coda19_stats_api_image_name: coda19/coda19-stats-api
 coda19_stats_api_image_tag: latest
+
+################################################################################
+#### CODA19-LEARNING-API
+################################################################################
+
+# Listening port (TCP)
+coda19_learning_api_port: 5445
+
+# Environnement variables
+coda19_learning_api_aidbox_client_id: client
+
+  # Image and tag to use
+coda19_learning_api_image_name: coda19/coda19-learning-api
+coda19_learning_api_image_tag: latest
 
 ################################################################################
 #### General and common stuff

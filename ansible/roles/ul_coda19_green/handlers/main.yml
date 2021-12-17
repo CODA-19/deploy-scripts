@@ -16,3 +16,12 @@
     enabled: yes
     daemon_reload: yes
   when: not _systemd_coda19_stats_api.changed
+
+
+- name: restart coda19-learning-api
+  systemd:
+    name: coda19-learning-api
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+  when: not _systemd_coda19_learning_api.changed
