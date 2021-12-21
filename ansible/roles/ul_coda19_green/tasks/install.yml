@@ -84,14 +84,14 @@
     - ansible_distribution == "CentOS"
     - ansible_distribution_major_version == '7'    
 
-# # Clean up old images
-# - name: "{{ task_title }} | SHELL | cleanup old images"
-#   shell: |
-#     podman system prune --all --force && podman rmi --all
-#   changed_when: false
-#   failed_when: false
-#   become: yes
-#   become_user: "{{ container_name }}"
+# Clean up old images
+- name: "{{ task_title }} | SHELL | cleanup old images"
+  shell: |
+    podman system prune --all --force && podman rmi --all
+  changed_when: false
+  failed_when: false
+  become: yes
+  become_user: "{{ container_name }}"
 
 # Get remote image digest and print
 - name: "{{ task_title }} | SHELL | Get remote image digest"
