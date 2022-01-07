@@ -87,7 +87,7 @@
 # Clean up old images
 - name: "{{ task_title }} | SHELL | cleanup old images"
   shell: |
-    podman system prune --all --force && podman rmi --all
+    podman image prune --all
   changed_when: false
   failed_when: false
   become: yes
