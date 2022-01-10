@@ -5,6 +5,12 @@
     - ul_coda19_green
     - ul_coda19_green_firewall
 
+- name: "IMPORT_TASKS | restart_apis.yml"
+  import_tasks: restart_apis.yml
+  tags:
+    - ul_coda19_green
+    - ul_coda19_green_install
+
 # CODA19-SITE-API
 - name: "IMPORT_TASKS | CODA19-SITE-API | install.yml"
   import_tasks: install.yml

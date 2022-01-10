@@ -1,0 +1,7 @@
+- name: "TEMPLATE | Copy script (/usr/bin/restart_coda19_apis)"
+  template:
+    src: bin/restart_apis/restart_coda19_apis.sh.j2
+    dest: /usr/bin/restart_coda19_apis
+    owner: root
+    group: root
+    mode: 0544
