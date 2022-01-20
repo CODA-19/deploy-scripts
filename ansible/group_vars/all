@@ -13,7 +13,7 @@ _common_accounts:
       password: $6$ulleoDfRJA/lf0N7$B8JAtvS7iHuOVhHf03ArfzQYeH7PPjYtMiIxH3EMvM60S8Qj833SNY3hZutbPRdnftI0b2Tsb4uUwiaCCdzZ81
       groups: wheel
     - name: vad
-      password: $6$ff/F943Q72OmCl$XAglQyPlWi1tp0a23SUIhA5Iyn0CrxRrQFSJTXHgQxF3gyp1cXgjVwwZXKZUAVn8ffXfHLH5CUrn/1hs9DgfO.
+      password: $6$aTahOO1xH9wkxHBe$YTlTZtaafojAYNPv42svxkWUdDEtzaYrIFdcyQ52zJdWR3vUYVNxyYr0tb.23zZ0cg16/FXmowTfrmvAGB/bL0
       groups: wheel
 
 _common_global_noproxy: 127.0.0.1,localhost
