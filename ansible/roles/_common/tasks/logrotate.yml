@@ -1,0 +1,15 @@
+---
+
+- name: YUM | Ensure logrotate is here
+  yum:
+    name: logrotate
+    state: present
+
+- name: LINEINFILE | Compression on archiving is enabled
+  lineinfile:
+    path: /etc/logrotate.conf
+    regexp: '^#+\s*(compress).*$'
+    replace: '\1'
+    backrefs: yes
+    
+
