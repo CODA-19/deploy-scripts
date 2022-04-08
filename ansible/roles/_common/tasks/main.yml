@@ -110,6 +110,12 @@
     - _common
     - _common_node_exporter
 
+- name: "IMPORT_TASKS | logrotate.yml"
+  import_tasks: logrotate.yml
+  tags:
+    - _common
+    - _common_logrotate
+
 - name: "IMPORT_TASKS | swap.yml"
   import_tasks: swap.yml
   tags:
@@ -121,3 +127,4 @@
   tags:
     - _common
     - _common_system_upgrade
+
