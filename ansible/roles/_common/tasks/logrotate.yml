@@ -9,7 +9,9 @@
   lineinfile:
     path: /etc/logrotate.conf
     regexp: '^#+\s*(compress).*$'
-    replace: '\1'
+    line: '\1'
     backrefs: yes
-    
+    state: present
+
+
 
