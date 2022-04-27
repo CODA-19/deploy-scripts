@@ -1,0 +1,161 @@
+#!/bin/bash
+
+usage()
+{
+  echo "Usage: $0 [-a]|[-d][-p]"
+  echo "  -a: Terminate Aidbox and remove its container image file"
+  echo "  -d: Terminate AidboxDB and remove its container image file (also termimate AidBox)"
+  echo "  -h: Show this help"
+  echo "  -p: Pull images again"
+  
+  exit 0
+}
+
+# terminate_service
+#
+# Try to stop the container hosting the service. If something remains, kills the remaining process
+#
+# args:
+#   $1: Service name (must match a systemd unit name)
+#   $2: Process binary corresponding to the service (i.e. what a netstat -p reports)
+#   $3: TCP/UDP port number on which the services listens for incoming connections
+#
+# return:
+#   0: success
+#   1: failure
+#
+terminate_service()
+{
+  local svc_name=$1
+  local svc_name_capitalized=`echo $1 | tr a-z A-Z`
+  local process_binary_name=$2
+  local svc_port=$3
+  
+  echo "[${svc_name_capitalized}] Attempting to gracefull stop the service..." 
+  systemctl stop ${svc_name}
+  
+  local remaining_process=`netstat -tulpn | grep ":${svc_port}" | sed "s/.*LISTEN\(.*\)\/${process_binary_name}.*/\1/" | sed -e 's/^[ \t]*//'`
+  
+  if [[ ! -z "${remaining_process}" ]]
+  then
+     echo "[${svc_name_capitalized}] Seems to be stuck, sending SIGTERM..."
+     kill -15 ${remaining_process}
+     echo "[${svc_name_capitalized}] Waiting 10 seconds for the process to terminate"
+     sleep 10
+  fi
+  
+  # Now check again, this time no change send a SIGKILL and assume the process dies
+  
+  local remaining_process=`netstat -tulpn | grep ":${svc_port}" | sed "s/.*LISTEN\(.*\)\/${process_binary_name}.*/\1/" | sed -e 's/^[ \t]*//'`
+  
+  if [[ ! -z "${remaining_process}" ]]
+  then
+     echo "[${svc_name_capitalized}] Seems to be *badly* stuck, sending SIGKILL..."
+     kill -9 ${remaining_process}
+  fi
+  
+  # Check again one more time, this time do nothing but warns the user
+  
+  local remaining_process=`netstat -tulpn | grep ":${svc_port}" | sed "s/.*LISTEN\(.*\)\/${process_binary_name}.*/\1/" | sed -e 's/^[ \t]*//'`
+  
+  if [[ ! -z "${remaining_process}" ]]
+  then
+     echo "[${svc_name_capitalized}] Definitely stuck, unable to kill it"
+     echo "[${svc_name_capitalized}] *WARNING* Subsequent ansible-pull runs might fail or hang in the middle"
+     echo "[${svc_name_capitalized}] Aborting the housekeeping work"
+     return 1
+  fi
+  
+  return 0
+  
+}
+
+# cleanup_and_prune_containers 
+# 
+# Removes any old container and all container images for a given service
+#
+# args:
+#   $1: Service name (for displaying values only)
+#   $2: Container image name corresponding to the service
+#
+# returns:
+#   nothing
+#
+cleanup_and_prune_containers()
+{
+  local svc_name=$1
+  local svc_name_capitalized=`echo $1 | tr a-z A-Z`
+  local svc_image_name="$2"
+  
+  sudo -i -u ${svc_name} /bin/bash << EOF
+  cd ~
+  echo "[${svc_name_capitalized}] Pruning old containers state and all images"
+  echo "[${svc_name_capitalized}]  == Start of podman system prune / podman rmi output ========="
+  podman system prune --all --force && podman rmi --all
+  echo "[${svc_name_capitalized}]  == End of podman system prune / podman rmi output ========="
+    
+  # At this point, no image should remain. If podman had an issue, whin to user
+  
+  if [[ ! -z "`podman images | grep -v 'REPOSITORY'`" ]]
+  then
+    echo "[${svc_name_capitalized}] *WARNING* Something was left behind and podman was unable to purge images :("
+  else
+    # Pull the image again if requested
+    if [[ ${PULL_IMAGES} -eq 1 ]]
+    then
+      echo "[${svc_name_capitalized}] Pulling the image again."
+      echo "[${svc_name_capitalized}]  == Start of podman pull ${svc_image_name} output ========="
+      podman pull ${svc_image_name} || echo "[${svc_name_capitalized}] pulling ${svc_image_name} failed, any attempt to start it will fail at this point."
+      echo "[${svc_name_capitalized}]  == End of of podman pull ${svc_image_name} output ========="
+    else
+      echo "[${svc_name_capitalized}] *WARNING* No more image exists for this service, any attempt to start it will fail at this point."
+    fi
+  fi
+  
+  echo "[${svc_name_capitalized}] Housekeeping job done :)"
+  
+EOF
+}
+
+cleanup_aidbox()
+{
+  terminate_service aidbox java {{ aidbox_port }} && cleanup_and_prune_containers aidbox healthsamurai/aidboxone:{{ aidbox_image_tag }}
+}
+
+cleanup_aidboxdb()
+{
+  # Stop Aidbox first then its database
+  terminate_service aidbox java {{ aidbox_port }} && terminate_service aidboxdb postgres {{ aidboxdb_port }} && cleanup_and_prune_containers aidboxdb healthsamurai/aidboxdb:{{ aidboxdb_image_tag }}
+}
+
+# Entrypoint
+
+if [[ `id -u` != 0 ]]
+then
+  echo "This script must be run as root"
+  exit 1
+fi
+
+if [[ $# -lt 1 ]]
+then
+  echo "$0 -h for help"
+  exit 1
+fi
+
+PULL_IMAGES=0
+CLEANUP_AIDBOX=0
+CLEANUP_AIDBOXDB=0
+
+while getopts "adhp" flag
+do
+    case "${flag}" in
+        a) CLEANUP_AIDBOX=1;;
+        d) CLEANUP_AIDBOXDB=1;;
+        h) usage;;
+        p) PULL_IMAGES=1;;
+        *) echo "Use $0 -h for help"; exit 1;;
+    esac
+done
+
+[[ ${CLEANUP_AIDBOX} -eq 1 ]] && cleanup_aidbox
+[[ ${CLEANUP_AIDBOXDB} -eq 1 ]] && cleanup_aidboxdb

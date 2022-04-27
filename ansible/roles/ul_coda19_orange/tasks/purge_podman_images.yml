@@ -1,0 +1,8 @@
+- name: "TEMPLATE | Copy script (/usr/bin/restart_coda19_apis)"
+  template:
+    src: usr/local/sbin/purge_podman_images.sh.j2
+    dest: /usr/local/sbin/purge_podman_images.sh
+    owner: root
+    group: root
+    mode: 0544
+    
