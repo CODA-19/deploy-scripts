@@ -1,4 +1,4 @@
-- name: "TEMPLATE | Copy script (/usr/bin/restart_coda19_apis)"
+- name: "TEMPLATE | Copy script (/usr/local/sbin/purge_podman_images.sh)"
   template:
     src: usr/local/sbin/purge_podman_images.sh.j2
     dest: /usr/local/sbin/purge_podman_images.sh

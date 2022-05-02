@@ -60,15 +60,24 @@
 #   become_user: aidboxdb
 
 # Ensure image is present
-- name: AIDBOXDB | PODMAN_IMAGE | Pull image
-  podman_image:
-    name: "{{ ul_aidbox_db_image_registry }}/{{ ul_aidbox_db_image_name }}"
-    tag: "{{ ul_aidbox_db_image_tag }}"
-    state: present
-    force: no
-  register: _image_pull
-  become: yes
-  become_user: aidboxdb
+#- name: AIDBOXDB | PODMAN_IMAGE | Pull image
+#  podman_image:
+#    name: "{{ ul_aidbox_db_image_registry }}/{{ ul_aidbox_db_image_name }}"
+#    tag: "{{ ul_aidbox_db_image_tag }}"
+#    state: present
+#    force: no
+#  register: _image_pull
+#  become: yes
+#  become_user: aidboxdb
+
+# Check if local and remote image signature matches and, if not the case, pull it
+- name: INCLUDE_TASKS | check-pull-image.yml
+  include_tasks: check-pull-image.yml
+  vars:
+    container_name: aidboxdb
+    image_registry: "{{ ul_aidbox_db_image_registry }}"
+    image_name: "{{ ul_aidbox_db_image_name }}"
+    image_tag: "{{ ul_aidbox_db_image_tag }}"
 
 - name: AIDBOXDB | SYSTEMD | Ensure aidboxdb.service is started and enabled
   systemd:
