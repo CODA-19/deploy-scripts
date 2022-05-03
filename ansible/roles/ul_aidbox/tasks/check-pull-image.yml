@@ -20,9 +20,9 @@
     var: _image_remote.stdout
 
 # Get local image digest and print
-- name: "SHELL | Get local image digest"
+- name: "SHELL | Get local image digest for {{ container_name }}"
   shell: |
-    /usr/bin/podman inspect --format {{ '{{.Digest}}' }} {{ image_registry }}/{{ image_name }}:{{ image_tag }} 2>/dev/null
+    /usr/bin/podman inspect {{ image_registry }}/{{ image_name }}:{{ image_tag }} | jq -r '.[0].Digest'
   changed_when: false
   failed_when: false
   register: _image_local
@@ -35,7 +35,7 @@
 
 # Ensure image is present
 # Force a pull when remote digest is different from local one
-- name: "PODMAN_IMAGE | Pull image "
+- name: "PODMAN_IMAGE | Pull image for {{ container_name }}"
   podman_image:
     name: "{{ image_registry }}/{{ image_name }}"
     tag: "{{ image_tag }}"
