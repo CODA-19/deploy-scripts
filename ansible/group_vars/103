@@ -3,7 +3,7 @@
 coda19_site_id: 103
 
 # Migration from FIHR 3 to FIHR 4
-_oneoffs_migration_fhir4: True
+_oneoffs_migration_fhir4: False
 _oneoffs_migration_fhir4_ignore_cookiefile: False
 
 # Overrides the FIHR version used by AidBox (see the role ul_aidbox)
