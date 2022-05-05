@@ -16,9 +16,9 @@ ul_aidbox_conf_client_secret: secret
 
 ul_aidbox_image_registry: docker.io
 ul_aidbox_image_name: healthsamurai/aidboxone
-ul_aidbox_image_tag: stable
+ul_aidbox_image_tag: 2202-lts
 
-ul_aidbox_fhir_version: 3.0.1
+ul_aidbox_fhir_version: 4.0.0
 
 #### AIDBOXDB
 
@@ -29,7 +29,7 @@ ul_aidbox_db_port: 5432
 
 ul_aidbox_db_image_registry: docker.io
 ul_aidbox_db_image_name: aidbox/db
-ul_aidbox_db_image_tag: 13.0.0
+ul_aidbox_db_image_tag: 13.2
 
 #### General and common stuff
 

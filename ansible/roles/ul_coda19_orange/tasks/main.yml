@@ -1,0 +1,6 @@
+---
+- name: "IMPORT_TASKS | purge_podman_images.yml"
+  import_tasks: purge_podman_images.yml
+  tags:
+    - ul_coda19_orange
+    - ul_coda19_orange_install

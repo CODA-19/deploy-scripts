@@ -1,0 +1,8 @@
+- name: "TEMPLATE | Copy script (/usr/local/sbin/purge_podman_images.sh)"
+  template:
+    src: usr/local/sbin/purge_podman_images.sh.j2
+    dest: /usr/local/sbin/purge_podman_images.sh
+    owner: root
+    group: root
+    mode: 0544
+    

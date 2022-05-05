@@ -1,0 +1,10 @@
+---
+
+# AidBox
+aidbox_port: 8888
+aidbox_image_tag: stable
+
+# AidboxDB
+aidboxdb_port: 5432
+aidboxdb_image_tag: 13.2
+
