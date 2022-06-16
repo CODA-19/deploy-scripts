@@ -13,3 +13,8 @@ ul_aidbox_fhir_version: 4.0.0
 ul_aidbox_db_image_registry: docker.io
 ul_aidbox_db_image_name: healthsamurai/aidboxdb
 ul_aidbox_db_image_tag: "13.2"
+
+# Overrides of Ansible code branches/tags to be used:
+_common_ansible_pull_repo_branch:
+  - orange: master
+  - green: master
