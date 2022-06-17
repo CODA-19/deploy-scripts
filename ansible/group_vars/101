@@ -17,4 +17,5 @@ ul_aidbox_db_image_tag: "13.2"
 # Overrides of Ansible code branches/tags to be used:
 _common_ansible_pull_repo_branch:
   orange: addes6-podman-pull-avoidance
-  green: master
+  green: addes6-podman-pull-avoidance
+
