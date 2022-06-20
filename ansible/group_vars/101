@@ -18,4 +18,3 @@ ul_aidbox_db_image_tag: "13.2"
 _common_ansible_pull_repo_branch:
   orange: addes6-podman-pull-avoidance
   green: addes6-podman-pull-avoidance
-
