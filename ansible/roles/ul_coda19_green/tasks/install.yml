@@ -120,14 +120,17 @@
     var: _image_local.stdout
 
 # Ensure image is present
-# Force a pull when remote digest is different from local one
+# Force a pull when remote digest is different from local one.
+# In the case the remote image state checksum is empty (this happens if dockerhub rejects us because of a reached request limit),
+# Do not pull anything and leave what exists locally alone.
 - name: "{{ task_title }} | PODMAN_IMAGE | Pull image"
   podman_image:
     name: "{{ ul_coda19_docker_image_registry }}/{{ docker_image_name }}"
     tag: "{{ docker_image_tag }}"
     state: present
-    force: "{{ (_image_remote.stdout == _image_local.stdout) | ternary(False, True) }}"
+    force: yes
   become: yes
   become_user: "{{ container_name }}"
   notify:
     - "restart {{ container_name }}"
+  when: (_image_remote.stdout != _image_local.stdout) and _image_remote.stdout != ''
