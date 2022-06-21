@@ -33,9 +33,6 @@
   debug:
     var: _image_local.stdout
 
-- set_fact:
-    _image_local.stdout: ''
-
 # Ensure image is present
 # Force a pull when remote digest is different from local one.
 # In the case the remote image state checksum is empty (this happens if dockerhub rejects us because of a reached request limit),
