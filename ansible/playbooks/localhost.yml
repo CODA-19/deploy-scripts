@@ -110,3 +110,10 @@
       when: coda19_host_role == "green"
       tags:
         - always
+
+    - name: FILE | Remove file /etc/coda19/boostrapping
+      file:
+        path: /etc/coda19/bootstrapping
+        state: absent
+      tags:
+        - always

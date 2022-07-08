@@ -158,3 +158,19 @@
         job: /usr/local/bin/execute-ansible-pull.sh > {{ _ansible_pull_log_dir }}/ansible-pull-$( date +\%Y\%m\%d-\%H\%M\%S ).log 2>&1
         minute: "*/{{ _ansible_pull_cron_interval }}"
         user: root
+
+    # Mark this host as bootstraping, this marker is deleted at the end of the
+    # main playbooks.
+
+    - name: FILE | Ensure /etc/coda19 folder exists
+      file:
+        path: /etc/coda19
+        state: directory
+        mode: 0750
+        owner: root
+        group: wheel
+
+    - name: FILE | Add file /etc/coda19/boostrapping
+      file:
+        path: /etc/coda19/bootstrapping
+        state: touch

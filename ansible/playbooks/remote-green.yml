@@ -38,7 +38,7 @@
         - "{{ playbook_dir }}/../group_vars/{{ coda19_site_id }}.{{ coda19_host_role | lower }}"
         - "{{ playbook_dir }}/../vaults/vault.{{ coda19_site_id }}.{{ coda19_host_role | lower }}"
       tags:
-        - always        
+        - always
 
   tasks:
 
@@ -52,5 +52,12 @@
       include_role:
         name: _green
       when: coda19_host_role == "green"
+      tags:
+        - always
+
+    - name: FILE | Remove file /etc/coda19/boostrapping
+      file:
+        path: /etc/coda19/bootstrapping
+        state: absent
       tags:
         - always
