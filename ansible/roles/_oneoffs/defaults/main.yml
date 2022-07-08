@@ -1,5 +1,1 @@
 ---
-
-# Enable the FIHR 3.0 -> 4.0 OneOff (do not enforce this oneoff, let the cookfile presence decide)
-_oneoffs_migration_fhir4: no
-_oneoffs_migration_fhir4_ignore_cookiefile: no
