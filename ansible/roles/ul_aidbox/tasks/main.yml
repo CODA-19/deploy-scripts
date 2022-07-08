@@ -1,11 +1,5 @@
 ---
 
-# - name: "IMPORT_TASKS | oneoffs/01"
-#   import_tasks: oneoffs/01-upgrade-fihr-v3-to-v4.yml
-#   tags:
-#     - ul_aidbox
-#     - ul_aidbox_migration_firh
-
 - name: "IMPORT_TASKS | firewall.yml"
   import_tasks: firewall.yml
   tags:
