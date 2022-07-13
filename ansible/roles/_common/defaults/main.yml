@@ -148,8 +148,8 @@ _common_selinux_boolean: []
 
 ###### NODE_EXPORTER
 
-_common_node_exporter_opts: ""
-_common_node_exporter_url: "https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz"
+_common_node_exporter_opts: "--collector.systemd"
+_common_node_exporter_url: "https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz"
 _common_node_exporter_collector_textfile_dir: /var/lib/prometheus/
 
 ###### SWAP MANAGEMENT
@@ -169,4 +169,3 @@ _common_system_upgrade_tag: ""
 # Does nothing if empty string
 
 _common_reboot_tag: ""
-
