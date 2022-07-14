@@ -1,6 +1,0 @@
----
-
-- name: COPY | Install repository file by content
-  copy:
-    content: "{{ ul_prometheus_repo_content }}"
-    dest: /etc/yum.repos.d/prometheus.repo

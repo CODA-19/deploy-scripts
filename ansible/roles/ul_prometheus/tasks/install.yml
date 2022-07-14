@@ -1,6 +1,0 @@
----
-
-- name: YUM | Install packages
-  yum:
-    name: "{{ ul_prometheus_components }}"
-    state: present
