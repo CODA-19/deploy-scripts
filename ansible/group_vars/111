@@ -1,13 +1,3 @@
 ---
 
 coda19_site_id: 111
-
-# This site is to be deployed, so no migration for fhir is needed.
-
-# Overrides the FIHR version used by AidBox (see the role ul_aidbox)
-ul_aidbox_fhir_version: '4.0.0'
-
-# # Overrides the image name and version defined in ul_aidbox
-ul_aidbox_db_image_registry: docker.io
-ul_aidbox_db_image_name: healthsamurai/aidboxdb
-ul_aidbox_db_image_tag: "13.2"
