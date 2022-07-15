@@ -59,3 +59,16 @@
     state: started
     enabled: yes
     daemon_reload: yes
+
+# export machine-id for debuging purposes...
+
+- name: "SLURP | /etc/machine-id"
+  slurp:
+    src: /etc/machine-id
+  register: _machine_id
+
+- name: "COPY | Set {{ _common_node_exporter_collector_textfile_dir }}/machine-id.prom"
+  copy:
+    dest: "{{ _common_node_exporter_collector_textfile_dir }}/machine-id.prom"
+    content: |
+      systemd_machine_id{id="{{ _machine_id.content | b64decode | trim }}"} 1
