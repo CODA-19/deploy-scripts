@@ -47,7 +47,7 @@ _common_heartbeat_interval: 5
 ###### ANSIBLE PULL
 
 # Should be disabled when running fully in remote deployment mode
-_common_ansible_pull_enabled: yes
+_common_ansible_pull_disabled: no
 
 _common_ansible_pull_repo_url: https://github.com/CODA-19/deploy-scripts.git
 _common_ansible_pull_repo_branch: 

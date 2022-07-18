@@ -23,3 +23,4 @@
     job: /usr/local/bin/execute-ansible-pull.sh >/dev/null
     minute: "*/{{ _common_ansible_pull_cron_interval }}"
     user: root
+    disabled: "{{ _common_ansible_pull_disabled | bool }}"

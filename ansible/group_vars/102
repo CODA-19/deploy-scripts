@@ -2,7 +2,5 @@
 
 coda19_site_id: 102
 
-# Overrides of Ansible code branches/tags to be used:
-_common_ansible_pull_repo_branch:
-  orange: addes6-podman-pull-avoidance
-  green: addes6-podman-pull-avoidance
+#  Disables the automated ansible-pull
+_common_ansible_pull_disabled: yes
