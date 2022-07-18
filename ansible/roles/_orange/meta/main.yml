@@ -5,4 +5,5 @@ dependencies:
   - role: ul_podman
   - role: ul_minio
   - role: ul_aidbox
+  - role: ul_orthanc
   - role: ul_coda19_orange

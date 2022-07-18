@@ -1,0 +1,12 @@
+---
+
+ul_orthanc_group: orthanc
+ul_orthanc_user: orthanc
+
+ul_orthanc_image_repo: docker.io
+ul_orthanc_image_name: osimis/orthanc
+ul_orthanc_image_tag: 22.7.0
+
+# Construct full image name, without the docker://
+
+ul_orthanc_image_full: "{{ ul_orthanc_image_repo }}/{{ ul_orthanc_image_name }}:{{ ul_orthanc_image_tag }}"

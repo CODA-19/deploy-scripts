@@ -1,0 +1,131 @@
+---
+
+### Group and user
+
+- name: "GROUP | Add the group {{ ul_orthanc_group }}"
+  group:
+    name: "{{ ul_orthanc_group }}"
+    system: no
+
+- name: "USER | Add the user {{ ul_orthanc_user }}"
+  user:
+    name: "{{ ul_orthanc_user }}"
+    comment: "orthanc account"
+    group: orthanc
+    home: /var/lib/orthanc
+    system: no
+
+### Get local image digest
+
+- name: "SHELL | Get local image digest for {{ ul_orthanc_image_full }}"
+  shell: "/usr/bin/podman inspect {{ ul_orthanc_image_full }}"
+  changed_when: false
+  failed_when: false
+  register: _podman_inspect
+  become: yes
+  become_user: "{{ ul_orthanc_user }}"
+
+- when: _podman_inspect.rc == 0
+  block:
+
+    - name: "SET_FACT | _local_digest"
+      set_fact:
+        _local_digest: "{{ _podman_inspect.stdout | from_json | json_query('[0].Digest') }}"
+      when: _podman_inspect.rc == 0
+
+    - name: DEBUG | _local_digest
+      debug:
+        var: _local_digest
+
+### Get remote image digest
+
+- name: "SHELL | Get remote image digest for {{ ul_orthanc_image_full }}"
+  shell: "/usr/bin/skopeo inspect --no-creds docker://{{ ul_orthanc_image_full }}"
+  changed_when: false
+  failed_when: false
+  register: _skopeo_inspect
+
+- when: _skopeo_inspect.rc == 0
+  block:
+
+    - name: "SET_FACT | _remote_digest"
+      set_fact:
+        _remote_digest: "{{ _skopeo_inspect.stdout | from_json | json_query('Digest') }}"
+
+    - name: "DEBUG | Remote image digest for {{ ul_orthanc_image_full }}"
+      debug:
+        var: _remote_digest
+
+### Pull image
+
+- name: "PODMAN_IMAGE | Pull image for {{ ul_orthanc_image_full }}"
+  podman_image:
+    name: "{{ ul_orthanc_image_repo }}/{{ ul_orthanc_image_name }}"
+    tag: "{{ ul_orthanc_image_tag }}"
+    state: present
+    force: yes
+  become: yes
+  become_user: "{{ ul_orthanc_user }}"
+  register: _podman_pull
+  notify: restart orthanc
+  when: >
+    _local_digest is not defined or
+    (        _local_digest  is defined
+         and _local_digest  != ''
+         and _remote_digest is defined
+         and _remote_digest != ''
+         and _local_digest  != _remote_digest)
+
+### Configurations
+
+- name: "ORTHANC | FILE | Create /etc/orthanc/"
+  file:
+    path: /etc/orthanc
+    state: directory
+
+- name: "ORTHANC | TEMPLATE | Generate /etc/default/orthanc"
+  template:
+    src: etc/default/orthanc.j2
+    dest: /etc/default/orthanc
+    owner: orthanc
+    group: orthanc
+    mode: 0640
+  notify:
+    - restart orthanc
+
+- name: "ORTHANC | TEMPLATE | Generate /etc/orthanc/orthanc.json"
+  template:
+    src: etc/orthanc/orthanc.json.j2
+    dest: /etc/orthanc/orthanc.json
+    owner: orthanc
+    group: orthanc
+    mode: 0640
+  notify:
+    - restart orthanc
+
+### Service files
+
+# - name: "ORTHANC | TEMPLATE | Copy systemd service unit"
+#   template:
+#     src: etc/systemd/system/aidbox.service.j2
+#     dest: /etc/systemd/system/aidbox.service
+#     owner: root
+#     group: root
+#     mode: 0664
+#   register: _systemd_service
+#   notify:
+#     - restart orthanc
+#
+# - name: "ORTHANC | SYSTEMD | Reload daemon"
+#   systemd:
+#     daemon_reload: yes
+#   when: _systemd_service.changed
+
+### Housekeeping stuff
+
+# - name: "ORTHANC | SHELL | cleanup old images for {{ container_name }}"
+#   shell: podman image prune --all
+#   changed_when: false
+#   failed_when: false
+#   become: yes
+#   become_user: "{{ ul_orthanc_user }}"

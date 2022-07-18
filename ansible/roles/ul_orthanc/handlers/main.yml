@@ -1,0 +1,11 @@
+---
+
+# TODO: use the real handler when ready
+
+- name: restart orthanc
+  command: /bin/true
+
+# - name: restart orthanc
+#   systemd:
+#     name: orthanc
+#     state: restarted

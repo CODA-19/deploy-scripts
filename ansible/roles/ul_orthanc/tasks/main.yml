@@ -1,0 +1,13 @@
+---
+
+- name: "IMPORT_TASKS | firewall.yml"
+  import_tasks: firewall.yml
+  tags:
+    - ul_orthanc
+    - ul_orthanc_firewall
+
+- name: "IMPORT_TASKS | install.yml"
+  import_tasks: install.yml
+  tags:
+    - ul_orthanc
+    - ul_orthanc_install
