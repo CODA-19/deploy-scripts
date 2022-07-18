@@ -1,7 +1,7 @@
 ---
 
 - block:
-  
+
     - name: YUM | Install aide required packages
       yum:
         name:
@@ -25,7 +25,8 @@
     - name: CRON | Create weekly aide check
       cron:
         name: "aide check"
-        cron_file: "/etc/crontab"
+        # 2022-07-18 - error: Will not manage /etc/crontab via cron_file, see documentation.
+        #cron_file: "/etc/crontab"        
         user: "root"
         minute: "5"
         hour: "4"

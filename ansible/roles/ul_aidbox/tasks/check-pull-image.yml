@@ -9,20 +9,18 @@
 
 # Get remote image digest and print
 - name: "SHELL | Get remote image digest for {{ container_name }}"
-  shell: |
-    /usr/bin/skopeo inspect --no-creds docker://{{ image_registry }}/{{ image_name }}:{{ image_tag }} |  jq -r '.Digest'
+  shell: /usr/bin/skopeo inspect --no-creds docker://{{ image_registry }}/{{ image_name }}:{{ image_tag }} |  jq -r '.Digest'
   changed_when: false
   failed_when: false
   register: _image_remote
 
-- name: "DEBUG | Remote image digest for {{ container_name }}" 
+- name: "DEBUG | Remote image digest for {{ container_name }}"
   debug:
     var: _image_remote.stdout
 
 # Get local image digest and print
 - name: "SHELL | Get local image digest for {{ container_name }}"
-  shell: |
-    /usr/bin/podman inspect {{ image_registry }}/{{ image_name }}:{{ image_tag }} | jq -r '.[0].Digest'
+  shell: /usr/bin/podman inspect {{ image_registry }}/{{ image_name }}:{{ image_tag }} | jq -r '.[0].Digest'
   changed_when: false
   failed_when: false
   register: _image_local
