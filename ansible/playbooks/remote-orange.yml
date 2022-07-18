@@ -55,7 +55,7 @@
       tags:
         - always
 
-    - name: FILE | Remove file /etc/coda19/boostrapping
+    - name: FILE | Remove file /etc/coda19/bootstrapping
       file:
         path: /etc/coda19/bootstrapping
         state: absent

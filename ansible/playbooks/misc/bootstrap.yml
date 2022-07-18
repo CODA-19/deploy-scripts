@@ -170,7 +170,7 @@
         owner: root
         group: wheel
 
-    - name: FILE | Add file /etc/coda19/boostrapping
+    - name: FILE | Add file /etc/coda19/bootstrapping
       file:
         path: /etc/coda19/bootstrapping
         state: touch
