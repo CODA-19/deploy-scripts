@@ -10,12 +10,12 @@
 # However, note that not having any local image, a pull will be done anyway at
 # anytime during the day.
 #
+# We run */10 minutes, so possible run values for _remote_check_runs are:
+#   0, 1, 2, 3, 4, 5
+#
 # Each time we run
 #   _remote_check_hours: '*'
 #   _remote_check_runs: '*'
-#
-# We run */10 minutes, so possible run values are:
-#   0, 1, 2, 3, 4, 5
 #
 # Once per hour, every hour
 #   _remote_check_hours: '*'
