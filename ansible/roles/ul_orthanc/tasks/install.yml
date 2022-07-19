@@ -25,6 +25,12 @@
     mode: 0750
     state: directory
 
+# TODO: REMOVE ME LATER
+- name: "FILE | Remove /data/ortanc/ (fixup)"
+  file:
+    dest: /data/ortanc
+    state: absent
+
 - name: "FILE | Create /etc/orthanc/"
   file:
     path: /etc/orthanc
