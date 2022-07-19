@@ -19,7 +19,7 @@
 
 - name: "FILE | Create /data/orthanc/"
   file:
-    dest: /data/ortanc
+    dest: /data/orthanc
     owner: orthanc
     group: orthanc
     mode: 0750
