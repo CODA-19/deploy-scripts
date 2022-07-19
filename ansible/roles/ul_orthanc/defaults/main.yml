@@ -10,6 +10,16 @@ ul_orthanc_image_tag: 22.7.0
 ul_orthanc_image_remote_check_hours: [ 0 ]
 ul_orthanc_image_remote_check_runs:  [ 0 ]
 
-# Construct full image name, without the docker://
+# Systemd stuff
 
-ul_orthanc_image_full: "{{ ul_orthanc_image_repo }}/{{ ul_orthanc_image_name }}:{{ ul_orthanc_image_tag }}"
+ul_orthanc_service_name: orthanc      # service_name == container_name
+
+ul_orthanc_systemd_temp_dir: "{{ '/tmp' if ansible_os_family == 'RedHat' and ansible_distribution_major_version|int == 7 else '%T' }}"
+ul_orthanc_systemd_timeout_start_sec: 120
+ul_orthanc_systemd_restart_sec: 30
+
+# Podman stuff
+
+ul_orthanc_container_stop_timeout: 15
+ul_orthanc_container_cidfile: "{{ ul_orthanc_systemd_temp_dir }}/%n-cid"
+ul_orthanc_container_pidfile: "{{ ul_orthanc_systemd_temp_dir }}/%n-pid"

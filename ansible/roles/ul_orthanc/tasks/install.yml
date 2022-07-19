@@ -56,21 +56,20 @@
 
 ### Service files
 
-# - name: "ORTHANC | TEMPLATE | Copy systemd service unit"
-#   template:
-#     src: etc/systemd/system/orthanc.service.j2
-#     dest: /etc/systemd/system/orthanc.service
-#     owner: root
-#     group: root
-#     mode: 0664
-#   register: _systemd_service
-#   notify:
-#     - restart orthanc
-#
-# - name: "ORTHANC | SYSTEMD | Reload daemon"
-#   systemd:
-#     daemon_reload: yes
-#   when: _systemd_service.changed
+- name: "TEMPLATE | Copy systemd service unit"
+  template:
+    src: etc/systemd/system/orthanc.service.j2
+    dest: /etc/systemd/system/orthanc.service
+    owner: root
+    group: root
+    mode: 0664
+  register: _systemd_service
+  notify: restart orthanc
+
+- name: "SYSTEMD | Reload daemon"
+  systemd:
+    daemon_reload: yes
+  when: _systemd_service.changed
 
 ### Invoke the puller
 
@@ -85,3 +84,11 @@
     _image_prune_enabled: false
     _remote_check_hours: "{{ ul_orthanc_image_remote_check_hours }}"
     _remote_check_runs: "{{ ul_orthanc_image_remote_check_runs }}"
+
+### Ensure orthanc service is started and enabled
+
+- name: SYSTEMD | Start and enable orthanc
+  systemd:
+    name: orthanc
+    state: started
+    enabled: yes

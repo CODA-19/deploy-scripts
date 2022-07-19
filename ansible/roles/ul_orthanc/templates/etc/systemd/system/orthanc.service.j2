@@ -1,3 +1,48 @@
 ###
 ### {{ ansible_managed }}
 ###
+
+[Unit]
+Description=Podman service for {{ ul_orthanc_service_name }}
+After=network.target
+
+[Service]
+Type=simple
+
+User={{ ul_orthanc_user }}
+Group={{ ul_orthanc_group }}
+
+# Take no chances, force a stop and remove before starting.
+# NOTE: In podman v1.6 there's no --ignore switches for «stop» and «rm»
+ExecStartPre=-/usr/bin/podman stop --time {{ ul_orthanc_container_stop_timeout }} {{ ul_orthanc_service_name }}
+ExecStartPre=-/usr/bin/podman rm --force {{ ul_orthanc_service_name }}
+ExecStartPre=-/usr/bin/rm -f {{ ul_orthanc_container_pidfile }} {{ ul_orthanc_container_cidfile }}
+ExecStartPre=/bin/mkdir -p /tmp/%n.tmp
+
+ExecStart=/usr/bin/podman run --name {{ ul_orthanc_service_name }} \
+  --conmon-pidfile {{ ul_orthanc_container_pidfile }} \
+  --cidfile {{ ul_orthanc_container_cidfile }} \
+  --env-file /etc/default/{{ ul_orthanc_service_name }} \
+  --log-driver journald \
+  --network host \
+  --publish 4242:4242 \
+  --publish 8042:8042 \
+  --volume /data/orthanc:/var/lib/orthanc:z \
+  --volume /tmp/%n.tmp:/tmp:z \
+  --rm --detach \
+  {{ ul_orthanc_image_repo }}/{{ ul_orthanc_image_name }}:{{ ul_orthanc_image_tag }}
+
+# Stop and remove
+# NOTE: In podman v1.6 there's no --ignore switches for «stop» and «rm»
+ExecStop=-/usr/bin/podman stop --time {{ ul_orthanc_container_stop_timeout }} {{ ul_orthanc_service_name }}
+ExecStop=-/usr/bin/podman rm --force {{ ul_orthanc_service_name }}
+
+Restart=on-failure
+RestartSec={{ ul_orthanc_systemd_restart_sec }}
+TimeoutStartSec={{ ul_orthanc_systemd_timeout_start_sec }}
+
+KillMode=none
+PIDFile={{ ul_orthanc_container_pidfile }}
+
+[Install]
+WantedBy=multi-user.target
