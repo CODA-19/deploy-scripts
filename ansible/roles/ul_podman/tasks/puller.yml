@@ -1,0 +1,190 @@
+---
+### Remote image change schedule
+#
+# To overcome the docker.io pull rate limits, during the day, we can skip
+# remote image check if we have a matching local image.
+#
+# By simply skipping the «skopeo inspect» task, we do not get a _remote_digest
+# and the podman_image will not be able to detect any changes/new images if any.
+#
+# However, note that not having any local image, a pull will be done anyway at
+# anytime during the day.
+#
+# Each time we run
+#   _remote_check_hours: '*'
+#   _remote_check_runs: '*'
+#
+# We run */10 minutes, so possible run values are:
+#   0, 1, 2, 3, 4, 5
+#
+# Once per hour, every hour
+#   _remote_check_hours: '*'
+#   _remote_check_runs:  [0]
+#
+# Once per day, at midnight
+#   _remote_check_hours: [0]
+#   _remote_check_runs:  [0]
+#
+# Three times per hour (out of 6)
+#   _remote_check_hours: '*'
+#   _remote_check_runs:  [0, 2, 4]
+#
+# Two times per hour (out of 6)
+#   _remote_check_hours: '*'
+#   _remote_check_runs:  [0, 3]
+
+### Set various variables and defaults
+
+- name: SET_FACT | Set various variables and defaults
+  set_fact:
+    _image_full: "{{ _image_repo }}/{{ _image_name }}:{{ _image_tag }}"
+    _docker_ratelimit_threshold: "{{ _docker_ratelimit_threshold | default(20) | int }}"
+    _remote_check_hours: "{{ _remote_check_hours | default('*') }}"
+    _remote_check_runs: "{{ _remote_check_runs | default('*') }}"
+
+### Housekeeping stuff
+
+- name: "COMMAND | cleanup old images for user {{ _image_user }}"
+  command: podman image prune --all
+  changed_when: false
+  failed_when: false
+  become: yes
+  become_user: "{{ _image_user }}"
+  when: _image_prune_enabled | default(true) | bool
+
+### Get local image digest
+
+- name: "SHELL | Get local image digest for {{ _image_full }}"
+  shell: "/usr/bin/podman inspect {{ _image_full }}"
+  changed_when: false
+  failed_when: false
+  register: _podman_inspect
+  become: yes
+  become_user: "{{ _image_user }}"
+
+- when: _podman_inspect.rc == 0
+  block:
+
+    - name: "SET_FACT | _local_digest"
+      set_fact:
+        _local_digest: "{{ _podman_inspect.stdout | from_json | json_query('[0].Digest') }}"
+      when: _podman_inspect.rc == 0
+
+    - name: DEBUG | _local_digest
+      debug:
+        var: _local_digest
+
+### Are we scheduled for a remote check ?
+
+- name: "SET_FACT: _remote_check_scheduled = false"
+  set_fact:
+    _remote_check_scheduled: false
+
+- name: "SET_FACT: _remote_check_scheduled = true"
+  set_fact:
+    _remote_check_scheduled: true
+  when:
+    - _remote_check_hours == '*' or ( ansible_date_time.hour   | int            ) in _remote_check_hours
+    - _remote_check_runs  == '*' or ((ansible_date_time.minute | int / 10) | int) in _remote_check_runs
+
+- name: DEBUG | _remote_check_scheduled
+  debug:
+    var: _remote_check_scheduled
+
+### Get our current docker.io rate limits
+#
+# Anonymous and Free Docker Hub users are limited to 100 and 200 container image
+# pull requests per six hours.
+#
+# See: https://www.docker.com/increase-rate-limits/
+#
+# We always fetch and show ratelimit informations, because that could be useful
+# to see this information on a necessary pull (when _local_digest is not defined).
+#
+
+- when: _image_repo == 'docker.io'
+  block:
+
+    - name: URI | Get token for docker.io
+      uri:
+        url: "https://auth.docker.io/token?service=registry.docker.io&scope=repository:ratelimitpreview/test:pull"
+      register: _uri
+
+    - name: URI | Get docker.io rate limits
+      uri:
+        url: https://registry-1.docker.io/v2/ratelimitpreview/test/manifests/latest
+        headers:
+          Authorization: "Bearer {{ _uri.json.token }}"
+      register: _uri
+
+    - name: SET_FACT | _docker_ratelimit_remaining + _docker_ratelimit_source
+      set_fact:
+        _docker_ratelimit_remaining: "{{  _uri.ratelimit_remaining | split(';') | first | int }}"
+        _docker_ratelimit_source: "{{ _uri.docker_ratelimit_source }}"
+
+    - name: DEBUG | Print diagnostic informations
+      debug:
+        msg: "We have {{ _docker_ratelimit_remaining }} remaining pulls from {{ _docker_ratelimit_source }}, threshold is {{ _docker_ratelimit_threshold }}"
+
+### Decide if we can do an update check
+#
+# It is not allowed if we have an image from docker.io AND we have reached the
+# defined ratelimit threshold.
+#
+
+- name: SET_FACT | _image_update_check_allowed
+  set_fact:
+    _image_update_check_allowed: "{{ _docker_ratelimit_remaining is not defined or (_docker_ratelimit_remaining is defined and _docker_ratelimit_remaining|int >= _docker_ratelimit_threshold|default(_docker_ratelimit_threshold_default)|int) }}"
+
+- name: DEBUG | _image_update_check_allowed
+  debug:
+    var: _image_update_check_allowed
+
+### Get remote image digest
+
+- when:
+    - _remote_check_scheduled       | bool
+    - _image_update_check_allowed   | bool
+    # Do not waste pull requests, we always try to pull when there's no local image
+    - _local_digest                 is defined
+  block:
+
+    - name: "SHELL | Get remote image digest for {{ _image_full }}"
+      shell: "/usr/bin/skopeo inspect --no-creds docker://{{ _image_full }}"
+      changed_when: false
+      failed_when: false
+      register: _skopeo_inspect
+
+    - when: _skopeo_inspect.rc == 0
+      block:
+
+        - name: "SET_FACT | _remote_digest"
+          set_fact:
+            _remote_digest: "{{ _skopeo_inspect.stdout | from_json | json_query('Digest') }}"
+
+        - name: "DEBUG | Remote image digest for {{ _image_full }}"
+          debug:
+            var: _remote_digest
+
+### Pull image
+
+- name: "PODMAN_IMAGE | Pull image for {{ _image_full }}"
+  podman_image:
+    name: "{{ _image_repo }}/{{ _image_name }}"
+    tag: "{{ _image_tag }}"
+    state: present
+    force: yes
+  become: yes
+  become_user: "{{ _image_user }}"
+  register: _podman_pull
+  notify: "{{ _image_change_handler | default(omit) }}"
+  # we always try to pull if we have no local image/digest...
+  when: >
+    _local_digest is not defined or
+    (        _local_digest  is defined
+         and _local_digest.startswith('sha256')
+         and _remote_digest is defined
+         and _remote_digest.startswith('sha256')
+         and _local_digest != _remote_digest
+         and _image_update_check_allowed | bool
+    )
