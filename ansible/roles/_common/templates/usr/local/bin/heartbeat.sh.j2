@@ -78,6 +78,11 @@ function header {
 SYSINFO=$( mktemp )
 
 {
+  header "ANSIBLE VIRTUAL ENVIRONMENT - pip list --outdated"
+  pip list --outdated
+
+  header "ANSIBLE VIRTUAL ENVIRONMENT - pip freeze"
+  pip freeze
 
   header "PROCESS TREE"
   ps auxf
