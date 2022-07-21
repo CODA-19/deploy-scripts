@@ -63,6 +63,9 @@ chmod go-rwx ${ANSIBLE_LOG_DIR}
     ${ANSIBLE_BASE}/playbooks/localhost.yml \
         | tee ${ANSIBLE_LOG_FILE}
 
+  # Simply add a timestamp at the end
+  echo -e "\nFinished at: $( date --iso-8601=seconds )" >> ${ANSIBLE_LOG_FILE}
+
   # Push log to heartbeat service
 
   curl \
