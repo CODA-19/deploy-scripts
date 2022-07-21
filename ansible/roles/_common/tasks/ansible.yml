@@ -19,11 +19,25 @@
 
 ## Create a second venv
 
-- name: "PIP | {{ _common_ansible_venv2_path }} - Try to spin a new venv with hard requirements"
+- name: "COPY | requirements.txt -> /opt/coda19/ansible-requirements.txt"
+  copy:
+    src: "{{ inventory_dir }}/requirements.txt"
+    dest: /opt/coda19/ansible-requirements.txt
+
+- name: "PIP | {{ _common_ansible_venv2_path }} - Ensure we have latest pip, setuptools and wheel"
   pip:
     virtualenv: "{{ _common_ansible_venv2_path }}"
-    virtualenv_python: python3
-    requirements: "{{ inventory_dir }}/requirements.txt"
+    virtualenv_python: /usr/bin/python3
+    name:
+      - pip
+      - setuptools
+      - wheel
+    state: latest
+
+- name: "PIP | Install requirements"
+  pip:
+    virtualenv: "{{ _common_ansible_venv2_path }}"
+    requirements: /opt/coda19/ansible-requirements.txt
 
 ###### ANSIBLE-ACTIVATORS
 
