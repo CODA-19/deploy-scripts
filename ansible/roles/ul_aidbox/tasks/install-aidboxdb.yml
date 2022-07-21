@@ -34,7 +34,8 @@
   notify:
     - restart aidboxdb
 
-# Create data directory
+### Create data directory
+
 - name: AIDBOXDB | FILE | Ensure /data/aidboxdb is present
   file:
     dest: /data/aidboxdb
@@ -43,14 +44,21 @@
     mode: 0700
     state: directory
 
-# Check if local and remote image signature matches and, if not the case, pull it
-- name: INCLUDE_TASKS | check-pull-image.yml
-  include_tasks: check-pull-image.yml
+### Invoke the puller
+
+- name: "INCLUDE_TASKS | roles/ul_podman/tasks/puller.yml"
+  include_tasks: "{{ inventory_dir }}/roles/ul_podman/tasks/puller.yml"
   vars:
-    container_name: aidboxdb
-    image_registry: "{{ ul_aidbox_db_image_registry }}"
-    image_name: "{{ ul_aidbox_db_image_name }}"
-    image_tag: "{{ ul_aidbox_db_image_tag }}"
+    _image_repo: "{{ ul_aidbox_db_image_registry }}"
+    _image_name: "{{ ul_aidbox_db_image_name }}"
+    _image_tag: "{{ ul_aidbox_db_image_tag }}"
+    _image_user: aidboxdb
+    _image_change_handler: restart aidboxdb
+    _image_prune_enabled: false
+    _remote_check_hours: "{{ ul_aidbox_db_image_remote_check_hours }}"
+    _remote_check_runs: "{{ ul_aidbox_db_image_remote_check_runs }}"
+
+### Start and enable the Service
 
 - name: AIDBOXDB | SYSTEMD | Ensure aidboxdb.service is started and enabled
   systemd:

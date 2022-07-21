@@ -20,6 +20,10 @@ ul_aidbox_image_tag: 2202-lts
 
 ul_aidbox_fhir_version: 4.0.0
 
+# only check at night
+ul_aidbox_image_remote_check_hours: [0, 2, 4]
+ul_aidbox_image_remote_check_runs: [0, 2, 4]
+
 #### AIDBOXDB
 
 ul_aidbox_db_user: aidboxdb
@@ -28,8 +32,12 @@ ul_aidbox_db_host: 127.0.0.1
 ul_aidbox_db_port: 5432
 
 ul_aidbox_db_image_registry: docker.io
-ul_aidbox_db_image_name: aidbox/db
+ul_aidbox_db_image_name: healthsamurai/aidboxdb
 ul_aidbox_db_image_tag: 13.2
+
+# only check at night
+ul_aidbox_db_image_remote_check_hours: [0, 2, 4]
+ul_aidbox_db_image_remote_check_runs: [0, 2, 4]
 
 #### General and common stuff
 
