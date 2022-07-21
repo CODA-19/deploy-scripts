@@ -1,9 +1,5 @@
 ---
 
-################################################################################
-### "{{ task_title }}"
-################################################################################
-
 - name: "{{ task_title }} | GROUP | Add the group '{{ container_name }}'"
   group:
     name: "{{ container_name }}"
@@ -82,55 +78,18 @@
     _selinux_module_name: "{{ container_name }}"
   when:
     - ansible_distribution == "CentOS"
-    - ansible_distribution_major_version == '7'    
+    - ansible_distribution_major_version == '7'
 
-# Clean up old images
-- name: "{{ task_title }} | SHELL | cleanup old images"
-  shell: |
-    podman image prune --all
-  changed_when: false
-  failed_when: false
-  become: yes
-  become_user: "{{ container_name }}"
+### Invoke the puller
 
-# Get remote image digest and print
-- name: "{{ task_title }} | SHELL | Get remote image digest"
-  shell: |
-    /usr/bin/skopeo inspect --no-creds docker://{{ ul_coda19_docker_image_registry }}/{{ docker_image_name }}:{{ docker_image_tag }} |  jq -r '.Digest'
-  changed_when: false
-  failed_when: false
-  register: _image_remote
-
-- name: "{{ task_title }} | DEBUG | Remote image digest"
-  debug:
-    var: _image_remote.stdout
-
-# Get local image digest and print
-- name: "{{ task_title }} | SHELL | Get local image digest"
-  shell: |
-    /usr/bin/podman inspect --format '{{ '{{' }} .Digest {{ '}}' }}' {{ ul_coda19_docker_image_registry }}/{{ docker_image_name }}:{{ docker_image_tag }} 2>/dev/null
-  changed_when: false
-  failed_when: false
-  register: _image_local
-  become: yes
-  become_user: "{{ container_name }}"
-
-- name: "{{ task_title }}| DEBUG | Local image digest"
-  debug:
-    var: _image_local.stdout
-
-# Ensure image is present
-# Force a pull when remote digest is different from local one.
-# In the case the remote image state checksum is empty (this happens if dockerhub rejects us because of a reached request limit),
-# Do not pull anything and leave what exists locally alone.
-- name: "{{ task_title }} | PODMAN_IMAGE | Pull image"
-  podman_image:
-    name: "{{ ul_coda19_docker_image_registry }}/{{ docker_image_name }}"
-    tag: "{{ docker_image_tag }}"
-    state: present
-    force: yes
-  become: yes
-  become_user: "{{ container_name }}"
-  notify:
-    - "restart {{ container_name }}"
-  when: (_image_remote.stdout != _image_local.stdout) and _image_remote.stdout != ''
+- name: "INCLUDE_TASKS | roles/ul_podman/tasks/puller.yml"
+  include_tasks: "{{ inventory_dir }}/roles/ul_podman/tasks/puller.yml"
+  vars:
+    _image_repo: "{{ ul_coda19_docker_image_registry }}"
+    _image_name: "{{ docker_image_name }}"
+    _image_tag: "{{ docker_image_tag }}"
+    _image_user: "{{ container_name }}"
+    _image_change_handler: "restart {{ container_name }}"
+    _image_prune_enabled: false
+    _remote_check_hours: '*'
+    _remote_check_runs: '*'
