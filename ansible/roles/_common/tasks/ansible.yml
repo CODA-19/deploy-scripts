@@ -6,7 +6,17 @@
 
 ###### ANSIBLE-ACTIVATORS
 
-# TODO
+- name: TEMPLATE | Generate activators - /etc/profile.d/env-ansible.sh
+  template:
+    src: etc/profile.d/env-ansible.sh.j2
+    dest: /etc/profile.d/env-ansible.sh
+    mode: 0744
+
+- name: TEMPLATE | Generate activators - /user/local/bin/env-ansible.sh
+  template:
+    src: usr/local/bin/env-ansible.sh.j2
+    dest: /usr/local/bin/env-ansible.sh
+    mode: 0755
 
 ###### ANSIBLE-PULL
 
