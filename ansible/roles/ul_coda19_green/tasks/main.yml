@@ -11,7 +11,10 @@
     - ul_coda19_green
     - ul_coda19_green_install
 
-# CODA19-SITE-API
+################################################################################
+#### CODA19-SITE-API
+################################################################################
+
 - name: "IMPORT_TASKS | CODA19-SITE-API | install.yml"
   import_tasks: install.yml
   tags:
@@ -38,7 +41,12 @@
     - ul_coda19_green
     - ul_coda19_green_install
 
-# CODA19-STATS-API    
+- meta: flush_handlers
+
+################################################################################
+#### CODA19-STATS-API
+################################################################################
+
 - name: "IMPORT_TASKS | CODA19-STATS-API | install.yml"
   import_tasks: install.yml
   tags:
@@ -50,8 +58,9 @@
     - container_port: "{{ coda19_stats_api_port }}"
     - docker_image_name: "{{ coda19_stats_api_image_name }}"
     - docker_image_tag: "{{ coda19_stats_api_image_tag }}"
-  
+
 # Start and enable service
+
 - name: CODA19-STATS-API | SYSTEMD | Ensure coda19-stats-api.service is started and enabled
   systemd:
     name: coda19-stats-api
@@ -67,7 +76,10 @@
 
 - meta: flush_handlers
 
-# CODA19-LEARNING-API    
+################################################################################
+#### CODA19-LEARNING-API
+################################################################################
+
 - name: "IMPORT_TASKS | CODA19-LEARNING-API | install.yml"
   import_tasks: install.yml
   tags:
@@ -79,7 +91,7 @@
     - container_port: "{{ coda19_learning_api_port }}"
     - docker_image_name: "{{ coda19_learning_api_image_name }}"
     - docker_image_tag: "{{ coda19_learning_api_image_tag }}"
-  
+
 # Start and enable service
 - name: CODA19-LEARNING-API | SYSTEMD | Ensure coda19-learning-api.service is started and enabled
   systemd:
