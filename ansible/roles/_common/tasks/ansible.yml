@@ -2,13 +2,28 @@
 
 ###### ANSIBLE-VENV
 
-- name: PIP | Upgrade pip to latest
+- name: "PIP | {{ _common_ansible_venv1_path }} - Upgrade pip to latest"
   pip:
-    name: pip
+    virtualenv: "{{ _common_ansible_venv1_path }}"
     state: latest
-    virtualenv: "{{ _common_ansible_venv_path }}"
+    name: pip
 
-# TODO: upgrade packages to our requirements.txt packages
+- name: "PIP | {{ _common_ansible_venv1_path }} - Remove unused packages"
+  pip:
+    virtualenv: "{{ _common_ansible_venv1_path }}"
+    state: absent
+    name:
+      - botocore
+      - boto3
+      - s3transfer
+
+## Create a second venv
+
+- name: "PIP | {{ _common_ansible_venv2_path }} - Try to spin a new venv with hard requirements"
+  pip:
+    virtualenv: "{{ _common_ansible_venv2_path }}"
+    virtualenv_python: python3
+    requirements: "{{ inventory_dir }}/requirements.txt"
 
 ###### ANSIBLE-ACTIVATORS
 
