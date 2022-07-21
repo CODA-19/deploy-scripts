@@ -2,7 +2,13 @@
 
 ###### ANSIBLE-VENV
 
-# TODO
+- name: PIP | Upgrade pip to latest
+  pip:
+    name: pip
+    state: latest
+    virtualenv: "{{ _common_ansible_venv_path }}"
+
+# TODO: upgrade packages to our requirements.txt packages
 
 ###### ANSIBLE-ACTIVATORS
 

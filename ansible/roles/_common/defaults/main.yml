@@ -44,6 +44,10 @@ _common_heartbeat_token: ""
 _common_heartbeat_base_url: https://heartbeat.hub.coda19.com
 _common_heartbeat_interval: 5
 
+###### ANSIBLE VENV
+
+_common_ansible_venv_path: /opt/coda19/venv-ansible
+
 ###### ANSIBLE PULL
 
 # Should be disabled when running fully in remote deployment mode
