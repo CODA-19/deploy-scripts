@@ -38,17 +38,17 @@
     - _common
     - _common_packages
 
-- name: "IMPORT_TASKS | heartbeat.yml"
-  import_tasks: heartbeat.yml
-  tags:
-    - _common
-    - _common_heartbeat
-
 - name: "IMPORT_TASKS | ansible.yml"
   import_tasks: ansible.yml
   tags:
     - _common
     - _common_ansible
+
+- name: "IMPORT_TASKS | heartbeat.yml"
+  import_tasks: heartbeat.yml
+  tags:
+    - _common
+    - _common_heartbeat
 
 - name: "IMPORT_TASKS | accounts.yml"
   import_tasks: accounts.yml
@@ -127,4 +127,3 @@
   tags:
     - _common
     - _common_system_upgrade
-
