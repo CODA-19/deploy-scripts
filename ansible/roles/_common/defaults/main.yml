@@ -46,7 +46,10 @@ _common_heartbeat_interval: 5
 
 ###### ANSIBLE VENV
 
+_common_ansible_venv1_managed: no
 _common_ansible_venv1_path: /opt/coda19/venv-ansible
+
+_common_ansible_venv2_managed: yes
 _common_ansible_venv2_path: /opt/coda19/venv-ansible-2022a
 
 # Effective VENV

@@ -2,13 +2,13 @@
 
 ###### ANSIBLE-VENV
 
-- name: "PIP | {{ _common_ansible_venv1_path }} - Upgrade pip to latest"
+- name: "LEGACY VENV | PIP | {{ _common_ansible_venv1_path }} - Upgrade pip to latest"
   pip:
     virtualenv: "{{ _common_ansible_venv1_path }}"
     state: latest
     name: pip
 
-- name: "PIP | {{ _common_ansible_venv1_path }} - Remove unused packages"
+- name: "LEGACY VENV | PIP | {{ _common_ansible_venv1_path }} - Remove unused packages"
   pip:
     virtualenv: "{{ _common_ansible_venv1_path }}"
     state: absent
@@ -17,16 +17,82 @@
       - boto3
       - s3transfer
 
-## Create a second venv
+## MANAGE THE FIRST VENV
 
-- name: "COPY | requirements.txt -> /opt/coda19/ansible-requirements.txt"
+- when: _common_ansible_venv1_managed|bool
+  block:
+
+    - name: "VENV1 | COPY | requirements.txt -> /opt/coda19/ansible-requirements.txt"
+      copy:
+        src: "{{ inventory_dir }}/requirements.txt"
+        dest: /opt/coda19/ansible-requirements.txt
+
+    - name: "VENV1 | PIP | {{ _common_ansible_venv1_path }} - Ensure we have latest pip, setuptools and wheel"
+      pip:
+        virtualenv: "{{ _common_ansible_venv1_path }}"
+        virtualenv_python: /usr/bin/python3
+        name:
+          - pip
+          - setuptools
+          - wheel
+        state: latest
+
+    - name: "VENV1 | PIP | Install requirements"
+      pip:
+        virtualenv: "{{ _common_ansible_venv1_path }}"
+        requirements: /opt/coda19/ansible-requirements.txt
+
+## MANAGE THE SECOND VENV
+
+- when: _common_ansible_venv2_managed|bool
+  block:
+
+    - name: "VENV2 | COPY | requirements.txt -> /opt/coda19/ansible-requirements.txt"
+      copy:
+        src: "{{ inventory_dir }}/requirements.txt"
+        dest: /opt/coda19/ansible-requirements.txt
+
+    - name: "VENV2 | PIP | {{ _common_ansible_venv2_path }} - Ensure we have latest pip, setuptools and wheel"
+      pip:
+        virtualenv: "{{ _common_ansible_venv2_path }}"
+        virtualenv_python: /usr/bin/python3
+        name:
+          - pip
+          - setuptools
+          - wheel
+        state: latest
+
+    - name: "VENV2 | PIP | Install requirements"
+      pip:
+        virtualenv: "{{ _common_ansible_venv2_path }}"
+        requirements: /opt/coda19/ansible-requirements.txt
+
+###### ANSIBLE VENV - AUTOMATIC IMPLEMENTATION
+
+- name: "VENV-AUTO | COPY | requirements.txt -> /opt/coda19/ansible-requirements-automatic.txt"
   copy:
     src: "{{ inventory_dir }}/requirements.txt"
-    dest: /opt/coda19/ansible-requirements.txt
+    dest: /opt/coda19/ansible-requirements-automatic.txt
 
-- name: "PIP | {{ _common_ansible_venv2_path }} - Ensure we have latest pip, setuptools and wheel"
+- name: "VENV-AUTO | STAT | /opt/coda19/ansible-requirements-automatic.txt"
+  stat:
+    path: /opt/coda19/ansible-requirements-automatic.txt
+    checksum_algorithm: md5
+  register: _stat
+
+- name: "VENV-AUTO | SET_FACT | _common_ansible_venv_automatic_path"
+  set_fact:
+    # be safe: md5 hash of the file; this will be removed in Ansible 2.9 in favor of the checksum return value
+    # see: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/stat_module.html
+    _common_ansible_venv_automatic_path: "/opt/coda19/venv-ansible-{{ _stat.stat.checksum | default(_stat.stat.md5) }}"
+
+- name: "VENV-AUTO | DEBUG | _common_ansible_venv_automatic_path"
+  debug:
+    var: _common_ansible_venv_automatic_path
+
+- name: "VENV-AUTO | PIP | {{ _common_ansible_venv2_path }} - Ensure we have latest pip, setuptools and wheel"
   pip:
-    virtualenv: "{{ _common_ansible_venv2_path }}"
+    virtualenv: "{{ _common_ansible_venv_automatic_path }}"
     virtualenv_python: /usr/bin/python3
     name:
       - pip
@@ -34,10 +100,10 @@
       - wheel
     state: latest
 
-- name: "PIP | Install requirements"
+- name: "VENV-AUTO | PIP | Install requirements"
   pip:
-    virtualenv: "{{ _common_ansible_venv2_path }}"
-    requirements: /opt/coda19/ansible-requirements.txt
+    virtualenv: "{{ _common_ansible_venv_automatic_path }}"
+    requirements: /opt/coda19/ansible-requirements-automatic.txt
 
 ###### ANSIBLE-ACTIVATORS
 
