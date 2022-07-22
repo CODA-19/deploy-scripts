@@ -66,6 +66,7 @@ _common_ansible_pull_directory: /opt/coda19/deploy-scripts-pull
 _common_ansible_pull_log_dir: /var/log/ansible
 
 # Cron job name and interval in minutes
+# NOTE: this CRON NAME and FILE must converge with the cron installed while bootstrapping (playbooks/misc/bootstrap.yml)
 _common_ansible_pull_cron_name: "EXECUTE_ANSIBLE_PULL"
 _common_ansible_pull_cron_interval: 10
 
