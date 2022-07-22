@@ -1,98 +1,41 @@
 ---
 
-###### ANSIBLE-VENV
+###### SOME CLEANUP
 
-- name: "LEGACY VENV | PIP | {{ _common_ansible_venv1_path }} - Upgrade pip to latest"
-  pip:
-    virtualenv: "{{ _common_ansible_venv1_path }}"
-    state: latest
-    name: pip
-
-- name: "LEGACY VENV | PIP | {{ _common_ansible_venv1_path }} - Remove unused packages"
-  pip:
-    virtualenv: "{{ _common_ansible_venv1_path }}"
+- name: FILE | Remove old implementation venv
+  file:
+    path: "{{ item }}"
     state: absent
-    name:
-      - botocore
-      - boto3
-      - s3transfer
-
-## MANAGE THE FIRST VENV
-
-- when: _common_ansible_venv1_managed|bool
-  block:
-
-    - name: "VENV1 | COPY | requirements.txt -> /opt/coda19/ansible-requirements.txt"
-      copy:
-        src: "{{ inventory_dir }}/requirements.txt"
-        dest: /opt/coda19/ansible-requirements.txt
-
-    - name: "VENV1 | PIP | {{ _common_ansible_venv1_path }} - Ensure we have latest pip, setuptools and wheel"
-      pip:
-        virtualenv: "{{ _common_ansible_venv1_path }}"
-        virtualenv_python: /usr/bin/python3
-        name:
-          - pip
-          - setuptools
-          - wheel
-        state: latest
-
-    - name: "VENV1 | PIP | Install requirements"
-      pip:
-        virtualenv: "{{ _common_ansible_venv1_path }}"
-        requirements: /opt/coda19/ansible-requirements.txt
-
-## MANAGE THE SECOND VENV
-
-- when: _common_ansible_venv2_managed|bool
-  block:
-
-    - name: "VENV2 | COPY | requirements.txt -> /opt/coda19/ansible-requirements.txt"
-      copy:
-        src: "{{ inventory_dir }}/requirements.txt"
-        dest: /opt/coda19/ansible-requirements.txt
-
-    - name: "VENV2 | PIP | {{ _common_ansible_venv2_path }} - Ensure we have latest pip, setuptools and wheel"
-      pip:
-        virtualenv: "{{ _common_ansible_venv2_path }}"
-        virtualenv_python: /usr/bin/python3
-        name:
-          - pip
-          - setuptools
-          - wheel
-        state: latest
-
-    - name: "VENV2 | PIP | Install requirements"
-      pip:
-        virtualenv: "{{ _common_ansible_venv2_path }}"
-        requirements: /opt/coda19/ansible-requirements.txt
+  loop:
+    - /opt/coda19/ansible-requirements-automatic.txt
+    - /opt/coda19/venv-ansible-2022a
 
 ###### ANSIBLE VENV - AUTOMATIC IMPLEMENTATION
 
-- name: "VENV-AUTO | COPY | requirements.txt -> /opt/coda19/ansible-requirements-automatic.txt"
+- name: "VENV | COPY | requirements.txt -> /opt/coda19/ansible-requirements.txt"
   copy:
     src: "{{ inventory_dir }}/requirements.txt"
-    dest: /opt/coda19/ansible-requirements-automatic.txt
+    dest: /opt/coda19/ansible-requirements.txt
 
-- name: "VENV-AUTO | STAT | /opt/coda19/ansible-requirements-automatic.txt"
+- name: "VENV | STAT | /opt/coda19/ansible-requirements.txt"
   stat:
-    path: /opt/coda19/ansible-requirements-automatic.txt
+    path: /opt/coda19/ansible-requirements.txt
     checksum_algorithm: md5
   register: _stat
 
-- name: "VENV-AUTO | SET_FACT | _common_ansible_venv_automatic_path"
+- name: "VENV | SET_FACT | _venv_path"
   set_fact:
     # be safe: md5 hash of the file; this will be removed in Ansible 2.9 in favor of the checksum return value
     # see: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/stat_module.html
-    _common_ansible_venv_automatic_path: "/opt/coda19/venv-ansible-{{ _stat.stat.checksum | default(_stat.stat.md5) }}"
+    _venv_path: "/opt/coda19/venv-ansible-{{ _stat.stat.checksum | default(_stat.stat.md5) }}"
 
-- name: "VENV-AUTO | DEBUG | _common_ansible_venv_automatic_path"
+- name: "VENV | DEBUG | _venv_path"
   debug:
-    var: _common_ansible_venv_automatic_path
+    var: _venv_path
 
-- name: "VENV-AUTO | PIP | {{ _common_ansible_venv2_path }} - Ensure we have latest pip, setuptools and wheel"
+- name: "VENV | PIP | {{ _venv_path }} - Ensure we have latest pip, setuptools and wheel"
   pip:
-    virtualenv: "{{ _common_ansible_venv_automatic_path }}"
+    virtualenv: "{{ _venv_path }}"
     virtualenv_python: /usr/bin/python3
     name:
       - pip
@@ -100,10 +43,15 @@
       - wheel
     state: latest
 
-- name: "VENV-AUTO | PIP | Install requirements"
+- name: "VENV | PIP | {{ _venv_path }} - Install requirements"
   pip:
-    virtualenv: "{{ _common_ansible_venv_automatic_path }}"
-    requirements: /opt/coda19/ansible-requirements-automatic.txt
+    virtualenv: "{{ _venv_path }}"
+    requirements: /opt/coda19/ansible-requirements.txt
+
+# if we're here, it's that we have a working venv with installed dependencies successfully
+- name: "VENV | SET_FACT | Set _common_ansible_venv_path to {{ _venv_path }}"
+  set_fact:
+    _common_ansible_venv_path: "{{ _venv_path }}"
 
 ###### ANSIBLE-ACTIVATORS
 
