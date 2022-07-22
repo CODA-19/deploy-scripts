@@ -51,6 +51,8 @@
     (item.1.create is defined and item.1.create | bool)
 
 - name: FILESYSTEM | Création des filesystems sur les nouveaux Logical Volume(s)
+  environment:
+    PATH: "/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
   filesystem:
     fstype: "{{ item.1.filesystem }}"
     dev: "/dev/{{ item.0.vgname }}/{{ item.1.lvname }}"
