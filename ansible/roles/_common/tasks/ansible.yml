@@ -47,11 +47,10 @@
     dest: /etc/profile.d/env-ansible.sh
     mode: 0744
 
-- name: TEMPLATE | Generate activators - /usr/local/bin/env-ansible.sh
-  template:
-    src: usr/local/bin/env-ansible.sh.j2
-    dest: /usr/local/bin/env-ansible.sh
-    mode: 0755
+- name: FILE | Remove /usr/local/bin/env-ansible.sh
+  file:
+    path: /usr/local/bin/env-ansible.sh
+    state: absent
 
 ###### ANSIBLE-PULL
 

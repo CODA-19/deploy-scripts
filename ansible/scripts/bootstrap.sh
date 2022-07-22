@@ -148,15 +148,10 @@ pip install -r ${REQUIREMENTS}
 
 echo "${BOLD}${YELLOW}*** CREATING ANSIBLE VIRTUAL ENVIRONMENT ACTIVATORS ***${NORMAL}"
 
-cat << EOT > /usr/local/bin/env-ansible.sh
-#!/bin/echo !!! PLEASE SOURCE THIS FILE OR SIMPLY CALL ENV-ANSIBLE !!!
-source ${CODA19_ANSIBLE_VENV_DIR}/bin/activate
-EOT
-
-chmod +x /usr/local/bin/env-ansible.sh
-
 cat << EOT > /etc/profile.d/env-ansible.sh
-alias env-ansible='source /usr/local/bin/env-ansible.sh'
+function env-ansible {
+  source ${CODA19_ANSIBLE_VENV_DIR}/bin/activate
+}
 EOT
 
 chmod a+r /etc/profile.d/env-ansible.sh
