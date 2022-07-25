@@ -5,6 +5,8 @@
     kill -15 894
     sleep 5
     kill -9  894
+  changed_when: false
+  failed_when: false
   when:
     - coda19_site_id|int == 110
     - coda19_host_role == 'orange'
