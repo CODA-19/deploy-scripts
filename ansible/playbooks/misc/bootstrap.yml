@@ -129,13 +129,8 @@
 
           #### Be safe, load required environment stuff
 
-          if [[ -f /etc/profile.d/proxy.sh ]]; then
-            source /etc/profile.d/proxy.sh
-          fi
-
-          if [[ -f /usr/local/bin/env-ansible.sh ]]; then
-            source /usr/local/bin/env-ansible.sh
-          fi
+          [ -f /etc/profile.d/proxy.sh       ] && source /etc/profile.d/proxy.sh
+          [ -f /etc/profile.d/env-ansible.sh ] && source /etc/profile.d/env-ansible.sh && env-ansible
 
           #### Execute ansible-pull
           #### If already running: dont' launch and exit
