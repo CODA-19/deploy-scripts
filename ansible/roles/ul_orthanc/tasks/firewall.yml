@@ -1,1 +1,22 @@
 ---
+
+- name: TEMPLATE | Put the Orthanc service definition
+  template:
+    src: etc/firewalld/services/orthanc.xml.j2
+    dest: /etc/firewalld/services/orthanc.xml
+  register: _svc
+
+- name: SYSTEMD | Reload firewalld
+  systemd:
+    name: firewalld
+    state: reloaded
+  when: _svc.changed
+
+- name: FIREWALLD | Manage orthanc service zones
+  firewalld:
+    zone: "{{ item.zone }}"
+    service: orthanc
+    state: "{{ item.state | default('enabled') }}"
+    permanent: yes
+    immediate: yes
+  with_items: "{{ ul_orthanc_firewalld_zones }}"

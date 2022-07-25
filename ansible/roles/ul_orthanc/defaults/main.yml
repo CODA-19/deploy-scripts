@@ -1,5 +1,11 @@
 ---
 
+# General stuff
+
+ul_orthanc_firewalld_zones:
+  - zone: public
+    state: enabled
+
 ul_orthanc_group: orthanc
 ul_orthanc_user: orthanc
 
@@ -12,7 +18,7 @@ ul_orthanc_image_remote_check_runs:  [ 0 ]
 
 # Systemd stuff
 
-ul_orthanc_service_name: orthanc      # service_name == container_name
+ul_orthanc_service_name: orthanc
 
 ul_orthanc_systemd_temp_dir: "{{ '/tmp' if ansible_os_family == 'RedHat' and ansible_distribution_major_version|int == 7 else '%T' }}"
 ul_orthanc_systemd_timeout_start_sec: 120
