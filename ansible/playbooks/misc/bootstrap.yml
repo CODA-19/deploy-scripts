@@ -132,6 +132,10 @@
           [ -f /etc/profile.d/proxy.sh       ] && source /etc/profile.d/proxy.sh
           [ -f /etc/profile.d/env-ansible.sh ] && source /etc/profile.d/env-ansible.sh && env-ansible
 
+          #### Disable python output buffering
+
+          export PYTHONUNBUFFERED=1
+
           #### Execute ansible-pull
           #### If already running: dont' launch and exit
 
