@@ -1,34 +1,46 @@
 #!/bin/bash
+#
+# {{ ansible_managed }}
+#
 
-sudo -i -u coda19-learning-api bash << EOF
+#### CODA19-LEARNING-API
+
 echo "=== coda19-learning-api cleanup ==="
-
+sudo -i -u coda19-learning-api bash << EOF
 cd ~
 podman rmi --force docker.io/coda19/coda19-learning-api:latest
 podman system prune --all --force && podman rmi --all
-kill $(netstat -tulpn | grep ":{{ coda19_learning_api_port }}" | sed "s/.*LISTEN\(.*\)\/node.*/\1/" | sed -e 's/^[ \t]*//')
-
+PID=$( netstat -tulpn | grep ":{{ coda19_learning_api_port }}" | sed "s/.*LISTEN\(.*\)\/node.*/\1/" | sed -e 's/^[ \t]*//' )
+kill -15 $PID
+sleep 5
+kill -9 $PID
 EOF
 echo "=== coda19-learning-api cleanup finished ==="
 
-sudo -i -u coda19-stats-api bash << EOF
-echo "=== coda19-stats-api cleanup ==="
+#### CODA19-STATS-API
 
+echo "=== coda19-stats-api cleanup ==="
+sudo -i -u coda19-stats-api bash << EOF
 cd ~
 podman rmi --force docker.io/coda19/coda19-stats-api:latest
 podman system prune --all --force && podman rmi --all
-kill $(netstat -tulpn | grep ":{{ coda19_stats_api_port }}" | sed "s/.*LISTEN\(.*\)\/node.*/\1/" | sed -e 's/^[ \t]*//')
-
+PID=$( netstat -tulpn | grep ":{{ coda19_stats_api_port }}" | sed "s/.*LISTEN\(.*\)\/node.*/\1/" | sed -e 's/^[ \t]*//' )
+kill -15 $PID
+sleep 5
+kill -9 $PID
 EOF
 echo "=== coda19-stats-api cleanup finished ==="
 
-sudo -i -u coda19-site-api bash << EOF
-echo "=== coda19-site-api cleanup ==="
+#### CODA19-SITE-API
 
+echo "=== coda19-site-api cleanup ==="
+sudo -i -u coda19-site-api bash << EOF
 cd ~
 podman rmi --force docker.io/coda19/coda19-site-api:latest
 podman system prune --all --force && podman rmi --all
-kill $(netstat -tulpn | grep ":{{ coda19_site_api_port }}" | sed "s/.*LISTEN\(.*\)\/node.*/\1/" | sed -e 's/^[ \t]*//')
-
+PID=$( netstat -tulpn | grep ":{{ coda19_site_api_port }}" | sed "s/.*LISTEN\(.*\)\/node.*/\1/" | sed -e 's/^[ \t]*//' )
+kill -15 $PID
+sleep 5
+kill -9 $PID
 EOF
 echo "=== coda19-site-api cleanup finished ==="
