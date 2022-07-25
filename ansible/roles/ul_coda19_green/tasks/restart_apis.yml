@@ -1,7 +1,14 @@
-- name: "TEMPLATE | Copy script (/usr/bin/restart_coda19_apis)"
+
+- name: "TEMPLATE | /usr/local/bin/restart_coda19_apis.sh"
   template:
-    src: bin/restart_apis/restart_coda19_apis.sh.j2
-    dest: /usr/bin/restart_coda19_apis
+    src: usr/local/bin/restart_coda19_apis.sh.j2
+    dest: /usr/local/bin/restart_coda19_apis.sh
     owner: root
     group: root
-    mode: 0544
+    mode: 0755
+
+# REMOVE ME LATER
+- name: FILE | Remove old script location
+  file:
+    path: /usr/bin/restart_coda19_apis
+    state: absent
