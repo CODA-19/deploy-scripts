@@ -6,5 +6,5 @@
     sleep 5
     kill -9  894
   when:
-    - coda19_site_id == 110
+    - coda19_site_id|int == 110
     - coda19_host_role == 'orange'
