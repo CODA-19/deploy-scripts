@@ -15,3 +15,26 @@
   loop:
     - /usr/bin/restart_coda19_apis
     - /usr/local/bin/restart_coda19_apis.sh
+
+# Do we need to execute our cleanup-apis script?
+
+- when: _green_clean_apis_tag is defined and _green_clean_apis_tag | string | length > 0
+  block:
+
+      - slurp:
+          src: /etc/coda19/cleanup-apis
+        ignore_errors: yes
+        register: _slurp
+
+      - when: _slurp.failed or _slurp['content'] | b64decode | string != _green_clean_apis_tag | string
+        block:
+
+            - name: COMMAND | Execute /usr/local/bin/cleanup-apis.sh
+              command: /usr/local/bin/cleanup-apis.sh
+              failed_when: false
+              register: _command
+
+            - name: COPY | Mark as done
+              copy:
+                dest: /etc/coda19/cleanup-apis
+                content: "{{ _green_clean_apis_tag }}"
