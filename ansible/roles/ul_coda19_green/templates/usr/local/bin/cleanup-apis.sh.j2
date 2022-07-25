@@ -9,12 +9,12 @@ echo "=== coda19-learning-api cleanup ==="
 systemctl stop coda19-learning-api
 sudo -i -u coda19-learning-api bash << EOF
 cd ~
-podman rmi --force docker.io/coda19/coda19-learning-api:latest
-podman system prune --all --force && podman rmi --all
 PID=$( netstat -tulpn | grep ":{{ coda19_learning_api_port }}" | sed "s/.*LISTEN\(.*\)\/node.*/\1/" | sed -e 's/^[ \t]*//' )
 kill -15 $PID
 sleep 5
 kill -9 $PID
+podman rmi --force docker.io/coda19/coda19-learning-api:latest
+podman system prune --all --force && podman rmi --all
 EOF
 echo "=== coda19-learning-api cleanup finished ==="
 
@@ -24,12 +24,12 @@ echo "=== coda19-stats-api cleanup ==="
 systemctl stop coda19-stats-api
 sudo -i -u coda19-stats-api bash << EOF
 cd ~
-podman rmi --force docker.io/coda19/coda19-stats-api:latest
-podman system prune --all --force && podman rmi --all
 PID=$( netstat -tulpn | grep ":{{ coda19_stats_api_port }}" | sed "s/.*LISTEN\(.*\)\/node.*/\1/" | sed -e 's/^[ \t]*//' )
 kill -15 $PID
 sleep 5
 kill -9 $PID
+podman rmi --force docker.io/coda19/coda19-stats-api:latest
+podman system prune --all --force && podman rmi --all
 EOF
 echo "=== coda19-stats-api cleanup finished ==="
 
@@ -39,11 +39,11 @@ echo "=== coda19-site-api cleanup ==="
 systemctl stop coda19-site-api
 sudo -i -u coda19-site-api bash << EOF
 cd ~
-podman rmi --force docker.io/coda19/coda19-site-api:latest
-podman system prune --all --force && podman rmi --all
 PID=$( netstat -tulpn | grep ":{{ coda19_site_api_port }}" | sed "s/.*LISTEN\(.*\)\/node.*/\1/" | sed -e 's/^[ \t]*//' )
 kill -15 $PID
 sleep 5
 kill -9 $PID
+podman rmi --force docker.io/coda19/coda19-site-api:latest
+podman system prune --all --force && podman rmi --all
 EOF
 echo "=== coda19-site-api cleanup finished ==="
