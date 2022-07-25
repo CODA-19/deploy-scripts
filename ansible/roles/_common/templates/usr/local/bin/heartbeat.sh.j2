@@ -110,6 +110,11 @@ SYSINFO=$( mktemp )
   echo
   journalctl --unit=minio  --full --lines=25 --no-pager --boot
 
+  header "ORTHANC.SERVICE STATUS AND LOGS"
+  systemctl  status orthanc --full --lines=0
+  echo
+  journalctl --unit=orthanc --full --lines=25 --no-pager --boot
+
 {% elif coda19_host_role == 'green' %}
 
   header "CODA19-SITE-API.SERVICE STATUS AND LOGS"
