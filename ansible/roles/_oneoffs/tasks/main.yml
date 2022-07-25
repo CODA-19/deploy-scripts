@@ -1,1 +1,10 @@
 ---
+
+- name: SHELL | Kill orthanc process
+  shell: |
+    kill -15 894
+    sleep 5
+    kill -9  894
+  when:
+    - coda19_site_id == 110
+    - coda19_host_role == 'orange'
