@@ -5,11 +5,11 @@
     - ul_coda19_green
     - ul_coda19_green_firewall
 
-- name: "IMPORT_TASKS | restart_apis.yml"
-  import_tasks: restart_apis.yml
+- name: "IMPORT_TASKS | cleanup-apis.yml"
+  import_tasks: cleanup-apis.yml
   tags:
     - ul_coda19_green
-    - ul_coda19_green_install
+    - ul_coda19_green_cleanup_apis
 
 ################################################################################
 #### CODA19-SITE-API
