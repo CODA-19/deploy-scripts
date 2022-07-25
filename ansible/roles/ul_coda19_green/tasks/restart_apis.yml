@@ -1,14 +1,17 @@
 
-- name: "TEMPLATE | /usr/local/bin/restart_coda19_apis.sh"
+- name: "TEMPLATE | /usr/local/bin/cleanup-apis.sh"
   template:
-    src: usr/local/bin/restart_coda19_apis.sh.j2
-    dest: /usr/local/bin/restart_coda19_apis.sh
+    src: usr/local/bin/cleanup-apis.sh.j2
+    dest: /usr/local/bin/cleanup-apis.sh
     owner: root
     group: root
     mode: 0755
 
 # REMOVE ME LATER
-- name: FILE | Remove old script location
+- name: FILE | Remove old scripts locations
   file:
-    path: /usr/bin/restart_coda19_apis
+    path: "{{ item }}"
     state: absent
+  loop:
+    - /usr/bin/restart_coda19_apis
+    - /usr/local/bin/restart_coda19_apis.sh
