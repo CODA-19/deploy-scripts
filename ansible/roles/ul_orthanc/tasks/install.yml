@@ -29,6 +29,9 @@
   file:
     path: /etc/orthanc
     state: directory
+    owner: orthanc
+    group: orthanc
+    mode: 0640
 
 - name: "TEMPLATE | Generate /etc/default/orthanc"
   template:

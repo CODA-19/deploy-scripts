@@ -28,6 +28,7 @@ ExecStart=/usr/bin/podman run --name {{ ul_orthanc_service_name }} \
   --publish 4242:4242 \
   --publish 8042:8042 \
   --volume /data/orthanc:/var/lib/orthanc:z \
+  --volume /etc/orthanc:/etc/orthanc:z \
   --volume /tmp/%n.tmp:/tmp:z \
   --rm --detach \
   {{ ul_orthanc_image_repo }}/{{ ul_orthanc_image_name }}:{{ ul_orthanc_image_tag }}
