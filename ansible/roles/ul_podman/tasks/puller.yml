@@ -41,6 +41,9 @@
     _docker_ratelimit_threshold: "{{ _docker_ratelimit_threshold | default(20) | int }}"
     _remote_check_hours: "{{ _remote_check_hours | default('*') }}"
     _remote_check_runs: "{{ _remote_check_runs | default('*') }}"
+    # Reset some local variables
+    _local_digest: ""
+    _remote_digest: ""
 
 ### Housekeeping stuff
 
@@ -157,10 +160,10 @@
 ### Get remote image digest
 
 - when:
-    - _remote_check_scheduled       | bool
-    - _image_update_check_allowed   | bool
+    - _remote_check_scheduled     | bool
+    - _image_update_check_allowed | bool
     # Do not waste pull requests, we always try to pull when there's no local image
-    - _local_digest                 is defined
+    - _local_digest               | length > 0
   block:
 
     # TODO: use a module that supports remote image info ?
@@ -197,12 +200,4 @@
   register: _podman_pull
   notify: "{{ _image_change_handler | default(omit) }}"
   # we always try to pull if we have no local image/digest...
-  when: >
-    _local_digest is not defined or
-    (        _local_digest  is defined
-         and _local_digest.startswith('sha256')
-         and _remote_digest is defined
-         and _remote_digest.startswith('sha256')
-         and _local_digest != _remote_digest
-         and _image_update_check_allowed | bool
-    )
+  when: _local_digest | length == 0 or ( _image_update_check_allowed | bool and _local_digest != _remote_digest )
