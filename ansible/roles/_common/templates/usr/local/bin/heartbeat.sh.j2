@@ -87,6 +87,9 @@ SYSINFO=$( mktemp )
   header "PACKAGE LIST"
   rpm -qa | sort
 
+  header "CONTENT OF /DATA"
+  ls -lah /data
+
   header "PROCESS TREE"
   ps auxf
 
