@@ -44,7 +44,7 @@
 
 ### Housekeeping stuff
 
-- name: "COMMAND | cleanup old images for user {{ _image_user }}"
+- name: "COMMAND | podman image prune --all"
   command: podman image prune --all
   changed_when: false
   failed_when: false
@@ -54,8 +54,10 @@
 
 ### Get local image digest
 
-- name: "SHELL | Get local image digest for {{ _image_full }}"
-  shell: "/usr/bin/podman inspect {{ _image_full }}"
+# TODO: use podman_image_info module ?
+
+- name: "COMMAND | podman inspect {{ _image_full }}"
+  command: "/usr/bin/podman inspect {{ _image_full }}"
   changed_when: false
   failed_when: false
   register: _podman_inspect
@@ -117,6 +119,9 @@
         - name: URI | Get token for docker.io
           uri:
             url: "https://auth.docker.io/token?service=registry.docker.io&scope=repository:ratelimitpreview/test:pull"
+            url_username: "{{ _general_dockerhub_username | default(omit) }}"
+            url_password: "{{ _general_dockerhub_password | default(omit) }}"
+            force_basic_auth: "{{ ( _general_dockerhub_password is defined ) | ternary(true, false) }}"
           register: _uri
 
         - name: URI | Get docker.io rate limits
@@ -158,8 +163,10 @@
     - _local_digest                 is defined
   block:
 
-    - name: "SHELL | Get remote image digest for {{ _image_full }}"
-      shell: "/usr/bin/skopeo inspect --no-creds docker://{{ _image_full }}"
+    # TODO: use a module that supports remote image info ?
+
+    - name: "COMMAND | skopeo inspect {{ _image_full }}"
+      command: "/usr/bin/skopeo inspect {{ _general_dockerhub_password is defined | ternary('--creds ' + _general_dockerhub_username|default('') + ':' + _general_dockerhub_password|default(''), '--no-creds') }} docker://{{ _image_full }}"
       changed_when: false
       failed_when: false
       register: _skopeo_inspect
@@ -183,6 +190,8 @@
     tag: "{{ _image_tag }}"
     state: present
     force: yes
+    username: "{{ _general_dockerhub_username | default(omit) }}"
+    password: "{{ _general_dockerhub_password | default(omit) }}"
   become: yes
   become_user: "{{ _image_user }}"
   register: _podman_pull
