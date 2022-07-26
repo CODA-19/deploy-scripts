@@ -21,7 +21,8 @@
 - when: _green_clean_apis_tag is defined and _green_clean_apis_tag | string | length > 0
   block:
 
-      - slurp:
+      - name: "SLURP | Check for cookie file - /etc/coda19/cleanup-apis"
+        slurp:
           src: /etc/coda19/cleanup-apis
         ignore_errors: yes
         register: _slurp
