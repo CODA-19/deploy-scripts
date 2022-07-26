@@ -59,7 +59,7 @@
 - name: "COMMAND | podman inspect {{ _image_full }}"
   command: "/usr/bin/podman inspect {{ _image_full }}"
   changed_when: false
-  failed_when: false
+  ignore_errors: true
   register: _podman_inspect
   become: yes
   become_user: "{{ _image_user }}"
@@ -168,7 +168,7 @@
     - name: "COMMAND | skopeo inspect {{ _image_full }}"
       command: "/usr/bin/skopeo inspect {{ _general_dockerhub_password is defined | ternary('--creds ' + _general_dockerhub_username|default('') + ':' + _general_dockerhub_password|default(''), '--no-creds') }} docker://{{ _image_full }}"
       changed_when: false
-      failed_when: false
+      ignore_errors: true
       register: _skopeo_inspect
 
     - when: _skopeo_inspect.rc == 0
