@@ -16,11 +16,6 @@ ul_orthanc_image_tag: 22.7.0
 ul_orthanc_image_remote_check_hours: [ 0 ]
 ul_orthanc_image_remote_check_runs:  [ 0 ]
 
-# Parameters
-
-ul_orthanc_user: orthanc
-#ul_orthanc_password:
-
 # Systemd stuff
 
 ul_orthanc_service_name: orthanc
