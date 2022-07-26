@@ -4,7 +4,7 @@
 
 - name: SET_FACT | _cookie_value + _cookie_file
   set_fact:
-    _cookie_value: "20220726-01"
+    _cookie_value: "20220726-02"
     _cookie_file: /etc/coda19/oneoff-fix-orthanc-user
 
 - when:
