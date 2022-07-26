@@ -41,4 +41,4 @@
         - name: COPY | Mark as done
           copy:
             dest: "{{ _cookie_file }}"
-              content: "{{ _cookie_value }}"
+            content: "{{ _cookie_value }}"
