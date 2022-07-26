@@ -200,4 +200,10 @@
   register: _podman_pull
   notify: "{{ _image_change_handler | default(omit) }}"
   # we always try to pull if we have no local image/digest...
-  when: _local_digest | length == 0 or ( _image_update_check_allowed | bool and _local_digest != _remote_digest )
+  when: >
+    _local_digest | length == 0 or
+    (     _image_update_check_allowed | bool
+      and _local_digest.startswith('sha256')
+      and _remote_digest.startswith('sha256')
+      and _local_digest != _remote_digest
+    )
