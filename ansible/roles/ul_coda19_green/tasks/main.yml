@@ -20,6 +20,7 @@
   tags:
     - ul_coda19_green
     - ul_coda19_green_install
+    - ul_coda19_green_site_api
   vars:
     - task_title: CODA19-SITE-API
     - container_name: coda19-site-api
@@ -40,6 +41,7 @@
   tags:
     - ul_coda19_green
     - ul_coda19_green_install
+    - ul_coda19_green_site_api
 
 - meta: flush_handlers
 
@@ -52,6 +54,7 @@
   tags:
     - ul_coda19_green
     - ul_coda19_green_install
+    - ul_coda19_green_stats_api
   vars:
     - task_title: CODA19-STATS-API
     - container_name: coda19-stats-api
@@ -73,6 +76,7 @@
   tags:
     - ul_coda19_green
     - ul_coda19_green_install
+    - ul_coda19_green_stats_api
 
 - meta: flush_handlers
 
@@ -85,6 +89,7 @@
   tags:
     - ul_coda19_green
     - ul_coda19_green_install
+    - ul_coda19_green_learning_api
   vars:
     - task_title: CODA19-LEARNING-API
     - container_name: coda19-learning-api
@@ -105,5 +110,6 @@
   tags:
     - ul_coda19_green
     - ul_coda19_green_install
+    - ul_coda19_green_learning_api
 
 - meta: flush_handlers
