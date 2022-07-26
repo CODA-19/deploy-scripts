@@ -73,6 +73,8 @@ function header {
     echo "*** $1"
     echo "**********************************************************************"
     echo
+    echo $( date --iso-8601=seconds )
+    echo
 }
 
 SYSINFO=$( mktemp )
@@ -80,12 +82,12 @@ SYSINFO=$( mktemp )
 {
   # header "ANSIBLE VIRTUAL ENVIRONMENT - pip list --outdated"
   # pip list --outdated
-  #
+
   # header "ANSIBLE VIRTUAL ENVIRONMENT - pip freeze"
   # pip freeze
 
-  header "PACKAGE LIST"
-  rpm -qa | sort
+  # header "PACKAGE LIST"
+  # rpm -qa | sort
 
   header "CONTENT OF /DATA"
   ls -lah /data
