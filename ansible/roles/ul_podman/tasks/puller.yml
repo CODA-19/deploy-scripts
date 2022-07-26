@@ -96,7 +96,9 @@
 # Anonymous and Free Docker Hub users are limited to 100 and 200 container image
 # pull requests per six hours.
 #
-# See: https://www.docker.com/increase-rate-limits/
+# See:
+#   https://www.docker.com/increase-rate-limits/
+#   https://docs.docker.com/docker-hub/download-rate-limit/
 #
 # We always fetch and show ratelimit informations, because that could be useful
 # to see this information on a necessary pull (when _local_digest is not defined).
@@ -105,22 +107,29 @@
 - when: _image_repo == 'docker.io'
   block:
 
-    - name: URI | Get token for docker.io
-      uri:
-        url: "https://auth.docker.io/token?service=registry.docker.io&scope=repository:ratelimitpreview/test:pull"
-      register: _uri
+    # If the puller was already called, we do not query many times
+    # It seems also, that requests to this api is rate limited
+    - when:
+        - _docker_ratelimit_remaining is not defined
+        - _docker_ratelimit_source    is not defined
+      block:
 
-    - name: URI | Get docker.io rate limits
-      uri:
-        url: https://registry-1.docker.io/v2/ratelimitpreview/test/manifests/latest
-        headers:
-          Authorization: "Bearer {{ _uri.json.token }}"
-      register: _uri
+        - name: URI | Get token for docker.io
+          uri:
+            url: "https://auth.docker.io/token?service=registry.docker.io&scope=repository:ratelimitpreview/test:pull"
+          register: _uri
 
-    - name: SET_FACT | _docker_ratelimit_remaining + _docker_ratelimit_source
-      set_fact:
-        _docker_ratelimit_remaining: "{{  _uri.ratelimit_remaining | split(';') | first | int }}"
-        _docker_ratelimit_source: "{{ _uri.docker_ratelimit_source }}"
+        - name: URI | Get docker.io rate limits
+          uri:
+            url: https://registry-1.docker.io/v2/ratelimitpreview/test/manifests/latest
+            headers:
+              Authorization: "Bearer {{ _uri.json.token }}"
+          register: _uri
+
+        - name: SET_FACT | _docker_ratelimit_remaining + _docker_ratelimit_source
+          set_fact:
+            _docker_ratelimit_remaining: "{{  _uri.ratelimit_remaining | split(';') | first | int }}"
+            _docker_ratelimit_source: "{{ _uri.docker_ratelimit_source }}"
 
     - name: DEBUG | Print diagnostic informations
       debug:
