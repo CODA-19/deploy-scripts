@@ -42,6 +42,8 @@
     _remote_check_hours: "{{ _remote_check_hours | default('*') }}"
     _remote_check_runs: "{{ _remote_check_runs | default('*') }}"
     # Reset some local variables
+    _remote_pull_scheduled: false
+    _remote_pull_allowed: false
     _local_digest: ""
     _remote_digest: ""
 
@@ -56,8 +58,6 @@
   when: _image_prune_enabled | default(true) | bool
 
 ### Get local image digest
-
-# TODO: use podman_image_info module ?
 
 - name: "COMMAND | podman inspect {{ _image_full }}"
   command: "/usr/bin/podman inspect {{ _image_full }}"
@@ -78,23 +78,6 @@
     - name: DEBUG | _local_digest
       debug:
         var: _local_digest
-
-### Are we scheduled for a remote check ?
-
-- name: "SET_FACT: _remote_check_scheduled = false"
-  set_fact:
-    _remote_check_scheduled: false
-
-- name: "SET_FACT: _remote_check_scheduled = true"
-  set_fact:
-    _remote_check_scheduled: true
-  when:
-    - _remote_check_hours == '*' or ( ansible_date_time.hour   | int            ) in _remote_check_hours
-    - _remote_check_runs  == '*' or ((ansible_date_time.minute | int / 10) | int) in _remote_check_runs
-
-- name: DEBUG | _remote_check_scheduled
-  debug:
-    var: _remote_check_scheduled
 
 ### Get our current docker.io rate limits
 #
@@ -143,30 +126,42 @@
       debug:
         msg: "We have {{ _docker_ratelimit_remaining }} remaining pulls from {{ _docker_ratelimit_source }}, threshold is {{ _docker_ratelimit_threshold }}"
 
-### Decide if we can do an update check
+### Decide if we are allowed to do «remote pulls»
 #
-# It is not allowed if we have an image from docker.io AND we have reached the
-# defined ratelimit threshold.
+# We are not allowed if we have:
+#   - an image from docker.io ;
+#   - reached the defined ratelimit threshold ;
 #
 
-- name: SET_FACT | _image_update_check_allowed
+- name: SET_FACT | _remote_pull_allowed
   set_fact:
-    _image_update_check_allowed: "{{ _docker_ratelimit_remaining is not defined or (_docker_ratelimit_remaining is defined and _docker_ratelimit_remaining|int >= _docker_ratelimit_threshold|default(_docker_ratelimit_threshold_default)|int) }}"
+    _remote_pull_allowed: "{{ _docker_ratelimit_remaining is not defined or (_docker_ratelimit_remaining is defined and _docker_ratelimit_remaining|int >= _docker_ratelimit_threshold|default(_docker_ratelimit_threshold_default)|int) }}"
 
-- name: DEBUG | _image_update_check_allowed
+- name: DEBUG | _remote_pull_allowed
   debug:
-    var: _image_update_check_allowed
+    var: _remote_pull_allowed
+
+### Check if we are scheduled to do «remote pulls»
+
+- name: "SET_FACT: _remote_pull_scheduled = true"
+  set_fact:
+    _remote_pull_scheduled: true
+  when:
+    - _remote_check_hours == '*' or ( ansible_date_time.hour   | int            ) in _remote_check_hours
+    - _remote_check_runs  == '*' or ((ansible_date_time.minute | int / 10) | int) in _remote_check_runs
+
+- name: DEBUG | _remote_pull_scheduled
+  debug:
+    var: _remote_pull_scheduled
 
 ### Get remote image digest
 
 - when:
-    - _remote_check_scheduled     | bool
-    - _image_update_check_allowed | bool
+    - _remote_pull_scheduled     | bool
+    - _remote_pull_allowed       | bool
     # Do not waste pull requests, we always try to pull when there's no local image
-    - _local_digest               | length > 0
+    - _local_digest              | length > 0
   block:
-
-    # TODO: use a module that supports remote image info ?
 
     - name: "COMMAND | skopeo inspect {{ _image_full }}"
       command: "/usr/bin/skopeo inspect {{ _general_dockerhub_password is defined | ternary('--creds ' + _general_dockerhub_username|default('') + ':' + _general_dockerhub_password|default(''), '--no-creds') }} docker://{{ _image_full }}"
@@ -199,10 +194,10 @@
   become_user: "{{ _image_user }}"
   register: _podman_pull
   notify: "{{ _image_change_handler | default(omit) }}"
-  # we always try to pull if we have no local image/digest...
   when: >
     _local_digest | length == 0 or
-    (     _image_update_check_allowed | bool
+    (     _remote_pull_scheduled | bool
+      and _remote_pull_allowed   | bool
       and _local_digest.startswith('sha256')
       and _remote_digest.startswith('sha256')
       and _local_digest != _remote_digest
