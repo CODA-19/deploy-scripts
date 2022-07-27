@@ -1,21 +1,18 @@
 ---
 
-- block:
+- when:
+    - _common_reboot_tag is defined
+    - _common_reboot_tag | string | length > 0
+  block:
 
-      # Check current state
-
-      - name: STAT | Check /etc/coda19/reboot
-        stat:
-          path: /etc/coda19/reboot
-        register: _reboot_stat
-
-      - name: SLURP | Fetch /etc/coda19/reboot content
+      - name: SLURP | /etc/coda19/reboot content
         slurp:
           src: /etc/coda19/reboot
-        register: _reboot_tag
-        when: _reboot_stat.stat.exists
+        register: _slurp
+        ignore_errors: yes
 
-      - block:
+      - when: _slurp.failed or _slurp['content'] | b64decode | string != _common_reboot_tag | string
+        block:
 
             - name: COPY | Mark this reboot as done
               copy:
@@ -27,7 +24,3 @@
               ignore_errors: yes
 
             - meta: end_play
-
-        when: not _reboot_stat.stat.exists or _reboot_tag.content|b64decode != _common_reboot_tag|string
-
-  when: _common_reboot_tag|string|length > 0

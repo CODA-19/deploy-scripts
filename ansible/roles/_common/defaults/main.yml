@@ -64,7 +64,7 @@ _common_heartbeat_interval: 5
 _common_ansible_pull_disabled: no
 
 _common_ansible_pull_repo_url: https://github.com/CODA-19/deploy-scripts.git
-_common_ansible_pull_repo_branch: 
+_common_ansible_pull_repo_branch:
   orange: master
   green: master
 
@@ -173,14 +173,8 @@ _common_disable_swap: no
 
 ###### SYSTEM UPGRADE
 
-# An empty tag means "do nothing­".
-# To trigger a system upgrade + reboot, simply change this string to the current date (eg: YYYYMMDD)
-# and it will proceed. This string will be stored on the host in a cookie file to mark it done.
-
-_common_system_upgrade_tag: ""
+#_common_system_upgrade_tag: ""
 
 ###### REBOOT MECANISM
 
-# Does nothing if empty string
-
-_common_reboot_tag: ""
+#_common_reboot_tag: ""
