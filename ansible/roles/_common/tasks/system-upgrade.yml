@@ -1,47 +1,27 @@
 ---
 
-# This block is executed when _common_system_upgrade_tag is non-empty
+- when:
+    - _common_system_upgrade_tag is defined
+    - _common_system_upgrade_tag | string | length > 0
+  block:
 
-- block:
+      - name: SLURP | /etc/coda19/system-upgrade
+        slurp:
+          src: /etc/coda19/system-upgrade
+        register: _slurp
+        ignore_errors: yes
 
-    # Check current state
+      - when: _slurp.failed or _slurp['content'] | b64decode | string != _common_system_upgrade_tag | string
+        block:
 
-    - name: STAT | Check /etc/coda19/system-upgrade
-      stat:
-        path: /etc/coda19/system-upgrade
-      register: _system_upgrade_stat
+          - name: YUM | Update all packages to latest
+            yum:
+              name: "*"
+              state: latest
+              update_cache: yes
+            register: _yum
 
-    - name: SLURP | Fetch /etc/coda19/system-upgrade content
-      slurp:
-        src: /etc/coda19/system-upgrade
-      register: _system_upgrade_tag
-      when: _system_upgrade_stat.stat.exists
-
-    # Trigger update, register and reboot when needed
-
-    - block:
-
-        - name: YUM | Update all packages to latest
-          yum:
-            name: "*"
-            state: latest
-            update_cache: yes
-          register: _yum
-
-        - name: COPY | Mark this update as done
-          copy:
-            dest: /etc/coda19/system-upgrade
-            content: "{{ _common_system_upgrade_tag }}"
-
-        ### NOTE: not permitted in local mode
-        #- name: REBOOT | Reboot system if yum changed something
-        #  reboot:
-        #  when: _yum.changed
-
-        - name: COMMAND | systemctl reboot
-          command:  systemctl reboot
-          when: _yum.changed
-
-      when: not _system_upgrade_stat.stat.exists or _system_upgrade_tag.content|b64decode != _common_system_upgrade_tag|string
-
-  when: _common_system_upgrade_tag|string|length > 0
+          - name: COPY | Mark this update as done
+            copy:
+              dest: /etc/coda19/system-upgrade
+              content: "{{ _common_system_upgrade_tag }}"
