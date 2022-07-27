@@ -4,7 +4,6 @@
 
 - when:
     - coda19_site_id|int == 110
-    - coda19_host_role == 'orange'
   block:
 
     - name: SET_FACT | _cookie_value + _cookie_file
