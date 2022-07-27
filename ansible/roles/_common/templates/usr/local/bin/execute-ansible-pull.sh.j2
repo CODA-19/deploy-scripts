@@ -21,7 +21,9 @@ CODA19_HOST_ROLE={{ coda19_host_role }}
 
 CODA19_HEARTBEAT_BASE_URL={{ _common_heartbeat_base_url }}
 CODA19_HEARTBEAT_TOKEN=$( cat /etc/coda19/heartbeat-token )
-CODA19_HEARTBEAT_CONNECT_TIMEOUT=10
+
+CODA19_CURL_CONNECT_TIMEOUT={{ _common_curl_connect_timeout }}
+CODA19_CURL_MAX_TIME={{ _common_curl_max_time }}
 
 # Script specifics
 
@@ -70,7 +72,8 @@ chmod go-rwx ${ANSIBLE_LOG_DIR}
 
   curl \
     --silent \
-    --connect-timeout ${CODA19_HEARTBEAT_CONNECT_TIMEOUT} \
+    --connect-timeout ${CODA19_CURL_CONNECT_TIMEOUT} \
+    --max-time ${CODA19_CURL_MAX_TIME} \
     --request POST \
     --header "Authorization: ${CODA19_HEARTBEAT_TOKEN}" \
     --header "Content-Type: text/plain" \

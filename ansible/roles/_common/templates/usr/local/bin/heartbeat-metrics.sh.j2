@@ -23,7 +23,9 @@ CODA19_HOST_ROLE={{ coda19_host_role }}
 
 CODA19_HEARTBEAT_BASE_URL={{ _common_heartbeat_base_url }}
 CODA19_HEARTBEAT_TOKEN=$( cat /etc/coda19/heartbeat-token )
-CODA19_CURL_MAX_TIME=10
+
+CODA19_CURL_CONNECT_TIMEOUT={{ _common_curl_connect_timeout }}
+CODA19_CURL_MAX_TIME={{ _common_curl_max_time }}
 
 # Script specifics
 
@@ -46,12 +48,14 @@ SLEEP_TIME=10
     curl \
       --silent \
       --output ${METRICS_FILE} \
+      --connect-timeout ${CODA19_CURL_CONNECT_TIMEOUT} \
       --max-time ${CODA19_CURL_MAX_TIME} \
       http://localhost:9100/metrics
 
     # Submit
     curl \
       --silent \
+      --connect-timeout ${CODA19_CURL_CONNECT_TIMEOUT} \
       --max-time ${CODA19_CURL_MAX_TIME} \
       --request POST \
       --header "Authorization: ${CODA19_HEARTBEAT_TOKEN}" \
