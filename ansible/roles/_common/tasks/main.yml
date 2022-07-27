@@ -14,12 +14,6 @@
     - _common
     - _common_directories
 
-- name: "IMPORT_TASKS | reboot.yml"
-  import_tasks: reboot.yml
-  tags:
-    - _common
-    - _common_reboot
-
 - name: "IMPORT_TASKS | proxy.yml"
   import_tasks: proxy.yml
   tags:
@@ -127,3 +121,9 @@
   tags:
     - _common
     - _common_system_upgrade
+
+- name: "IMPORT_TASKS | reboot.yml"
+  import_tasks: reboot.yml
+  tags:
+    - _common
+    - _common_reboot    
