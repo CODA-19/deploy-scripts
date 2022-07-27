@@ -81,6 +81,10 @@ function header {
 SYSINFO=$( mktemp )
 
 {
+  header "UPTIME AND UNAME"
+  uptime
+  uname -a  
+
   # header "ANSIBLE VIRTUAL ENVIRONMENT - pip list --outdated"
   # pip list --outdated
 
