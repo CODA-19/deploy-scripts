@@ -1,16 +1,58 @@
 ---
 
-########## TRY TO FIX ORTHANC USER
-
-- name: SET_FACT | _cookie_value + _cookie_file
-  set_fact:
-    _cookie_value: "20220726-02"
-    _cookie_file: /etc/coda19/oneoff-fix-orthanc-user
+########## TRY TO FIX STUCKED SYSINFO
 
 - when:
     - coda19_site_id|int == 110
     - coda19_host_role == 'orange'
   block:
+
+    - name: URI | Try to connect to our heartbeat endpoint
+      uri:
+        url: "{{ _common_heartbeat_base_url}}/{{ coda19_site_id }}/{{ coda19_host_role }}"
+        timeout: 15
+        method: GET
+        headers:
+          Authorization: "{{ _common_heartbeat_token }}"
+      register: _uri
+      ignore_errors: yes
+
+    - debug:
+        var: _uri
+
+    - name: SET_FACT | _cookie_value + _cookie_file
+      set_fact:
+        _cookie_value: "20220727-01"
+        _cookie_file: /etc/coda19/oneoff-diagnose-sysinfo
+
+    - name: "SLURP | Check for cookie file - {{ _cookie_file }}"
+      slurp:
+        src: "{{ _cookie_file }}"
+      ignore_errors: yes
+      register: _slurp
+
+    - when: _slurp.failed or _slurp['content'] | b64decode | string != _cookie_value | string
+      block:
+
+        - name: COMMAND | Kill heartbeat.sh processes
+          command: pkill -9 -f heartbeat.sh
+
+        - name: COPY | Mark as done
+          copy:
+            dest: "{{ _cookie_file }}"
+            content: "{{ _cookie_value }}"
+
+########## TRY TO FIX ORTHANC USER
+
+- when:
+    - coda19_site_id|int == 110
+    - coda19_host_role == 'orange'
+  block:
+
+    - name: SET_FACT | _cookie_value + _cookie_file
+      set_fact:
+        _cookie_value: "20220726-02"
+        _cookie_file: /etc/coda19/oneoff-fix-orthanc-user
 
     - name: "SLURP | Check for cookie file - {{ _cookie_file }}"
       slurp:
