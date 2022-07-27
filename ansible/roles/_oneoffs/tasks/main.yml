@@ -9,7 +9,7 @@
 
     - name: SET_FACT | _cookie_value + _cookie_file
       set_fact:
-        _cookie_value: "20220727-01"
+        _cookie_value: "20220727-02"
         _cookie_file: /etc/coda19/oneoff-fix-orthanc-service
 
     - name: "SLURP | Check for cookie file - {{ _cookie_file }}"
@@ -33,8 +33,13 @@
             sleep 10
             pkill -U orthanc --signal SIGKILL
             pkill -u orthanc --signal SIGKILL
-            rm -rf /tmp/orthanc*
+            rm -rf /tmp/orthanc* /data/orthanc*
+            sudo -i -u orthanc "podman system prune --all --force; podman rmi --all"
           failed_when: false
+          register: _shell
+
+        - debug:
+            var: _shell
 
         - name: COPY | Mark as done
           copy:
