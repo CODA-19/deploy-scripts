@@ -6,10 +6,6 @@ _green_clean_apis_tag: "20220725-02"
 ###### _COMMON
 ################################################################################
 
-_common_reboot_tag: "20210825"
-
-_common_system_upgrade_tag: "202108"
-
 _common_accounts:
     - name: vbl
       password: $6$ulleoDfRJA/lf0N7$B8JAtvS7iHuOVhHf03ArfzQYeH7PPjYtMiIxH3EMvM60S8Qj833SNY3hZutbPRdnftI0b2Tsb4uUwiaCCdzZ81
