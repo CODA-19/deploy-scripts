@@ -18,6 +18,9 @@ Group=aidboxdb
 ExecStartPre=-/usr/bin/podman stop --time {{ ul_aidbox_container_stop_timeout }} aidboxdb
 ExecStartPre=-/usr/bin/podman rm --force aidboxdb
 ExecStartPre=-/usr/bin/rm -f {{ ul_aidbox_container_pidfile }} {{ ul_aidbox_container_cidfile }}
+ExecStartPre=-/usr/bin/pkill -u aidboxdb --signal 15
+ExecStartPre=-/usr/bin/sleep 5
+ExecStartPre=-/usr/bin/pkill -u aidboxdb --signal 9
 ExecStartPre=/bin/mkdir -p /tmp/%n.tmp
 
 ExecStart=/usr/bin/podman run --name aidboxdb \
@@ -36,6 +39,9 @@ ExecStart=/usr/bin/podman run --name aidboxdb \
 # NOTE: In podman v1.6 there's no --ignore switches for «stop» and «rm»
 ExecStop=-/usr/bin/podman stop --time {{ ul_aidbox_container_stop_timeout }} aidboxdb
 ExecStop=-/usr/bin/podman rm --force aidboxdb
+ExecStop=-/usr/bin/pkill -u aidboxdb --signal 15
+ExecStop=-/usr/bin/sleep 5
+ExecStop=-/usr/bin/pkill -u aidboxdb --signal 9
 
 Restart=on-failure
 RestartSec={{ ul_aidbox_systemd_restart_sec }}

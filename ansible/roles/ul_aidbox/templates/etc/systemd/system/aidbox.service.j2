@@ -41,6 +41,7 @@ ExecStop=-/usr/bin/podman rm --force aidbox
 ExecStop=-/usr/bin/pkill -u aidbox --signal 15
 ExecStop=-/usr/bin/sleep 5
 ExecStop=-/usr/bin/pkill -u aidbox --signal 9
+
 Restart=on-failure
 RestartSec={{ ul_aidbox_systemd_restart_sec }}
 TimeoutStartSec={{ ul_aidbox_systemd_timeout_start_sec }}
