@@ -17,6 +17,9 @@ Group={{ ul_orthanc_group }}
 ExecStartPre=-/usr/bin/podman stop --time {{ ul_orthanc_container_stop_timeout }} {{ ul_orthanc_service_name }}
 ExecStartPre=-/usr/bin/podman rm --force {{ ul_orthanc_service_name }}
 ExecStartPre=-/usr/bin/rm -f {{ ul_orthanc_container_pidfile }} {{ ul_orthanc_container_cidfile }}
+ExecStartPre=-/usr/bin/pkill -u {{ ul_orthanc_user }} --signal 15
+ExecStartPre=-/usr/bin/sleep 5
+ExecStartPre=-/usr/bin/pkill -u {{ ul_orthanc_user }} --signal 9
 ExecStartPre=/bin/mkdir -p /tmp/%n.tmp
 
 ExecStart=/usr/bin/podman run --name {{ ul_orthanc_service_name }} \
@@ -37,6 +40,9 @@ ExecStart=/usr/bin/podman run --name {{ ul_orthanc_service_name }} \
 # NOTE: In podman v1.6 there's no --ignore switches for «stop» and «rm»
 ExecStop=-/usr/bin/podman stop --time {{ ul_orthanc_container_stop_timeout }} {{ ul_orthanc_service_name }}
 ExecStop=-/usr/bin/podman rm --force {{ ul_orthanc_service_name }}
+ExecStop=-/usr/bin/pkill -u {{ ul_orthanc_user }} --signal 15
+ExecStop=-/usr/bin/sleep 5
+ExecStop=-/usr/bin/pkill -u {{ ul_orthanc_user }} --signal 9
 
 Restart=on-failure
 RestartSec={{ ul_orthanc_systemd_restart_sec }}
