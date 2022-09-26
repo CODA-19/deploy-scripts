@@ -90,6 +90,6 @@
     _image_tag: "{{ docker_image_tag }}"
     _image_user: "{{ container_name }}"
     _image_change_handler: "restart {{ container_name }}"
-    _image_prune_enabled: false
+    _image_prune_enabled: true
     _remote_check_hours: '*'
     _remote_check_runs: '*'

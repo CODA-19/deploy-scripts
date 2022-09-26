@@ -54,7 +54,7 @@
     _image_tag: "{{ ul_aidbox_db_image_tag }}"
     _image_user: aidboxdb
     _image_change_handler: restart aidboxdb
-    _image_prune_enabled: false
+    _image_prune_enabled: true
     _remote_check_hours: "{{ ul_aidbox_db_image_remote_check_hours }}"
     _remote_check_runs: "{{ ul_aidbox_db_image_remote_check_runs }}"
 
