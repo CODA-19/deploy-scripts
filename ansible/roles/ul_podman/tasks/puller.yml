@@ -50,7 +50,7 @@
 ### Housekeeping stuff
 
 - name: "COMMAND | podman image prune --all"
-  command: podman image prune --all
+  command: /usr/bin/podman image prune --all
   changed_when: false
   failed_when: false
   become: yes
