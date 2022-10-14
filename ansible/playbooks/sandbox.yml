@@ -1,5 +1,5 @@
 
-- name: Deploy the current box based on local facts (coda19.host.role)
+- name: Deploy the current box in sandbox mode
   hosts: localhost
   connection: local
 
