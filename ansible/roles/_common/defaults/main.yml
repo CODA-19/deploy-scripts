@@ -57,6 +57,7 @@ _common_curl_max_time: 15
 _common_heartbeat_token: ""
 _common_heartbeat_base_url: https://heartbeat.hub.coda19.com
 _common_heartbeat_interval: 5
+_common_heartbeat_disabled: no
 
 ###### ANSIBLE PULL
 
