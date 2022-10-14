@@ -4,6 +4,10 @@ dependencies:
   - role: _data
   - role: ul_podman
   - role: ul_minio
+    when: _orange_enable_minio    | default(true)
   - role: ul_aidbox
+    when: _orange_enable_aidbox   | default(true)
+  - role: ul_fhirbase
+    when: _orange_enable_fhirbase | default(true)
   - role: ul_orthanc
-  - role: ul_coda19_orange
+    when: _orange_enable_orthanc  | default(true)

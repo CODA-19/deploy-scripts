@@ -1,0 +1,36 @@
+
+- name: Deploy the current box based on local facts (coda19.host.role)
+  hosts: localhost
+  connection: local
+
+  environment:
+    http_proxy:  "{{ _common_global_proxy   | default('') }}"
+    https_proxy: "{{ _common_global_proxy   | default('') }}"
+    no_proxy:    "{{ _common_global_noproxy | default('') }}"
+    HTTP_PROXY:  "{{ _common_global_proxy   | default('') }}"
+    HTTPS_PROXY: "{{ _common_global_proxy   | default('') }}"
+    NO_PROXY:    "{{ _common_global_noproxy | default('') }}"
+
+  vars_files:
+    - "{{ playbook_dir }}/../group_vars/all"
+    - "{{ playbook_dir }}/../group_vars/sandbox"
+
+  tasks:
+
+    #### ORANGE
+
+    - name: INCLUDE_ROLE | _ORANGE
+      include_role:
+        name: _orange
+      when: coda19_host_role in ("all", "orange")
+      tags:
+        - always
+
+    #### GREEN
+
+    - name: INCLUDE_ROLE | _GREEN
+      include_role:
+        name: _green
+      when: coda19_host_role in ("all", "green")
+      tags:
+        - always
