@@ -78,7 +78,7 @@
     _image_tag: "{{ ul_orthanc_image_tag }}"
     _image_user: "{{ ul_orthanc_user }}"
     _image_change_handler: restart orthanc
-    _image_prune_enabled: false
+    _image_prune_enabled: true
     _remote_check_hours: "{{ ul_orthanc_image_remote_check_hours }}"
     _remote_check_runs: "{{ ul_orthanc_image_remote_check_runs }}"
 
