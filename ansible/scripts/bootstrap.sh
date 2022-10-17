@@ -162,7 +162,7 @@ chmod a+r /etc/profile.d/env-ansible.sh
 
 # Just to get out some warning messages in bootstrap playbook.
 mkdir -p /etc/ansible/facts.d/
-echo "<dummy>" /etc/ansible/vault.pass
+echo "<dummy>" > /etc/ansible/vault.pass
 touch /etc/ansible/facts.d/coda19.fact
 
 ################################################################################
