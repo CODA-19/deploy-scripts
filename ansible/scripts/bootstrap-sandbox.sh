@@ -141,5 +141,5 @@ fi
 
 # Just to get out some warning messages in bootstrap playbook.
 mkdir -p /etc/ansible/facts.d/
-touch /etc/ansible/vault.pass
+echo "<dummy>" > /etc/ansible/vault.pass
 touch /etc/ansible/facts.d/coda19.fact
