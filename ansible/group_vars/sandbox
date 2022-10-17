@@ -1,0 +1,34 @@
+---
+
+# Sandbox site_id and role
+_coda19_site_id: 999
+
+# We can toggle «all» roles or individually with «orange» or «green»
+# You can toggle which components to enable on each of these roles, see below.
+_coda19_host_role: all
+
+# Send heartbeat requests on localhost, useful for development when desired
+_common_heartbeat_base_url: http://localhost:5000
+
+# Disable heartbeat cron
+_heartbeat_disabled: yes
+
+# Disable automatic updates from github (ansible-pull)
+_common_ansible_pull_disabled: yes
+
+# Disable /data partition management
+# A /data folder will be created anyway but won't on a second block device (sdb, vdb)
+_data_enabled: no
+
+# If you need to use a proxy to access internet, uncomment
+#_common_global_proxy: http://squid.company.com:3128
+
+# APIs must connect to locally deployed aidbox/fhirbase
+coda19_stats_api_aidbox_url: http://localhost:8888
+
+# Choose which components to install
+_orange_enable_aidbox: no
+_orange_enable_fhirbase: yes
+
+# Customize firewall
+# TODO
