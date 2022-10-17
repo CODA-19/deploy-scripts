@@ -120,26 +120,31 @@ EOT
 chmod a+r /etc/profile.d/env-ansible.sh
 
 ################################################################################
-#### BOOTSTRAP PLAYBOOK
+#### MINIMAL SETUP
 ################################################################################
 
-echo "${BOLD}${YELLOW}*** RUNNING BOOTSTRAP PLAYBOOK ***${NORMAL}"
-
-#### LAUNCH PLAYBOOK - FROM FETCHED FILE
-
-if [[ -d "/vagrant" && ${CODA19_USE_VAGRANT} = true ]]; then
-  echo "${YELLOW}Src:${NORMAL} ${CODA19_ANSIBLE_BOOTSTRAP_PLAYBOOK_FILE}"
-
-  PLAYBOOK=${CODA19_ANSIBLE_BOOTSTRAP_PLAYBOOK_FILE}
-else
-  PLAYBOOK=$( mktemp --tmpdir=/tmp bootstrap-XXXXX.yml )
-  echo "${YELLOW}Src:${NORMAL} ${CODA19_ANSIBLE_BOOTSTRAP_PLAYBOOK_URL}"
-  echo "${YELLOW}Dst:${NORMAL} ${PLAYBOOK}"
-
-  curl -so ${PLAYBOOK} ${CODA19_ANSIBLE_BOOTSTRAP_PLAYBOOK_URL}
-fi
-
 # Just to get out some warning messages in bootstrap playbook.
+
 mkdir -p /etc/ansible/facts.d/
 echo "<dummy>" > /etc/ansible/vault.pass
 touch /etc/ansible/facts.d/coda19.fact
+
+################################################################################
+#### BOOTSTRAP PLAYBOOK
+################################################################################
+
+# echo "${BOLD}${YELLOW}*** RUNNING BOOTSTRAP PLAYBOOK ***${NORMAL}"
+#
+# #### LAUNCH PLAYBOOK - FROM FETCHED FILE
+#
+# if [[ -d "/vagrant" && ${CODA19_USE_VAGRANT} = true ]]; then
+#   echo "${YELLOW}Src:${NORMAL} ${CODA19_ANSIBLE_BOOTSTRAP_PLAYBOOK_FILE}"
+#
+#   PLAYBOOK=${CODA19_ANSIBLE_BOOTSTRAP_PLAYBOOK_FILE}
+# else
+#   PLAYBOOK=$( mktemp --tmpdir=/tmp bootstrap-XXXXX.yml )
+#   echo "${YELLOW}Src:${NORMAL} ${CODA19_ANSIBLE_BOOTSTRAP_PLAYBOOK_URL}"
+#   echo "${YELLOW}Dst:${NORMAL} ${PLAYBOOK}"
+#
+#   curl -so ${PLAYBOOK} ${CODA19_ANSIBLE_BOOTSTRAP_PLAYBOOK_URL}
+# fi
