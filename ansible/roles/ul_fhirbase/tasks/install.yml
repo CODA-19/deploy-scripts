@@ -1,0 +1,98 @@
+---
+
+### Group and user
+
+- name: "GROUP | Add the group {{ ul_fhirbase_group }}"
+  group:
+    name: "{{ ul_fhirbase_group }}"
+    system: no
+
+- name: "USER | Add the user {{ ul_fhirbase_user }}"
+  user:
+    name: "{{ ul_fhirbase_user }}"
+    comment: "fhirbase account"
+    group: fhirbase
+    home: /var/lib/fhirbase
+    system: no
+
+### SELinux
+
+# not tested against EL8
+- when: ansible_distribution_major_version == '7'
+  block:
+
+    - name: "COPY | /etc/selinux/coda19/fhirbase.te"
+      copy:
+        src: fhirbase.te
+        dest: /etc/selinux/coda19/
+      register: _selinux_te
+
+    - name: "COMMAND | checkmodule: fhirbase.te -> fhirbase.mod"
+      command: checkmodule -M -m -o /etc/selinux/coda19/fhirbase.mod /etc/selinux/coda19/fhirbase.te
+      when: _selinux_te.changed
+
+    - name: "COMMAND | semodule_package: fhirbase.mod -> fhirbase.pp"
+      command: semodule_package -o /etc/selinux/coda19/fhirbase.pp -m /etc/selinux/coda19/fhirbase.mod
+      when: _selinux_te.changed
+
+    - name: "COMMAND | semodule -i fhirbase.pp"
+      command:  semodule -i /etc/selinux/coda19/fhirbase.pp
+      when: _selinux_te.changed
+
+### Configurations
+
+- name: "FILE | Create data directories"
+  file:
+    dest: /data/fhirbase
+    owner: fhirbase
+    group: fhirbase
+    mode: 0750
+    state: directory
+
+- name: "TEMPLATE | Generate /etc/default/fhirbase"
+  template:
+    src: etc/default/fhirbase.j2
+    dest: /etc/default/fhirbase
+    owner: fhirbase
+    group: fhirbase
+    mode: 0640
+  notify: restart fhirbase
+
+### Service files
+
+- name: "TEMPLATE | Copy systemd service unit"
+  template:
+    src: etc/systemd/system/fhirbase.service.j2
+    dest: /etc/systemd/system/fhirbase.service
+    owner: root
+    group: root
+    mode: 0664
+  register: _systemd_service
+  notify: restart fhirbase
+
+- name: "SYSTEMD | Reload daemon"
+  systemd:
+    daemon_reload: yes
+  when: _systemd_service.changed
+
+### Invoke the puller
+
+- name: "INCLUDE_TASKS | roles/ul_podman/tasks/puller.yml"
+  include_tasks: "{{ inventory_dir }}/roles/ul_podman/tasks/puller.yml"
+  vars:
+    _image_repo: "{{ ul_fhirbase_image_repo }}"
+    _image_name: "{{ ul_fhirbase_image_name }}"
+    _image_tag: "{{ ul_fhirbase_image_tag }}"
+    _image_user: "{{ ul_fhirbase_user }}"
+    _image_change_handler: restart fhirbase
+    _image_prune_enabled: false
+    _remote_check_hours: "{{ ul_fhirbase_image_remote_check_hours }}"
+    _remote_check_runs: "{{ ul_fhirbase_image_remote_check_runs }}"
+
+### Ensure orthanc service is started and enabled
+
+- name: SYSTEMD | Start and enable fhirbase
+  systemd:
+    name: fhirbase
+    state: started
+    enabled: yes
