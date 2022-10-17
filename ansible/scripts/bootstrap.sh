@@ -170,7 +170,8 @@ touch /etc/ansible/facts.d/coda19.fact
 ################################################################################
 
 if [[ -z "$CODA19_SANDBOX" ]]
-  
+then
+
   echo "${BOLD}${YELLOW}*** RUNNING BOOTSTRAP PLAYBOOK ***${NORMAL}"
 
   #### LAUNCH PLAYBOOK - FROM FETCHED FILE
