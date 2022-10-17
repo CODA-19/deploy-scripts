@@ -1,11 +1,11 @@
 ---
 
 # Sandbox site_id and role
-_coda19_site_id: 999
+coda19_site_id: 999
 
 # We can toggle «all» roles or individually with «orange» or «green»
 # You can toggle which components to enable on each of these roles, see below.
-_coda19_host_role: all
+coda19_host_role: all
 
 # Send heartbeat requests on localhost, useful for development when desired
 _common_heartbeat_base_url: http://localhost:5000
