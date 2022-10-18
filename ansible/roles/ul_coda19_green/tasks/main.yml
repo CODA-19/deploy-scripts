@@ -12,104 +12,113 @@
     - ul_coda19_green_cleanup_apis
 
 ################################################################################
-#### CODA19-SITE-API
-################################################################################
-
-- name: "IMPORT_TASKS | CODA19-SITE-API | install.yml"
-  import_tasks: install.yml
-  tags:
-    - ul_coda19_green
-    - ul_coda19_green_install
-    - ul_coda19_green_site_api
-  vars:
-    - task_title: CODA19-SITE-API
-    - container_name: coda19-site-api
-    - container_port: "{{ coda19_site_api_port }}"
-    - docker_image_name: "{{ coda19_site_api_image_name }}"
-    - docker_image_tag: "{{ coda19_site_api_image_tag }}"
-
-# Start and enable service
-- name: CODA19-SITE-API | SYSTEMD | Ensure coda19-site-api.service is started and enabled
-  systemd:
-    name: coda19-site-api
-    state: started
-    enabled: yes
-    daemon_reload: yes
-  # We register this task status.
-  # Don't start + restart service with handlers, usualy on first run.
-  register: _systemd_coda19_site_api
-  tags:
-    - ul_coda19_green
-    - ul_coda19_green_install
-    - ul_coda19_green_site_api
-
-- meta: flush_handlers
-
-################################################################################
 #### CODA19-STATS-API
 ################################################################################
 
-- name: "IMPORT_TASKS | CODA19-STATS-API | install.yml"
-  import_tasks: install.yml
-  tags:
-    - ul_coda19_green
-    - ul_coda19_green_install
-    - ul_coda19_green_stats_api
-  vars:
-    - task_title: CODA19-STATS-API
-    - container_name: coda19-stats-api
-    - container_port: "{{ coda19_stats_api_port }}"
-    - docker_image_name: "{{ coda19_stats_api_image_name }}"
-    - docker_image_tag: "{{ coda19_stats_api_image_tag }}"
+- when: _green_enable_stats_api | defaut(true)
+  block:
 
-# Start and enable service
+    - name: "IMPORT_TASKS | CODA19-STATS-API | install.yml"
+      import_tasks: install.yml
+      tags:
+        - ul_coda19_green
+        - ul_coda19_green_install
+        - ul_coda19_green_stats_api
+      vars:
+        - task_title: CODA19-STATS-API
+        - container_name: coda19-stats-api
+        - container_port: "{{ coda19_stats_api_port }}"
+        - docker_image_name: "{{ coda19_stats_api_image_name }}"
+        - docker_image_tag: "{{ coda19_stats_api_image_tag }}"
 
-- name: CODA19-STATS-API | SYSTEMD | Ensure coda19-stats-api.service is started and enabled
-  systemd:
-    name: coda19-stats-api
-    state: started
-    enabled: yes
-    daemon_reload: yes
-  # We register this task status.
-  # Don't start + restart service with handlers, usualy on first run.
-  register: _systemd_coda19_stats_api
-  tags:
-    - ul_coda19_green
-    - ul_coda19_green_install
-    - ul_coda19_green_stats_api
+    # Start and enable service
 
-- meta: flush_handlers
+    - name: CODA19-STATS-API | SYSTEMD | Ensure coda19-stats-api.service is started and enabled
+      systemd:
+        name: coda19-stats-api
+        state: started
+        enabled: yes
+        daemon_reload: yes
+      # We register this task status.
+      # Don't start + restart service with handlers, usualy on first run.
+      register: _systemd_coda19_stats_api
+      tags:
+        - ul_coda19_green
+        - ul_coda19_green_install
+        - ul_coda19_green_stats_api
+
+    - meta: flush_handlers
 
 ################################################################################
 #### CODA19-LEARNING-API
 ################################################################################
 
-- name: "IMPORT_TASKS | CODA19-LEARNING-API | install.yml"
-  import_tasks: install.yml
-  tags:
-    - ul_coda19_green
-    - ul_coda19_green_install
-    - ul_coda19_green_learning_api
-  vars:
-    - task_title: CODA19-LEARNING-API
-    - container_name: coda19-learning-api
-    - container_port: "{{ coda19_learning_api_port }}"
-    - docker_image_name: "{{ coda19_learning_api_image_name }}"
-    - docker_image_tag: "{{ coda19_learning_api_image_tag }}"
+- when: _green_enable_learning_api | defaut(true)
+  block:
 
-# Start and enable service
-- name: CODA19-LEARNING-API | SYSTEMD | Ensure coda19-learning-api.service is started and enabled
-  systemd:
-    name: coda19-learning-api
-    state: started
-    enabled: yes
-    daemon_reload: yes
-  # We register this task status.
-  # Don't start + restart service with handlers, usualy on first run.
-  register: _systemd_coda19_learning_api
-  tags:
-    - ul_coda19_green
-    - ul_coda19_green_install
-    - ul_coda19_green_learning_api
+    - name: "IMPORT_TASKS | CODA19-LEARNING-API | install.yml"
+      import_tasks: install.yml
+      tags:
+        - ul_coda19_green
+        - ul_coda19_green_install
+        - ul_coda19_green_learning_api
+      vars:
+        - task_title: CODA19-LEARNING-API
+        - container_name: coda19-learning-api
+        - container_port: "{{ coda19_learning_api_port }}"
+        - docker_image_name: "{{ coda19_learning_api_image_name }}"
+        - docker_image_tag: "{{ coda19_learning_api_image_tag }}"
 
-- meta: flush_handlers
+    # Start and enable service
+    - name: CODA19-LEARNING-API | SYSTEMD | Ensure coda19-learning-api.service is started and enabled
+      systemd:
+        name: coda19-learning-api
+        state: started
+        enabled: yes
+        daemon_reload: yes
+      # We register this task status.
+      # Don't start + restart service with handlers, usualy on first run.
+      register: _systemd_coda19_learning_api
+      tags:
+        - ul_coda19_green
+        - ul_coda19_green_install
+        - ul_coda19_green_learning_api
+
+    - meta: flush_handlers
+
+################################################################################
+#### CODA19-SITE-API
+################################################################################
+
+- when: _green_enable_site_api | defaut(true)
+  block:
+
+    - name: "IMPORT_TASKS | CODA19-SITE-API | install.yml"
+      import_tasks: install.yml
+      tags:
+        - ul_coda19_green
+        - ul_coda19_green_install
+        - ul_coda19_green_site_api
+      vars:
+        - task_title: CODA19-SITE-API
+        - container_name: coda19-site-api
+        - container_port: "{{ coda19_site_api_port }}"
+        - docker_image_name: "{{ coda19_site_api_image_name }}"
+        - docker_image_tag: "{{ coda19_site_api_image_tag }}"
+
+    # Start and enable service
+    - name: CODA19-SITE-API | SYSTEMD | Ensure coda19-site-api.service is started and enabled
+      systemd:
+        name: coda19-site-api
+        state: started
+        enabled: yes
+        daemon_reload: yes
+      # We register this task status.
+      # Don't start + restart service with handlers, usualy on first run.
+      register: _systemd_coda19_site_api
+      tags:
+        - ul_coda19_green
+        - ul_coda19_green_install
+        - ul_coda19_green_site_api
+
+    - meta: flush_handlers

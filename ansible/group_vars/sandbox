@@ -29,8 +29,11 @@ coda19_stats_api_aidbox_url: http://localhost:8888
 # Choose which components to install
 _common_enable_aide: no
 _common_enable_stig: no
+
 _orange_enable_aidbox: no
 _orange_enable_fhirbase: yes
+
+_green_enable_site_api: no
 
 # Customize firewall
 # TODO
