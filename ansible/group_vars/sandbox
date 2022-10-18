@@ -11,7 +11,7 @@ coda19_host_role: "all"
 _common_heartbeat_base_url: http://localhost:5000
 
 # Disable heartbeat cron
-_heartbeat_disabled: yes
+_common_heartbeat_disabled: yes
 
 # Disable automatic updates from github (ansible-pull)
 _common_ansible_pull_disabled: yes

@@ -25,7 +25,7 @@
     job: /usr/local/bin/heartbeat.sh >/dev/null
     cron_file: coda19
     user: root
-    disabled: "{{ _heartbeat_disabled | default(omit) }}"
+    disabled: "{{ _common_heartbeat_disabled | default(omit) }}"
 
 ###### HEARTBEAT - METRICS PUSHER
 
@@ -45,4 +45,4 @@
     job: /usr/local/bin/heartbeat-metrics.sh >/dev/null
     cron_file: coda19
     user: root
-    disabled: "{{ _heartbeat_disabled | default(omit) }}"
+    disabled: "{{ _common_heartbeat_disabled | default(omit) }}"
