@@ -1,1 +1,33 @@
 ---
+
+# General stuff
+
+ul_fhirbase_port: 3000
+
+ul_fhirbase_firewalld_zones:
+  - zone: public
+    state: enabled
+
+ul_fhirbase_group: fhirbase
+ul_fhirbase_user: fhirbase
+
+ul_fhirbase_image_repo: docker.io
+ul_fhirbase_image_name: fhirbase/fhirbase
+ul_fhirbase_image_tag: latest
+
+ul_fhirbase_image_remote_check_hours: [ 0 ]
+ul_fhirbase_image_remote_check_runs:  [ 0 ]
+
+# Systemd stuff
+
+ul_fhirbase_service_name: fhirbase
+
+ul_fhirbase_systemd_temp_dir: "{{ '/tmp' if ansible_os_family == 'RedHat' and ansible_distribution_major_version|int == 7 else '%T' }}"
+ul_fhirbase_systemd_timeout_start_sec: 120
+ul_fhirbase_systemd_restart_sec: 30
+
+# Podman stuff
+
+ul_fhirbase_container_stop_timeout: 15
+ul_fhirbase_container_cidfile: "{{ ul_fhirbase_systemd_temp_dir }}/%n-cid"
+ul_fhirbase_container_pidfile: "{{ ul_fhirbase_systemd_temp_dir }}/%n-pid"

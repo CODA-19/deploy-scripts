@@ -1,4 +1,6 @@
 ---
 dependencies:
-  - ul_stig
-  - ul_aide
+  - role: ul_stig
+    when: _common_enable_stig     | default(true)
+  - role: ul_aide
+    when: _common_enable_aide     | default(true)
