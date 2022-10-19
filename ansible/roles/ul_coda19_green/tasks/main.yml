@@ -15,7 +15,7 @@
 #### CODA19-STATS-API
 ################################################################################
 
-- when: _green_enable_stats_api | defaut(true)
+- when: _green_enable_stats_api | default(true)
   block:
 
     - name: "IMPORT_TASKS | CODA19-STATS-API | install.yml"
@@ -53,7 +53,7 @@
 #### CODA19-LEARNING-API
 ################################################################################
 
-- when: _green_enable_learning_api | defaut(true)
+- when: _green_enable_learning_api | default(true)
   block:
 
     - name: "IMPORT_TASKS | CODA19-LEARNING-API | install.yml"
@@ -90,7 +90,7 @@
 #### CODA19-SITE-API
 ################################################################################
 
-- when: _green_enable_site_api | defaut(true)
+- when: _green_enable_site_api | default(true)
   block:
 
     - name: "IMPORT_TASKS | CODA19-SITE-API | install.yml"
