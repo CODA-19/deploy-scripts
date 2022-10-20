@@ -29,12 +29,12 @@ _orange_enable_fhirbase: yes
 
 _green_enable_site_api: no
 
-# If you need to use a proxy to access internet, uncomment
-#_common_global_proxy: http://squid.company.com:3128
-
 # Choose which components to install
 _orange_enable_aidbox: no
 _orange_enable_fhirbase: yes
+
+# If you need to use a proxy to access internet, uncomment
+#_common_global_proxy: http://squid.company.com:3128
 
 # Minio
 ul_minio_server_access_key: "<CHANGEME>"
