@@ -47,7 +47,7 @@
 ### Invoke the puller
 
 - name: "INCLUDE_TASKS | roles/ul_podman/tasks/puller.yml"
-  include_tasks: "{{ inventory_dir }}/roles/ul_podman/tasks/puller.yml"
+  include_tasks: "{{ playbook_dir }}/../roles/ul_podman/tasks/puller.yml"
   vars:
     _image_repo: "{{ ul_aidbox_db_image_registry }}"
     _image_name: "{{ ul_aidbox_db_image_name }}"
