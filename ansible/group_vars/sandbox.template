@@ -1,8 +1,5 @@
 ---
 
-# Sandbox site_id and role
-coda19_site_id: 999
-
 # We can toggle «all» roles or individually with «orange» or «green»
 # You can toggle which components to enable on each of these roles, see below.
 coda19_host_role: "all"
@@ -20,9 +17,6 @@ _common_ansible_pull_disabled: yes
 # A /data folder will be created anyway but won't on a second block device (sdb, vdb)
 _data_enabled: no
 
-# If you need to use a proxy to access internet, uncomment
-#_common_global_proxy: http://squid.company.com:3128
-
 # APIs must connect to locally deployed aidbox/fhirbase
 coda19_stats_api_aidbox_url: http://localhost:8888
 
@@ -35,5 +29,16 @@ _orange_enable_fhirbase: yes
 
 _green_enable_site_api: no
 
-# Customize firewall
-# TODO
+# If you need to use a proxy to access internet, uncomment
+#_common_global_proxy: http://squid.company.com:3128
+
+# Choose which components to install
+_orange_enable_aidbox: no
+_orange_enable_fhirbase: yes
+
+# Minio
+ul_minio_server_access_key: "<CHANGEME>"
+ul_minio_server_secret_key: "<CHANGEME>"
+
+# Orthanc
+ul_orthanc_password: "<CHANGEME>"

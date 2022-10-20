@@ -13,7 +13,10 @@
 
   vars_files:
     - "{{ playbook_dir }}/../group_vars/all"
-    - "{{ playbook_dir }}/../group_vars/sandbox"
+    - "/opt/coda19/sandbox"
+
+  vars:
+    coda19_site_id: "999"
 
   tasks:
 
