@@ -83,7 +83,7 @@
 ### Invoke the puller
 
 - name: "INCLUDE_TASKS | roles/ul_podman/tasks/puller.yml"
-  include_tasks: "{{ inventory_dir }}/roles/ul_podman/tasks/puller.yml"
+  include_tasks: "{{ playbook_dir }}/../roles/ul_podman/tasks/puller.yml"
   vars:
     _image_repo: "{{ ul_coda19_docker_image_registry }}"
     _image_name: "{{ docker_image_name }}"
