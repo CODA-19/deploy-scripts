@@ -14,7 +14,7 @@
 
 - name: "VENV | COPY | requirements.txt -> /opt/coda19/ansible-requirements.txt"
   copy:
-    src: "{{ inventory_dir }}/requirements.txt"
+    src: "{{ playbook_dir }}/../requirements.txt"
     dest: /opt/coda19/ansible-requirements.txt
 
 - name: "VENV | STAT | /opt/coda19/ansible-requirements.txt"
