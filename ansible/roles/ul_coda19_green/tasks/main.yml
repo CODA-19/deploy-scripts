@@ -90,7 +90,7 @@
 #### CODA19-SITE-API
 ################################################################################
 # Never deploy the site API in a sandbox. The service would register in our hub (useless)
-- when: (site_id != 999) and (_green_enable_site_api | default(true))
+- when: (coda19_site_id | int != 999) and (_green_enable_site_api | default(true))
   block:
 
     - name: "IMPORT_TASKS | CODA19-SITE-API | install.yml"
