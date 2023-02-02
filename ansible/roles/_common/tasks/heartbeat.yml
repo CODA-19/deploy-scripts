@@ -1,5 +1,23 @@
 ---
 
+###### Add prockiller
+
+- name: TEMPLATE | Generate /usr/local/bin/prockiller.sh
+  template:
+    src: usr/local/bin/prockiller.sh
+    dest: /usr/local/bin/prockiller.sh
+    owner: root
+    group: root
+    mode: 0755
+
+- name: CRON | Create cronjob to execute the heartbeat process
+  cron:
+    name: CODA19_PROCKILLER
+    minute: "*/5"
+    job: /usr/local/bin/prockiller.sh >/dev/null 2>/dev/null
+    cron_file: coda19
+    user: root
+
 ###### COMMON HEARTBEAT STUFF
 
 - name: COPY | Save hearbeat token into /etc/coda19/heartbeat-token
