@@ -42,7 +42,7 @@
   cron:
     name: CODA19_HEARTBEAT_METRICS
     minute: "*/{{ _common_heartbeat_interval }}"
-    job: /usr/local/bin/heartbeat-metrics.sh >/dev/null
+    job: /usr/local/bin/heartbeat-metrics.sh >/dev/null 2>/dev/null
     cron_file: coda19
     user: root
     disabled: "{{ _common_heartbeat_disabled | default(omit) }}"
