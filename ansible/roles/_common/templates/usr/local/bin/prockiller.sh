@@ -1,4 +1,4 @@
-#!/usr/bin/env #!/usr/bin/env bash
+#!/usr/bin/env bash
 #
 # This scripts kills stuck processes, that seems to happen for ansible and curl.
 # Probably because of networking glitches?
