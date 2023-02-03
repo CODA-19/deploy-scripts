@@ -34,10 +34,14 @@
 #     timeout: 30
 #   notify: restart minio
 
+- file:
+    path: /usr/local/bin/mino
+    state: absent
+
 - name: COPY | /usr/local/bin/minio
   copy:
     src: files/minio
-    dest: /usr/local/bin/mino
+    dest: /usr/local/bin/minio
     owner: root
     group: root
     mode: 0755
