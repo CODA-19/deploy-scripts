@@ -4,8 +4,8 @@ _green_clean_apis_tag: "20220725-02"
 
 # Global upgrade and reboot
 
-_common_system_upgrade_tag: 20220727
-_common_reboot_tag: 20220727
+#_common_system_upgrade_tag: 20220727
+#_common_reboot_tag: 20220727
 
 ################################################################################
 ###### _COMMON
