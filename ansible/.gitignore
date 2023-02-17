@@ -5,3 +5,4 @@ vault.pass
 vault.*.pass
 heartbeat-token.*
 venv/
+.venv
