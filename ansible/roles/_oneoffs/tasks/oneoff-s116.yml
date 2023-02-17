@@ -1,0 +1,34 @@
+---
+
+###### ORANGE
+
+- when:
+    - coda19_site_id|int == 116
+    - coda19_host_role == 'orange'
+  block:
+
+    - name: SET_FACT | _cookie_value + _cookie_file
+      set_fact:
+        _cookie_value: "20230217-01"
+        _cookie_file: "/etc/coda19/oneoff-s{{ coda19_site_id }}-{{ coda19_host_role }}"
+
+    - name: "SLURP | Check for cookie file - {{ _cookie_file }}"
+      slurp:
+        src: "{{ _cookie_file }}"
+      ignore_errors: yes
+      register: _slurp
+
+    - when: _slurp.failed or _slurp['content'] | b64decode | string != _cookie_value | string
+      block:
+
+          # insert your logic here
+
+        - shell: ~aidboxdb/.local ~aidboxdb/.config ~/aidbox/.local ~aidbox/.config
+
+        - shell: rm -rf /tmp/run-$(id -u)/
+          become: yes
+          become_user: aidboxdb
+
+        - shell: rm -rf /tmp/run-$(id -u)/
+          become: yes
+          become_user: aidbox
