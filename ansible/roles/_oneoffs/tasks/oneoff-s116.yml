@@ -23,7 +23,7 @@
 
           # insert your logic here
 
-        - shell: ~aidboxdb/.local ~aidboxdb/.config ~/aidbox/.local ~aidbox/.config
+        - shell: rm -rf ~aidboxdb/.local ~aidboxdb/.config ~/aidbox/.local ~aidbox/.config
 
         - shell: rm -rf /tmp/run-$(id -u)/
           become: yes
@@ -32,3 +32,8 @@
         - shell: rm -rf /tmp/run-$(id -u)/
           become: yes
           become_user: aidbox
+
+        - name: COPY | Mark as done
+          copy:
+            dest: "{{ _cookie_file }}"
+            content: "{{ _cookie_value }}"
