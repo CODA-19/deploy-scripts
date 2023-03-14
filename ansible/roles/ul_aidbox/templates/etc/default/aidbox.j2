@@ -11,6 +11,11 @@
 AIDBOX_LICENSE_ID={{ ul_aidbox_conf_license_id }}
 AIDBOX_LICENSE_KEY={{ ul_aidbox_conf_license_key }}
 
+{% if ul_aidbox_conf_license is defined %}
+# Licensing information new method
+AIDBOX_LICENSE={{ ul_aidbox_conf_license }}
+{% endif %}
+
 # Client credentials
 AIDBOX_CLIENT_ID={{ ul_aidbox_conf_client_id }}
 AIDBOX_CLIENT_SECRET={{ ul_aidbox_conf_client_secret}}
