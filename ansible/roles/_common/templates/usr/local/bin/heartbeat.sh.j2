@@ -83,7 +83,7 @@ SYSINFO=$( mktemp )
 {
   header "UPTIME AND UNAME"
   uptime
-  uname -a  
+  uname -a
 
   # header "ANSIBLE VIRTUAL ENVIRONMENT - pip list --outdated"
   # pip list --outdated
@@ -102,6 +102,9 @@ SYSINFO=$( mktemp )
 
   header "LISTENING TCP SOCKETS"
   netstat -lntp
+
+  header "DISK SPACE"
+  df -h
 
 {% if coda19_host_role == 'orange' %}
 
