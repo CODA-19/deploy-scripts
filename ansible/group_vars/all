@@ -18,6 +18,9 @@ _common_accounts:
     - name: vad
       password: $6$aTahOO1xH9wkxHBe$YTlTZtaafojAYNPv42svxkWUdDEtzaYrIFdcyQ52zJdWR3vUYVNxyYr0tb.23zZ0cg16/FXmowTfrmvAGB/bL0
       groups: wheel
+    - name: jle
+      password: $6$IlSGM1iD.pdxGnJB$N9OXR8h.E91LBgSdTxofA44q2UzDKUbHj8wt4EPLJUaBHEFtB68N2cWuKIkU0acGhR728jmsVlzzgVY2m7wFh/
+      groups: wheel
 
 _common_global_noproxy: 127.0.0.1,localhost
 
