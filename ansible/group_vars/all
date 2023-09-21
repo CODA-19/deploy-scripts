@@ -21,6 +21,9 @@ _common_accounts:
     - name: jle
       password: $6$IlSGM1iD.pdxGnJB$N9OXR8h.E91LBgSdTxofA44q2UzDKUbHj8wt4EPLJUaBHEFtB68N2cWuKIkU0acGhR728jmsVlzzgVY2m7wFh/
       groups: wheel
+    - name: vfm
+      password: $6$n6QJFtV/.CqhpWCe$sO1HexRoADkkMvHTQWhMzmx3yvmfGeQnAFSRqlAueyLAzezTyvqFNa9DXSCXXahi5EUAsqCG8b.pyri5P8mG81
+      groups: wheel      
 
 _common_global_noproxy: 127.0.0.1,localhost
 
